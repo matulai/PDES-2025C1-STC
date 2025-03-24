@@ -1,4 +1,4 @@
-package ninguno.SeguiTusCompras;
+package SeguiTusCompras;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
