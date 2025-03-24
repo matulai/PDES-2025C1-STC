@@ -1,4 +1,4 @@
-package SeguiTusCompras.modelo.usuario;
+package SeguiTusCompras.modelo;
 
 import jakarta.persistence.*;
 
