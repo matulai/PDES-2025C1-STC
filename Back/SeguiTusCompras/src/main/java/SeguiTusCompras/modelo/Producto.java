@@ -1,8 +1,8 @@
-package ninguno.SeguiTusCompras.usuario;
+package SeguiTusCompras.modelo;
 
+import SeguiTusCompras.modelo.user.Client;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -34,5 +34,9 @@ public class Producto {
 
     @Column
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
 }
