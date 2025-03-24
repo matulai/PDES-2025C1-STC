@@ -1,4 +1,4 @@
-package ninguno.SeguiTusCompras.usuario;
+package SeguiTusCompras.modelo.usuario;
 
 import jakarta.persistence.*;
 
