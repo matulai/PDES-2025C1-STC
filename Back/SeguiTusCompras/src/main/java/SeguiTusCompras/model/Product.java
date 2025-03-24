@@ -1,14 +1,14 @@
-package SeguiTusCompras.modelo;
+package SeguiTusCompras.model;
 
+import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "productos")
+@Table(name = "products")
 @Data
-public class Producto {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,21 +18,25 @@ public class Producto {
     private String MLA_id;
 
     @Column(nullable = false)
-    private String categoria_id;
+    private String category_id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String name;
 
     @Column(precision = 12, scale = 3)
-    private BigDecimal precio;
+    private BigDecimal price;
 
     @Column(nullable = false)
-    private String imagen_url;
+    private String image_url;
 
     @Column
-    private int cantidad;
+    private int stock;
 
     @Column
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
 }
