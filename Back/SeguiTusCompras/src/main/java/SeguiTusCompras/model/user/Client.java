@@ -2,10 +2,12 @@ package SeguiTusCompras.model.user;
 
 import SeguiTusCompras.model.Product;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Set;
 
 @Entity
+@Data
 public class Client extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
