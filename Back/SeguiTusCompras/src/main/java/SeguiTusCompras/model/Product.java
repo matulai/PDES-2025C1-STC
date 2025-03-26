@@ -4,6 +4,7 @@ import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.Dictionary;
 
 @Entity
 @Table(name = "products")
@@ -35,8 +36,16 @@ public class Product {
     @Column
     private String description;
 
+    @Column
+    Dictionary<Long, Integer> Qualifications; // Key: ClientId - Value: Score
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+
+    public void receiveQualification(Integer score, Client user){
+        this.Qualifications.put(user.getId(), score);
+        user.qualificationAdded(this, score);
+    }
 
 }
