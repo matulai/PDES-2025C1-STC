@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Admin extends User{
+public class Admin extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
@@ -13,5 +13,8 @@ public class Admin extends User{
 
     public Admin(String name, String password) {
         super(name, password);
+    }
+    public Admin() {
+        super();
     }
 }

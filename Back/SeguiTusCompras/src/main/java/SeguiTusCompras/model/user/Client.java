@@ -29,7 +29,7 @@ public class Client extends User {
     @OneToMany(mappedBy = "client")
     private Set<Qualification> qualifications;
 
-    public Client(String name, String pass) {
+    public Client(java.lang.String name, java.lang.String pass) {
         super(name, pass);
     }
 
