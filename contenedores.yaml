@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: qac1978/seguituscompras_database:1.0
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  spring:
+    image: maven:3.9.9-amazoncorretto-21-al2023
+    container_name: backend_container
+    volumes:
+      - ./Back/SeguiTusCompras:/SourceCode
+    working_dir: /SourceCode
+    command: mvn spring-boot:run
+    environment:
+      SPRING_DATASOURCE_URL: ${POSTGRES_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+
+
+
+
+
+
+
+  

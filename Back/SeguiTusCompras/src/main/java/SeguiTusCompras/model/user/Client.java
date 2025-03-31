@@ -1,31 +1,39 @@
 package SeguiTusCompras.model.user;
 
 import SeguiTusCompras.model.Product;
+import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-
-import java.util.Dictionary;
+import lombok.EqualsAndHashCode;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Getter
 public class Client extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long id;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "client_favorites",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private Set<Product> favs;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Product> purchases;
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private Dictionary<Product, Integer> qualifications; // ver como se comporta al persistir
+
+    @OneToMany(mappedBy = "client")
+    private Set<Qualification> qualifications;
 
     public Client(String name, String pass) {
         super(name, pass);
     }
+
+    public Client() {super();}
 
     private void purchase(Product product){
         this.purchases.add(product);
@@ -36,16 +44,14 @@ public class Client extends User {
     }
 
     private void qualifyPorduct(Product product, Integer score){
-        if(this.purchases.contains(product)){
-            product.receiveQualification(score, this);
+        if(doIOwnTheProduct(product)){
+            Qualification qualification = new Qualification(this, product, score);
+            qualifications.add(qualification);
         }
     }
 
-    public Long getId() {
-        return this.id;
+    private boolean doIOwnTheProduct(Product product) {
+        return this.purchases.contains(product);
     }
 
-    public void qualificationAdded(Product product, Integer score) {
-        qualifications.put(product, score);
-    }
 }

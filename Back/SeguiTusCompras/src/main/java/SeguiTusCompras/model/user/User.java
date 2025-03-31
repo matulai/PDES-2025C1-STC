@@ -8,7 +8,6 @@ import lombok.Getter;
 @Table(name = "usuario")
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
-@Getter
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +20,6 @@ public abstract class User {
         this.name = name;
         this.password = password;
     }
+    public User() {}
 }
 

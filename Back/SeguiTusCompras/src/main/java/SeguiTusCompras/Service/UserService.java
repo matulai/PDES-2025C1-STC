@@ -1,4 +1,4 @@
-package SeguiTusCompras.Service;
+package SeguiTusCompras.service;
 
 import SeguiTusCompras.model.user.Admin;
 import SeguiTusCompras.model.user.Client;
