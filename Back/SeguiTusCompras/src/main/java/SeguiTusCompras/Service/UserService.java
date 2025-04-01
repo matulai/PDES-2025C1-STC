@@ -1,10 +1,12 @@
 package SeguiTusCompras.service;
 
+import SeguiTusCompras.Security.UserSecurity;
 import SeguiTusCompras.model.user.Admin;
 import SeguiTusCompras.model.user.Client;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
+import SeguiTusCompras.persistence.IUserSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,24 +14,32 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     IUserDao userDao;
+    @Autowired
+    IUserSecurity userSecurity;
 
-    public User createClient(String name, String password, String role){
-        User newUser = assingRoleToUser(name, password, role);
-        userDao.save(newUser); // atajar error de usuario duplicado
-        return newUser;
-    }
-
-    private static User assingRoleToUser(String name, String password, String role) {
-        User newUser;
-        if (role.equals(Role.Client.name())){
-            newUser = new Client(name, password);
-        } else{
-            newUser = new Admin(name, password);
+    public User createUser(String name, String password, String role){
+        User user = userDao.getByName(name);
+        if (user != null){
+            throw new RuntimeException("user already registered");
         }
-        return newUser;
+        return this.generateNewUser(name, password, role);
     }
 
-    public User getUser(String name){
+    private User generateNewUser(String name, String password,  String role) {
+        if (role.equals("Client")){
+            Client client = new Client(name, password);
+            userDao.save(client);
+            userSecurity.save(new UserSecurity( Role.valueOf(role), client));
+            return client;
+        } else {
+            Admin admin = new Admin(name, password);
+            userDao.save(admin);
+            userSecurity.save(new UserSecurity( Role.valueOf(role), admin));
+            return admin;
+        }
+    }
+
+    public User getUser(java.lang.String name){
         return userDao.getByName(name);
     }
 

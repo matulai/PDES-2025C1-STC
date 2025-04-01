@@ -8,5 +8,5 @@ public interface IUserDao extends JpaRepository<User, Long> {
     @Query("""
        SELECT u FROM User u WHERE u.name = ?1
        """)
-    User getByName(String name);
+    User getByName(java.lang.String name);
 }

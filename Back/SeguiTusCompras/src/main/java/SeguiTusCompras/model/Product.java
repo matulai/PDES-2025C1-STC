@@ -8,7 +8,6 @@ import java.util.Dictionary;
 import java.util.HashMap;
 
 @Entity
-@Table(name = "products")
 @Data
 public class Product {
 
