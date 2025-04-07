@@ -18,12 +18,16 @@ public class UserSecurity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Role role;
+    private String password;
 
     @OneToOne
-    @JoinColumn(name = "userSecurity")
+    @JoinColumn(name = "userModel")
     private User userModel;
 
-    public UserSecurity(Role role, User client) {}
+    public UserSecurity(Role role, User user, String password) {
+        this.role = role;
+        this.userModel = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -32,7 +36,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public java.lang.String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override

@@ -1,8 +1,7 @@
-package SeguiTusCompras.service;
+package SeguiTusCompras.Service;
 
 import SeguiTusCompras.Security.UserSecurity;
-import SeguiTusCompras.model.user.Admin;
-import SeguiTusCompras.model.user.Client;
+import SeguiTusCompras.model.UserGenerator.UserGenerator;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
@@ -26,17 +25,11 @@ public class UserService {
     }
 
     private User generateNewUser(String name, String password,  String role) {
-        if (role.equals("Client")){
-            Client client = new Client(name, password);
-            userDao.save(client);
-            userSecurity.save(new UserSecurity( Role.valueOf(role), client));
-            return client;
-        } else {
-            Admin admin = new Admin(name, password);
-            userDao.save(admin);
-            userSecurity.save(new UserSecurity( Role.valueOf(role), admin));
-            return admin;
-        }
+        User newUser = UserGenerator.getInstance().generateUser(role, name);
+        User persistedUser = userDao.save(newUser);
+        UserSecurity userSec = new UserSecurity(Role.valueOf(role), persistedUser, password);
+        userSecurity.save(userSec);
+        return persistedUser;
     }
 
     public User getUser(java.lang.String name){

@@ -8,9 +8,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
   spring:
     image: maven:3.9.9-amazoncorretto-21-al2023
     container_name: backend_container
@@ -22,15 +19,13 @@ services:
       SPRING_DATASOURCE_URL: ${POSTGRES_URL}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      MAVEN_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      MAVEN_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:5005"
     depends_on:
       - postgres
     ports:
       - "8080:8080"
       - "5005:5005"
 
-volumes:
-  postgres_data:
 
 
 

@@ -14,15 +14,13 @@ public abstract class User {
     private Long id;
     @Column(unique = true)
     private java.lang.String name;
-    private java.lang.String password;
 
     @OneToOne
-    @JoinColumn(name = "userModel")
+    @JoinColumn(name = "userSecurity")
     private UserSecurity userSecurity;
 
-    public User(java.lang.String name, java.lang.String password) {
+    public User(String name) {
         this.name = name;
-        this.password = password;
     }
     public User() {}
 }

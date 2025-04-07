@@ -29,11 +29,13 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().authenticated()
-                        )
+                        ).build();
+                /**
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authprovider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+                */
     }
 }

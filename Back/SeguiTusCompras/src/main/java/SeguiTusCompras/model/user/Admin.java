@@ -11,8 +11,8 @@ public class Admin extends User {
     @Column(name = "admin_id")
     private Long id;
 
-    public Admin(String name, String password) {
-        super(name, password);
+    public Admin(String name) {
+        super(name);
     }
     public Admin() {
         super();

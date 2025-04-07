@@ -30,11 +30,11 @@ public class AuthService {
 
     private User generateNewUser(java.lang.String name, java.lang.String password, java.lang.String role) {
         if (role.equals("Client")){
-            Client client = new Client(name, password);
+            Client client = new Client(name);
             userDao.save(client);
             return client;
         } else{
-            Admin admin = new Admin(name, password);
+            Admin admin = new Admin(name);
             userDao.save(admin);
             return admin;
         }
