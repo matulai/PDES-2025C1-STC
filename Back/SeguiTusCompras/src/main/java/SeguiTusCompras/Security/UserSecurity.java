@@ -27,6 +27,7 @@ public class UserSecurity implements UserDetails {
     public UserSecurity(Role role, User user, String password) {
         this.role = role;
         this.userModel = user;
+        this.password = password;
     }
 
     @Override

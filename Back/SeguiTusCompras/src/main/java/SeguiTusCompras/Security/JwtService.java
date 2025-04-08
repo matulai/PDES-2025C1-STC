@@ -22,24 +22,17 @@ public class JwtService {
     }
 
     private String getNewToken(Map<String, Object> extraClaims, UserSecurity user) {
+        // extraClaims.put("name", user.getUserModel().getName());  // Agregar el nombre al claim
+        extraClaims.put("role", user.getRole().toString());  // Agregar el rol al claim
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUserModel().getName())
-                .setSubject(user.getRole().toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(this.getKey(), SignatureAlgorithm.HS256)// Se asegura de usar una clave válida.
                 .compact();
     }
-
-    /**
-     * La versión antigua de este método decodificaba la clave en Base64 pero no cumplía con el tamaño necesario.
-     * private Key getKey() {
-     *     byte[] keyBites = Decoders.BASE64.decode(key);
-     *     return Keys.hmacShaKeyFor(keyBites);
-     * }
-     */
 
     private Key getKey() {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
