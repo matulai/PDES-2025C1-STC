@@ -30,18 +30,20 @@ public class UserSecurity implements UserDetails {
         this.password = password;
     }
 
+    public UserSecurity() {}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
-    public java.lang.String getPassword() {
+    public String getPassword() {
         return this.password;
     }
 
     @Override
-    public java.lang.String getUsername() {
+    public String getUsername() {
         return "";
     }
 }

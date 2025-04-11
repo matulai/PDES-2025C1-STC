@@ -7,6 +7,7 @@ import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
 import SeguiTusCompras.persistence.IUserSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,13 +28,33 @@ public class UserService {
     private User generateNewUser(String name, String password,  String role) {
         User newUser = UserGenerator.getInstance().generateUser(role, name);
         User persistedUser = userDao.save(newUser);
-        UserSecurity userSec = new UserSecurity(Role.valueOf(role), persistedUser, password);
-        userSecurity.save(userSec);
-        return persistedUser;
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(password);
+        UserSecurity securityUser = new UserSecurity(Role.valueOf(role), persistedUser, encodedPassword);
+        userSecurity.save(securityUser);
+        newUser.setUserSecurity(securityUser);
+        return userDao.save(newUser);
     }
 
-    public User getUser(java.lang.String name){
-        return userDao.getByName(name);
+    public User getUser(String name, String password){
+        if (validatePassWord(name, password)){
+            return getUserByName(name);
+        }
+        return null; // ver como mejorar esto
+    }
+
+    private User getUserByName(String name) {
+        try {
+            return userDao.getByName(name);
+        } catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private boolean validatePassWord(String name, String password) {
+        UserSecurity userSecurity = this.userSecurity.getByName(name);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, userSecurity.getPassword());
     }
 
     public User updateUser(User updatedUser){

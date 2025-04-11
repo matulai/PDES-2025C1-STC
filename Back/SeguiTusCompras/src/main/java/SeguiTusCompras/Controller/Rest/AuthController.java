@@ -1,5 +1,7 @@
 package SeguiTusCompras.Controller.Rest;
 
+import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
+import SeguiTusCompras.Controller.Utils.Validators.AuthValidator;
 import SeguiTusCompras.Controller.dtos.ClientDto;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController { // hay que ver el token para autenticarse
+public class AuthController {
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -30,21 +32,26 @@ public class AuthController { // hay que ver el token para autenticarse
 
     @PostMapping(value = "login")
     public ResponseEntity<UserDto> login(@RequestBody LoginDto login){
-        //TODO ESTO NO ESTA HECHO
-        ClientDto client = new ClientDto("a", "a", "a"); // devolver el user
-        User user = userService.getUser(login.getUserName());
-        // String token = jwtService.getToken(user);
-        return ResponseEntity.ok().body(client);
+        User user = userService.getUser(login.getName(), login.getPassword());
+        String token = generateTokenFor(user.getName());
+        UserDto userDto = UserMapper.convertToDto(user);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + token);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);
     }
     @PostMapping(value = "register")
     public ResponseEntity<UserDto> register(@RequestBody RegisterDto register){
-        String token;
-        ClientDto client = new ClientDto("a", "a", "a"); // devolver el user
+        AuthValidator.getInstance().ValidateRegister(register);
         User newUser = userService.createUser(register.getName(), register.getPassword(), register.getRole());
-        UserSecurity userSec = userSecurity.getByName(newUser.getName());
-        token = jwtService.getToken(userSec);
+        String token = generateTokenFor(newUser.getName());
+        UserDto userDto = UserMapper.convertToDto(newUser);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(client);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);
+    }
+
+    private String generateTokenFor(String name) {
+        UserSecurity userSec = userSecurity.getByName(name);
+        return jwtService.getToken(userSec);
     }
 }

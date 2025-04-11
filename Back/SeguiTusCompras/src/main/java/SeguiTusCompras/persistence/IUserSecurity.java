@@ -11,7 +11,7 @@ public interface IUserSecurity extends JpaRepository<UserSecurity, Long> {
     @Query("""
        SELECT us FROM UserSecurity us
        JOIN us.userModel u
-       WHERE u.name = ?1
+       WHERE u.name like ?1
        """)
     UserSecurity getByName(String name);
 }

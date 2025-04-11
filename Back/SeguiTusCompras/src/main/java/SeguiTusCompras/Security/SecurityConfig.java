@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     @Autowired
      private final JwtAuthFilter jwtAuthFilter;
-     // private final AuthenticationProvider authprovider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //TODO
@@ -31,9 +30,8 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority(Role.Admin.name())
                                 .requestMatchers("/client/**").hasAuthority(Role.Client.name())
-                                .anyRequest().authenticated()
                         )
-                        .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+                        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                         .sessionManagement(sessionManager -> sessionManager
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .build();

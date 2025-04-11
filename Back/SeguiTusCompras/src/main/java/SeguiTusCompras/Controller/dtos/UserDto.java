@@ -1,14 +1,10 @@
 package SeguiTusCompras.Controller.dtos;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@NoArgsConstructor
-@Data
+@Getter
 public abstract class UserDto {
     private String name;
-    private String password;
-    private String role;
 
-    public UserDto(String name, String password, String role) {}
+    public UserDto(String name) {this.name = name;}
 }
