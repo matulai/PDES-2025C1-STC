@@ -2,7 +2,6 @@ package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
 import SeguiTusCompras.Controller.Utils.Validators.AuthValidator;
-import SeguiTusCompras.Controller.dtos.ClientDto;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
 import SeguiTusCompras.Controller.dtos.UserDto;

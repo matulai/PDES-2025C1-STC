@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -37,24 +39,18 @@ public class UserService {
     }
 
     public User getUser(String name, String password){
-        if (validatePassWord(name, password)){
-            return getUserByName(name);
-        }
-        return null; // ver como mejorar esto
+        UserSecurity userSecurity = Optional.ofNullable(this.userSecurity.getByName(name))
+                .orElseThrow(() -> new RuntimeException("Usuario o contrasenia erronea"));
+        validatePassWord(userSecurity.getPassword(), password);
+        return userDao.getByName(name);
     }
 
-    private User getUserByName(String name) {
-        try {
-            return userDao.getByName(name);
-        } catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
-    private boolean validatePassWord(String name, String password) {
-        UserSecurity userSecurity = this.userSecurity.getByName(name);
+    private void validatePassWord(String encriptedPassword, String password) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(password, userSecurity.getPassword());
+        if(encoder.matches(encriptedPassword, password)){
+            throw  new RuntimeException("Usuario o contrasenia erronea");
+        }
     }
 
     public User updateUser(User updatedUser){
