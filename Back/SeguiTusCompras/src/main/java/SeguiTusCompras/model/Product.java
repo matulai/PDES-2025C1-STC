@@ -4,9 +4,10 @@ import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.util.Dictionary;
+import java.util.HashMap;
 
 @Entity
-@Table(name = "products")
 @Data
 public class Product {
 
@@ -37,6 +38,6 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    private Client client;
+    private Client owner;
 
 }

@@ -1,20 +1,27 @@
 package SeguiTusCompras.model.user;
 
+import SeguiTusCompras.Security.UserSecurity;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "usuario")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@Table(name = "userModel")
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String password;
+    @Column(unique = true)
+    private java.lang.String name;
 
-    public User(String name, String password) {
+    @OneToOne
+    @JoinColumn(name = "userSecurity")
+    private UserSecurity userSecurity;
+
+    public User(String name) {
         this.name = name;
-        this.password = password;
     }
+    public User() {}
 }
 
