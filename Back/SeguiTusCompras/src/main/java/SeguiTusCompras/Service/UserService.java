@@ -50,7 +50,7 @@ public class UserService {
     private void validatePassWord(String encodedPassword, String rawPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(rawPassword, encodedPassword)){
-            throw  new RuntimeException(ServicesErrors.USER_NOT_FOUND.getMessage()); // cambiar
+            throw  new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()); // cambiar
         }
     }
 
