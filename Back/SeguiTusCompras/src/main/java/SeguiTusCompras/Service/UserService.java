@@ -1,5 +1,6 @@
 package SeguiTusCompras.Service;
 
+import SeguiTusCompras.Errors.ServicesErrors;
 import SeguiTusCompras.Security.UserSecurity;
 import SeguiTusCompras.model.UserGenerator.UserGenerator;
 import SeguiTusCompras.model.user.Role;
@@ -22,7 +23,7 @@ public class UserService {
     public User createUser(String name, String password, String role){
         User user = userDao.getByName(name);
         if (user != null){
-            throw new RuntimeException("user already registered");
+            throw new RuntimeException(ServicesErrors.ALREADY_REGISTERED.getMessage());
         }
         return this.generateNewUser(name, password, role);
     }
@@ -40,16 +41,16 @@ public class UserService {
 
     public User getUser(String name, String password){
         UserSecurity userSecurity = Optional.ofNullable(this.userSecurity.getByName(name))
-                .orElseThrow(() -> new RuntimeException("Usuario o contrasenia erronea"));
+                .orElseThrow(() -> new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()));
         validatePassWord(userSecurity.getPassword(), password);
         return userDao.getByName(name);
     }
 
 
-    private void validatePassWord(String encriptedPassword, String password) {
+    private void validatePassWord(String encodedPassword, String rawPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(encoder.matches(encriptedPassword, password)){
-            throw  new RuntimeException("Usuario o contrasenia erronea");
+        if(!encoder.matches(rawPassword, encodedPassword)){
+            throw  new RuntimeException(ServicesErrors.USER_NOT_FOUND.getMessage()); // cambiar
         }
     }
 

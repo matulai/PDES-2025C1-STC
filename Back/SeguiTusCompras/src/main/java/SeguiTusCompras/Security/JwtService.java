@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -15,14 +16,14 @@ import java.util.Map;
 
 @Service
 public class JwtService {
-    private static final String key = "VGhpcyBpcyBhIHNlY3VyZSBzZWNyZXQga2V5VGhpcyBpcyBhIHNlY3VyZSBzZWNyZXQga2V5Cg==";
+    @Value("${jwt.key}")
+    private String key;
 
     public String getToken(UserSecurity user) {
         return getNewToken(new HashMap<>(), user);
     }
 
     private String getNewToken(Map<String, Object> extraClaims, UserSecurity user) {
-        // extraClaims.put("name", user.getUserModel().getName());  // Agregar el nombre al claim
         extraClaims.put("role", user.getRole().toString());  // Agregar el rol al claim
         return Jwts
                 .builder()

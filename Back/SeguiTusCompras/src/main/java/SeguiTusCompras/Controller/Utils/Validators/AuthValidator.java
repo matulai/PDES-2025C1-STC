@@ -1,6 +1,7 @@
 package SeguiTusCompras.Controller.Utils.Validators;
 
 import SeguiTusCompras.Controller.dtos.RegisterDto;
+import SeguiTusCompras.Errors.ValidatorsErrors;
 import SeguiTusCompras.model.user.Role;
 
 import java.util.Arrays;
@@ -25,13 +26,13 @@ public class AuthValidator {
 
     private void itsAnInValidPassword(String password) {
         if(!Pattern.matches(passwordRegex, password)) {
-            throw new IllegalArgumentException("La contrasenia no es correcta");
+            throw new IllegalArgumentException(ValidatorsErrors.INVALID_PASSWORD.getMessage());
         }
     }
 
     private void itsAnInvalidRole(String userRole) {
         if (Arrays.stream(Role.values()).noneMatch(role -> role.name().equalsIgnoreCase(userRole))){;
-            throw new IllegalArgumentException("El rol no es correcto");
+            throw new IllegalArgumentException(ValidatorsErrors.INVALID_ROLE.getMessage());
         }
     }
 }
