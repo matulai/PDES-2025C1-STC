@@ -2,7 +2,7 @@
 
 ## Desarrolladores
 
-- Laime Matias
+- Laime Matias Daniel
 - Cabezas Juan Manuel
 
 
