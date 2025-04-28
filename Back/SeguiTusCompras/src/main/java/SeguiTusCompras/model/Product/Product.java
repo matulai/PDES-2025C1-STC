@@ -1,4 +1,4 @@
-package SeguiTusCompras.model;
+package SeguiTusCompras.model.Product;
 
 import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class Product {
     @Column(nullable = false)
     private String category_id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(precision = 12, scale = 3)

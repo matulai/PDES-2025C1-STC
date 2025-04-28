@@ -1,5 +1,6 @@
 package SeguiTusCompras.model;
 
+import SeguiTusCompras.model.Product.Product;
 import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
