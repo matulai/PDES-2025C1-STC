@@ -23,7 +23,12 @@ public class Client extends User {
     )
     private Set<Product> favs;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "client_purchases",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private Set<Product> purchases;
 
     @OneToMany(mappedBy = "client")
@@ -46,6 +51,7 @@ public class Client extends User {
     private void qualifyPorduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){
             Qualification qualification = new Qualification(this, product, score);
+            product.makeQualification(qualification);
             qualifications.add(qualification);
         }
     }

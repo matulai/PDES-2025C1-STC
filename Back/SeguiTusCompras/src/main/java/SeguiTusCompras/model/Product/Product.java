@@ -1,11 +1,10 @@
 package SeguiTusCompras.model.Product;
 
-import SeguiTusCompras.model.user.Client;
+import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
-import java.util.Dictionary;
-import java.util.HashMap;
+import java.util.Set;
 
 @Entity
 @Data
@@ -36,8 +35,12 @@ public class Product {
     @Column
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client owner;
+    @OneToMany(mappedBy = "product")
+    private Set<Qualification> qualifications;
+
+    public void makeQualification(Qualification qualification){
+        qualifications.add(qualification);
+    }
+
 
 }
