@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "@/views";
 import MainLayout from "@/layout/MainLayout";
-import "./App.css";
 
 function App() {
   return (
