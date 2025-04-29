@@ -27,7 +27,9 @@
     /* Paths resolve*/
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@pages/*": ["src/views/*"],
+      "@components/*": ["./src/components/*"]
     }
   },
   "include": ["src"]
