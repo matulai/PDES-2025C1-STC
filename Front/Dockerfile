@@ -1,12 +1,12 @@
 # Usa la imagen base de Node.js para compilar la aplicación
-FROM node:22 AS build
+FROM node:22-slim AS build
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
 # Copia los archivos del proyecto y la configuración
 COPY package.json package-lock.json ./
-RUN npm install --frozen-lockfile
+RUN npm ci
 
 # Copia el resto del código fuente
 COPY . .
@@ -25,3 +25,9 @@ EXPOSE 80
 
 # Comando por defecto para ejecutar Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+# # Usa la imagen base de Node.js para compilar la aplicación
+# FROM node:22@sha256:3c5e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6 AS build
+
+# # Usa una imagen ligera de Nginx para servir la aplicación
+# FROM nginx@sha256:ad4b9c3e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6e5b6b6b6
