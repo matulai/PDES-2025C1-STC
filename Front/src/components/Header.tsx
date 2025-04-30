@@ -1,9 +1,10 @@
 import Navbar from "./Navbar";
+import "@/styles/Header.css";
 
 const Header = () => {
   return (
-    <header>
-      <h1>STC</h1>
+    <header className="header-container">
+      <h1 className="header-container-title">STC</h1>
       <Navbar />
     </header>
   );
