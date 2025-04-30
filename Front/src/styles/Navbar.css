@@ -13,16 +13,13 @@
   justify-content: center;
   align-items: center;
   padding: 0 8px;
+  font-size: 20px;
+  color: var(--color-grey-medium);
   border-right: 1px solid var(--color-grey-medium);
 }
 
 .navbar-container .navbar-container-link:last-child {
   border-right: none;
-}
-
-.navbar-container-link-text {
-  color: var(--color-grey-medium);
-  font-size: 20px;
 }
 
 .navbar-container-link-inactive::after {
