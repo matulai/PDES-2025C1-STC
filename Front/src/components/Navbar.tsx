@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
@@ -17,12 +18,19 @@ const Navbar = () => {
   const location = useLocation();
 
   return (
-    <nav>
-      {navLinksNoRegistered.map(link => (
-        <Link key={link.label} to={link.pathname}>
-          {link.label}
-        </Link>
-      ))}
+    <nav className="navbar-container">
+      {navLinksNoRegistered.map(link => {
+        const isActive = location.pathname === link.pathname;
+        return (
+          <Link
+            key={link.label}
+            to={link.pathname}
+            className={`navbar-container-link ${isActive ? "navbar-container-link-active" : "navbar-container-link-inactive"}`}
+          >
+            <span className="navbar-container-link-text">{link.label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 };
