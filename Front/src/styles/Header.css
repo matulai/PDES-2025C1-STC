@@ -3,14 +3,24 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 48px;
-  height: 88px;
+  padding: 12px 36px;
   background-color: var(--color-black-light);
 }
 
 .header-container-title {
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 700;
-  line-height: 58px;
+  line-height: 48px;
   color: var(--color-grey-light);
+}
+
+@media (min-width: 1536px) {
+  .header-container-title {
+    font-size: 48px;
+    line-height: 58px;
+  }
+
+  .header-container {
+    padding: 12px 48px;
+  }
 }
