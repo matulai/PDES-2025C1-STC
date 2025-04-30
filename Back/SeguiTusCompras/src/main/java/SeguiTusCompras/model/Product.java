@@ -1,6 +1,5 @@
-package SeguiTusCompras.model.Product;
+package SeguiTusCompras.model;
 
-import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;

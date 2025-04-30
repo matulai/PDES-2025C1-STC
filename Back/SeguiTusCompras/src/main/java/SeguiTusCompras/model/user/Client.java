@@ -1,7 +1,7 @@
 package SeguiTusCompras.model.user;
 
+import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
-import SeguiTusCompras.model.Product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
