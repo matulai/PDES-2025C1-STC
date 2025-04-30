@@ -1,0 +1,7 @@
+.layout-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  flex: 1;
+  padding: 24px 40px;
+}

@@ -1,10 +1,11 @@
 import { Header, Footer } from "@/components";
 import { Outlet } from "react-router-dom";
+import "@/styles/MainLayout.css";
 
 const MainLayout = () => (
   <>
     <Header />
-    <main style={{ padding: "1rem" }}>
+    <main className="layout-content">
       <Outlet />
     </main>
     <Footer />
