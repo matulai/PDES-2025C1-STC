@@ -27,7 +27,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/**", 
+                                                        "/swagger-ui/**",
+                                                        "/v3/api-docs/**",
+                                                        "/swagger-ui.html").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority(Role.Admin.name())
                                 .requestMatchers("/client/**").hasAuthority(Role.Client.name())
                         )
