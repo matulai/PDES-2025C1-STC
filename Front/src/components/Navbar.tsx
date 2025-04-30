@@ -4,14 +4,14 @@ import "@/styles/Navbar.css";
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
   { label: "Ingresar", pathname: "/login" },
-  { label: "Mis favoritos", pathname: "/favorites" },
-  { label: "Mis compras", pathname: "/purchases" },
+  { label: "Favoritos", pathname: "/favorites" },
+  { label: "Compras", pathname: "/purchases" },
 ];
 
 const navLinksRegistered = [
-  { label: "Mi perfil", pathname: "/profile" },
-  { label: "Mis favoritos", pathname: "/favorites" },
-  { label: "Mis compras", pathname: "/purchases" },
+  { label: "perfil", pathname: "/profile" },
+  { label: "Favoritos", pathname: "/favorites" },
+  { label: "Compras", pathname: "/purchases" },
 ];
 
 const Navbar = () => {
