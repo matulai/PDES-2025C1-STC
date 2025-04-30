@@ -102,7 +102,8 @@ video {
 :root {
   --color-white: #f0f0f0;
   --color-grey-dark: #858585;
-  --color-grey-medium: #d3d3d3;
+  --color-grey-medium: #adadad;
+  --color-grey-light: #d3d3d3;
   --color-black-dark: #000000e6;
   --color-black-light: #131921;
   --color-blue: #3e43ff;
@@ -114,7 +115,7 @@ body {
   font-weight: 400;
 
   color: var(--color-black-dark);
-  background-color: var(--color-grey-medium);
+  background-color: var(--color-grey-light);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
