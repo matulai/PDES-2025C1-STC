@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Searchbar from "./Searchbar";
 import Navbar from "./Navbar";
 import "@/styles/Header.css";
 
@@ -10,6 +11,7 @@ const Header = () => {
           STC
         </Link>
       </h1>
+      <Searchbar />
       <Navbar />
     </header>
   );
