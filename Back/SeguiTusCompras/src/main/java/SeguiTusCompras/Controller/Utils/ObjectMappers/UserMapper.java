@@ -9,7 +9,8 @@ import SeguiTusCompras.model.user.User;
 public class UserMapper {
     public static UserDto convertToDto(User newUser) {
         if (newUser.getClass() == Client.class){
-            return new ClientDto(newUser.getName());
+            Client client = (Client) newUser;
+            return new ClientDto(client.getName(), client.getFavs());
         }
         return new AdminDto(newUser.getName());
     }

@@ -1,12 +1,10 @@
 package SeguiTusCompras.Service;
-
-import SeguiTusCompras.Errors.ServicesErrors;
 import SeguiTusCompras.Security.UserSecurity;
 import SeguiTusCompras.model.UserGenerator.UserGenerator;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
-import SeguiTusCompras.persistence.IUserSecurity;
+import SeguiTusCompras.persistence.IUserSecurityDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,7 @@ public class UserService {
     @Autowired
     IUserDao userDao;
     @Autowired
-    IUserSecurity userSecurity;
+    IUserSecurityDao userSecurity;
 
     public User createUser(String name, String password, String role){
         User user = userDao.getByName(name);

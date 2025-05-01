@@ -40,15 +40,15 @@ public class Client extends User {
 
     public Client() {super();}
 
-    private void purchase(Product product){
+    public void purchase(Product product){
         this.purchases.add(product);
     }
 
-    private void addToFavs(Product product){
+    public void addToFavs(Product product){
         this.favs.add(product);
     }
 
-    private void qualifyPorduct(Product product, Integer score){
+    public void qualifyPorduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){
             Qualification qualification = new Qualification(this, product, score);
             product.makeQualification(qualification);
