@@ -2,7 +2,7 @@
   height: 40px;
   max-width: 768px;
   width: 100%;
-  padding: 0 24px;
+  padding-left: 24px;
 }
 
 .searchbar-container-form {
@@ -43,6 +43,12 @@
 
 .searchbar-container-form-button:hover {
   background-color: var(--color-grey-medium);
+}
+
+@media (min-width: 1024px) {
+  .searchbar-container {
+    padding-right: 24px;
+  }
 }
 
 @media (min-width: 1536px) {

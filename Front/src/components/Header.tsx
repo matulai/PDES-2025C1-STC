@@ -1,18 +1,20 @@
 import { Link } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import Navbar from "./Navbar";
+import Menu from "./Menu";
 import "@/styles/Header.css";
 
 const Header = () => {
   return (
     <header className="header-container">
+      <Menu />
       <h1 className="header-container-title">
-        <Link to="/" className="header-container-title-link">
-          STC
-        </Link>
+        <Link to="/">STC</Link>
       </h1>
       <Searchbar />
-      <Navbar />
+      <div className="header-container-navbar-render">
+        <Navbar />
+      </div>
     </header>
   );
 };
