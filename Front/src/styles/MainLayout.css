@@ -3,5 +3,18 @@
   flex-direction: column;
   justify-content: start;
   flex: 1;
-  padding: 24px 40px;
+  gap: 36px;
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .layout-content {
+    padding: 24px 40px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .layout-content {
+    padding: 36px 56px;
+  }
 }
