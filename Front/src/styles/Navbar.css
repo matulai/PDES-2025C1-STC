@@ -1,5 +1,5 @@
 .navbar-container {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   padding: 8px 0;
@@ -50,8 +50,14 @@
   bottom: 0;
   width: 90%;
   height: 2px;
-  background-color: var(--color-grey-light);
   transition: width 0.3s ease;
+  background-color: var(--color-grey-light);
+}
+
+@media (min-width: 1024px) {
+  .navbar-container {
+    display: flex;
+  }
 }
 
 @media (min-width: 1536px) {
