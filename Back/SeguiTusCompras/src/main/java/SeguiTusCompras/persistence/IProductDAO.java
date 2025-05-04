@@ -7,6 +7,6 @@ import SeguiTusCompras.model.Product;
 
 public interface IProductDao extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE p.name = :productName")
+    @Query("SELECT p FROM Product p WHERE p.name = ?1")
     Product getByName(String productName);
 }

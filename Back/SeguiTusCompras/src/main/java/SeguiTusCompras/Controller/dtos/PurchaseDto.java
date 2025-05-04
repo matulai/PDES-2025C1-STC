@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PurchaseDto {
     private String userName;
     private ProductDto productDto;
+    private Integer numberOfUnits;
 }

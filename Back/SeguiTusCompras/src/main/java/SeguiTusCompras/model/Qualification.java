@@ -3,11 +3,15 @@ package SeguiTusCompras.model;
 import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Qualification {
     @Id
     private Long id;

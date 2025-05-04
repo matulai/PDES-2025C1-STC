@@ -2,14 +2,16 @@ package SeguiTusCompras.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -18,10 +20,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // solo para probar cambiar luego
     private String MLA_id;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // solo para probar cambiar luego
     private String category_id;
 
     @Column(nullable = false, unique = true)
@@ -30,7 +32,7 @@ public class Product {
     @Column(precision = 12, scale = 3)
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // solo para probar cambiar luego
     private String image_url;
 
     @Column

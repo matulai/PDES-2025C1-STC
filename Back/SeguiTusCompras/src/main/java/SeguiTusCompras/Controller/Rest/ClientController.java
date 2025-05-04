@@ -16,6 +16,7 @@ import SeguiTusCompras.Service.ClientService;
 import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.user.Client;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/client")
@@ -23,9 +24,11 @@ import SeguiTusCompras.model.user.Client;
 public class ClientController {
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private ProductService ProductService;
 
     @PostMapping(value = "addProductToFavorites")
-    public ResponseEntity<UserDto> addProductToFavorites(FavoriteDto favoriteDto){
+    public ResponseEntity<UserDto> addProductToFavorites(@RequestBody FavoriteDto favoriteDto){
         Client client = clientService.getClient(favoriteDto.getUserName());
         Product product = ProductService.getProductForClient(favoriteDto.getProductDto().getProductName());
         Client clientWithNewFavorite = clientService.addProductToFavorites(client, product);
@@ -34,21 +37,19 @@ public class ClientController {
     }
 
     @PostMapping(value = "addPurchase")
-    public ResponseEntity<UserDto> addPurchase(PurchaseDto purchaseDto){
+    public ResponseEntity<Void> addPurchase(@RequestBody PurchaseDto purchaseDto){
         Client client = clientService.getClient(purchaseDto.getUserName());
         Product product = ProductService.getProductForClient(purchaseDto.getProductDto().getProductName());
-        Client clientWithNewPurchase = clientService.addPurchase(client, product);
-        UserDto clientDto = UserMapper.convertToDto(clientWithNewPurchase);
-        return ResponseEntity.status(HttpStatus.OK).body(clientDto);
+        clientService.addPurchase(client, product, purchaseDto.getNumberOfUnits());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping(value = "qualifyProduct")
-    public ResponseEntity<UserDto> qualifyProduct(QualificationDto qualificationDto){
+    public ResponseEntity<Void> qualifyProduct(@RequestBody QualificationDto qualificationDto){
         Client client = clientService.getClient(qualificationDto.getUserName());
         Product product = ProductService.getProductForClient(qualificationDto.getProductDto().getProductName()); 
-        Client clientWithNewQualification = clientService.qualifyProduct(client, product, qualificationDto.getScore());
-        UserDto clientDto = UserMapper.convertToDto(clientWithNewQualification);
-        return ResponseEntity.status(HttpStatus.OK).body(clientDto);
+        clientService.qualifyProduct(client, product, qualificationDto.getScore());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

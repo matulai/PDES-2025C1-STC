@@ -9,10 +9,9 @@ import SeguiTusCompras.persistence.IProductDao;
 @Service
 public class ProductService {
     @Autowired
-    static
     IProductDao productDao;
 
-    public static Product getProductForClient(String productName) {
+    public Product getProductForClient(String productName) {
         Product product = productDao.getByName(productName);
         if (product == null){
             product = new Product();
