@@ -1,38 +1,36 @@
 package SeguiTusCompras.model.user;
 
 import SeguiTusCompras.model.Product;
+import SeguiTusCompras.model.Purchase;
 import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Data
+@Getter
+@Setter
 public class Client extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "client_id")
-    private Long id;
     @ManyToMany
     @JoinTable(
             name = "client_favorites",
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> favs;
+    private Set<Product> favs = new HashSet<>(); ;
 
-    @ManyToMany
-    @JoinTable(
-            name = "client_purchases",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> purchases;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Purchase> purchases = new ArrayList<>(); 
 
     @OneToMany(mappedBy = "client")
-    private Set<Qualification> qualifications;
+    private Set<Qualification> qualifications = new HashSet<>(); ;
 
     public Client(java.lang.String name) {
         super(name);
@@ -40,15 +38,16 @@ public class Client extends User {
 
     public Client() {super();}
 
-    private void purchase(Product product){
-        this.purchases.add(product);
+    public void purchase(Product product, Integer units){
+        Purchase purchase = new Purchase(this, product, units);
+        this.purchases.add(purchase);
     }
 
-    private void addToFavs(Product product){
+    public void addToFavs(Product product){
         this.favs.add(product);
     }
 
-    private void qualifyPorduct(Product product, Integer score){
+    public void qualifyPorduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){
             Qualification qualification = new Qualification(this, product, score);
             product.makeQualification(qualification);
@@ -57,7 +56,7 @@ public class Client extends User {
     }
 
     private boolean doIOwnTheProduct(Product product) {
-        return this.purchases.contains(product);
+        return this.purchases.stream().anyMatch(purchase -> purchase.getProduct().equals(product));
     }
 
 }
