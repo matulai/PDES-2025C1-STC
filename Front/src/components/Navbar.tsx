@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import NavbarItem from "./NavbarItem";
 import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
@@ -15,22 +15,15 @@ const navLinksRegistered = [
 ];
 
 const Navbar = () => {
-  const location = useLocation();
-
   return (
     <nav className="navbar-container">
-      {navLinksNoRegistered.map(link => {
-        const isActive = location.pathname === link.pathname;
-        return (
-          <Link
-            key={link.label}
-            to={link.pathname}
-            className={`navbar-container-link ${isActive ? "navbar-container-link-active" : "navbar-container-link-inactive"}`}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
+      {navLinksNoRegistered.map(link => (
+        <NavbarItem
+          key={link.label}
+          label={link.label}
+          pathname={link.pathname}
+        />
+      ))}
     </nav>
   );
 };
