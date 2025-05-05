@@ -48,7 +48,7 @@ public class ClientController {
     public ResponseEntity<Void> qualifyProduct(@RequestBody QualificationDto qualificationDto){
         Client client = clientService.getClient(qualificationDto.getUserName());
         Product product = ProductService.getProductForClient(qualificationDto.getProductDto().getProductName()); 
-        clientService.qualifyProduct(client, product, qualificationDto.getScore());
+        clientService.qualifyProduct(client, product, qualificationDto.getScore(), qualificationDto.getComment());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

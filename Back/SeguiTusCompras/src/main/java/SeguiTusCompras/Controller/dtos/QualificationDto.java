@@ -11,4 +11,5 @@ public class QualificationDto {
     private String userName;
     private ProductDto productDto;
     private Integer score;
+    private String comment;
 }
