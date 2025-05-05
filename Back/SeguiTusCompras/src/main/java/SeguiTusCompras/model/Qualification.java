@@ -26,5 +26,7 @@ public class Qualification {
 
     private Integer score;
 
-    public Qualification(Client client, Product product, Integer score) {}
+    private String comment;
+
+    public Qualification(Client client, Product product, Integer score, String comment) {}
 }

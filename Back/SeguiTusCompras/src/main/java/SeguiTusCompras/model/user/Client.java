@@ -47,9 +47,9 @@ public class Client extends User {
         this.favs.add(product);
     }
 
-    public void qualifyPorduct(Product product, Integer score){
+    public void qualifyPorduct(Product product, Integer score, String comment){
         if(doIOwnTheProduct(product)){
-            Qualification qualification = new Qualification(this, product, score);
+            Qualification qualification = new Qualification(this, product, score, comment);
             product.makeQualification(qualification);
             qualifications.add(qualification);
         }

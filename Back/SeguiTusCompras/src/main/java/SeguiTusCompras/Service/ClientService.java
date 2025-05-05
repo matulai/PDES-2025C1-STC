@@ -30,8 +30,8 @@ public class ClientService {
         return clientDao.save(client);
     }
 
-    public Client qualifyProduct(Client client, Product product, Integer score) {
-        client.qualifyPorduct(product, score);
+    public Client qualifyProduct(Client client, Product product, Integer score, String comment) {
+        client.qualifyPorduct(product, score, comment);
         return clientDao.save(client);
     }
 
