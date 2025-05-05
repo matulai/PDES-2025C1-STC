@@ -1,8 +1,19 @@
 .scrollable-carousel-container {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; /* IE y Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollable-carousel-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.scrollable-carousel-container-content {
   display: flex;
-  gap: 16px;
+  gap: 24px;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .scrollable-carousel-button {
@@ -35,7 +46,7 @@
 
 @media (min-width: 600px) {
   .scrollable-carousel-container {
-    gap: 24px;
+    overflow-x: hidden;
   }
 
   .scrollable-carousel-button-next {
