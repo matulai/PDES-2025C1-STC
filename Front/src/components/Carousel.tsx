@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import ChevronLeftIcon from "./ChevronLeftIcon";
 import ProductCard from "./ProductCard";
+import ScrollableCarousel from "./ScrollableCarousel";
 import "@/styles/Carousel.css";
 
 const Carousel = () => {
@@ -12,7 +12,7 @@ const Carousel = () => {
           Ir a título
         </Link>
       </div>
-      <div className="carousel-container-content">
+      <ScrollableCarousel>
         <ProductCard />
         <ProductCard />
         <ProductCard />
@@ -23,13 +23,7 @@ const Carousel = () => {
         <ProductCard />
         <ProductCard />
         <ProductCard />
-      </div>
-      <button className="carousel-button carousel-container-buttons-prev">
-        <ChevronLeftIcon />
-      </button>
-      <button className="carousel-button carousel-container-buttons-next">
-        <ChevronLeftIcon style={{ transform: "rotate(180deg)" }} />
-      </button>
+      </ScrollableCarousel>
     </section>
   );
 };
