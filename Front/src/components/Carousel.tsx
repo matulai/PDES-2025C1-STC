@@ -18,6 +18,11 @@ const Carousel = () => {
         <ProductCard />
         <ProductCard />
         <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
       </div>
       <button className="carousel-container-buttons-prev">
         <ChevronLeftIcon />
