@@ -46,7 +46,7 @@
 
 @media (min-width: 600px) {
   .scrollable-carousel-container {
-    overflow-x: hidden;
+    overflow-x: hidden; /* on overflow-x: auto the snap could be used */
   }
 
   .scrollable-carousel-button-next {
