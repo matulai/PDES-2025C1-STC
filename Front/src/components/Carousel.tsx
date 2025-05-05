@@ -24,10 +24,10 @@ const Carousel = () => {
         <ProductCard />
         <ProductCard />
       </div>
-      <button className="carousel-container-buttons-prev">
+      <button className="carousel-button carousel-container-buttons-prev">
         <ChevronLeftIcon />
       </button>
-      <button className="carousel-container-buttons-next">
+      <button className="carousel-button carousel-container-buttons-next">
         <ChevronLeftIcon style={{ transform: "rotate(180deg)" }} />
       </button>
     </section>
