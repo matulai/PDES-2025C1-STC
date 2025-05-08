@@ -1,4 +1,4 @@
-package SeguiTusCompras.Errors;
+package SeguiTusCompras.Service;
 
 import lombok.Getter;
 

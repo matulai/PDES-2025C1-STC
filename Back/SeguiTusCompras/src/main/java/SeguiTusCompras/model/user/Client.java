@@ -5,7 +5,6 @@ import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,17 +45,18 @@ public class Client extends User {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Qualification> qualifications = new HashSet<>();
 
-    private void addToPurchases(Product product){
+    public void addToPurchases(Product product){
         this.purchases.add(product);
     }
 
-    private void addToFavorites(Product product){
+    public void addToFavorites(Product product){
         this.favorites.add(product);
     }
 
-    private void addToQualified(Product product, Integer score){
+    public void addToQualified(Product product, Integer score, String comment){
         if(doIOwnTheProduct(product)){
-            Qualification qualification = new Qualification(this, product, score);
+            Qualification qualification = new Qualification(this, product, score, comment);
+            product.makeQualification(qualification);
             qualifications.add(qualification);
         }
     }

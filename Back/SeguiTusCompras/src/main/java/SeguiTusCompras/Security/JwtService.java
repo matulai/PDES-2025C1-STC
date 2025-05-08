@@ -1,13 +1,12 @@
 package SeguiTusCompras.Security;
 
-import SeguiTusCompras.model.user.User;
+import SeguiTusCompras.persistence.IUserSecurityDao;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -18,8 +17,11 @@ import java.util.Map;
 public class JwtService {
     @Value("${jwt.key}")
     private String key;
+    @Autowired
+    IUserSecurityDao userSecurityDao;
 
-    public String getToken(UserSecurity user) {
+    public String getToken(String name) {
+        UserSecurity user = userSecurityDao.getByName(name);
         return getNewToken(new HashMap<>(), user);
     }
 

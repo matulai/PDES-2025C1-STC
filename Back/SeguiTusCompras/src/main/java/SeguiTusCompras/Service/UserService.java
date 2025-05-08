@@ -1,13 +1,16 @@
 package SeguiTusCompras.Service;
 
-import SeguiTusCompras.Errors.ServicesErrors;
-import SeguiTusCompras.Security.UserSecurity;
 import SeguiTusCompras.model.UserGenerator.UserGenerator;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
+
+import SeguiTusCompras.persistence.IUserSecurityDao;
 import SeguiTusCompras.persistence.IUserDao;
-import SeguiTusCompras.persistence.IUserSecurity;
+
+import SeguiTusCompras.Security.UserSecurity;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,9 +18,9 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final IUserDao userDao;
-    private final IUserSecurity userSecurityDAO;
+    private final IUserSecurityDao userSecurityDAO;
 
-    public UserService(IUserDao userDao, IUserSecurity userSecurity) {
+    public UserService(IUserDao userDao, IUserSecurityDao userSecurity) {
         this.userDao = userDao;
         this.userSecurityDAO = userSecurity;
     }

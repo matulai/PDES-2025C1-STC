@@ -2,20 +2,21 @@ package SeguiTusCompras.model;
 
 import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.Entity;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import jakarta.persistence.Id;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
 @Data
 @NoArgsConstructor
 public class Qualification {
 
-    public Qualification(Client client, Product product, Integer score) {
+    public Qualification(Client client, Product product, Integer score, String comment) {
         this.client = client;
         this.product = product;
         this.score = score;
+        this.comment = comment;
     }
 
     @Id
@@ -31,8 +32,9 @@ public class Qualification {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private String comment;
-
     @Column(nullable = false)
     private Integer score;
+
+    private String comment;
+
 }
