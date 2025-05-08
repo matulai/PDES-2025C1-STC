@@ -7,7 +7,6 @@ import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
 import SeguiTusCompras.persistence.IUserSecurity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +14,13 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    IUserDao userDao;
-    @Autowired
-    IUserSecurity userSecurity;
+    private final IUserDao userDao;
+    private final IUserSecurity userSecurityDAO;
+
+    public UserService(IUserDao userDao, IUserSecurity userSecurity) {
+        this.userDao = userDao;
+        this.userSecurityDAO = userSecurity;
+    }
 
     public User createUser(String name, String password, String role){
         User user = userDao.getByName(name);
@@ -34,13 +36,13 @@ public class UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(password);
         UserSecurity securityUser = new UserSecurity(Role.valueOf(role), persistedUser, encodedPassword);
-        userSecurity.save(securityUser);
+        userSecurityDAO.save(securityUser);
         newUser.setUserSecurity(securityUser);
         return userDao.save(newUser);
     }
 
     public User getUser(String name, String password){
-        UserSecurity userSecurity = Optional.ofNullable(this.userSecurity.getByName(name))
+        UserSecurity userSecurity = Optional.ofNullable(this.userSecurityDAO.getByName(name))
                 .orElseThrow(() -> new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()));
         validatePassWord(userSecurity.getPassword(), password);
         return userDao.getByName(name);
@@ -59,8 +61,8 @@ public class UserService {
         return  userDao.save(updatedUser);
     }
 
-    public void deleteUser(User user){
-        userDao.delete(user);
+    public void deleteUsers(){
+        userDao.deleteAll();
     }
 
 }
