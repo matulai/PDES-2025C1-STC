@@ -28,7 +28,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(user.getUserModel().getName())
+                .setSubject(user.getUser().getName())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(this.getKey(), SignatureAlgorithm.HS256)// Se asegura de usar una clave válida.
