@@ -5,12 +5,23 @@ import SeguiTusCompras.model.Qualification;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 public class Client extends User {
+
+    public Client(String name) {
+        super(name);
+    }
+
+    public Client() {super();}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
@@ -21,29 +32,28 @@ public class Client extends User {
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> favs;
+    private Set<Product> favorites = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    private Set<Product> purchases;
+    @ManyToMany
+    @JoinTable(
+            name = "client_purchases",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> purchases = new ArrayList<>();
 
     @OneToMany(mappedBy = "client")
-    private Set<Qualification> qualifications;
+    private Set<Qualification> qualifications = new HashSet<>();
 
-    public Client(java.lang.String name) {
-        super(name);
-    }
-
-    public Client() {super();}
-
-    private void purchase(Product product){
+    private void addToPurchases(Product product){
         this.purchases.add(product);
     }
 
-    private void addToFavs(Product product){
-        this.favs.add(product);
+    private void addToFavorites(Product product){
+        this.favorites.add(product);
     }
 
-    private void qualifyPorduct(Product product, Integer score){
+    private void addToQualified(Product product, Integer score){
         if(doIOwnTheProduct(product)){
             Qualification qualification = new Qualification(this, product, score);
             qualifications.add(qualification);
