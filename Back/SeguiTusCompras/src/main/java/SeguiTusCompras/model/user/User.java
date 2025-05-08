@@ -7,16 +7,17 @@ import lombok.Data;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
-@Table(name = "userModel")
+@Table(name = "user_model")
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
-    private java.lang.String name;
 
-    @OneToOne
-    @JoinColumn(name = "userSecurity")
+    @Column(unique = true)
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_security_id")
     private UserSecurity userSecurity;
 
     public User(String name) {

@@ -17,16 +17,17 @@ public class UserSecurity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Role role;
+
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "userModel")
-    private User userModel;
+    @OneToOne(mappedBy = "userSecurity")
+    private User user;
 
     public UserSecurity(Role role, User user, String password) {
         this.role = role;
-        this.userModel = user;
+        this.user = user;
         this.password = password;
     }
 

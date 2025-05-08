@@ -26,7 +26,8 @@ public class Client extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Long id;
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "client_favorites",
             joinColumns = @JoinColumn(name = "client_id"),
@@ -34,7 +35,7 @@ public class Client extends User {
     )
     private Set<Product> favorites = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "client_purchases",
             joinColumns = @JoinColumn(name = "client_id"),
@@ -42,7 +43,7 @@ public class Client extends User {
     )
     private List<Product> purchases = new ArrayList<>();
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Qualification> qualifications = new HashSet<>();
 
     private void addToPurchases(Product product){
