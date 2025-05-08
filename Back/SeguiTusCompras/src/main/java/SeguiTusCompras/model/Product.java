@@ -1,11 +1,9 @@
 package SeguiTusCompras.model;
 
-import SeguiTusCompras.model.user.Client;
 import jakarta.persistence.*;
-import lombok.Data;
 import java.math.BigDecimal;
-import java.util.Dictionary;
-import java.util.HashMap;
+import java.util.List;
+import lombok.Data;
 
 @Entity
 @Data
@@ -16,10 +14,7 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
-    private String MLA_id;
-
-    @Column(nullable = false)
-    private String category_id;
+    private String mlaId;
 
     @Column(nullable = false)
     private String name;
@@ -28,16 +23,14 @@ public class Product {
     private BigDecimal price;
 
     @Column(nullable = false)
-    private String image_url;
+    private String imageURL;
 
     @Column
-    private int stock;
+    private String domainId;
 
     @Column
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client owner;
-
+    @OneToMany(mappedBy = "product")
+    private List<Qualification> qualifications;
 }
