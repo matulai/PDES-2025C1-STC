@@ -28,7 +28,7 @@ const AuthCard = ({
       <form onSubmit={onSubmit} className="login-card-container-form">
         <div className="login-card-container-form-inputs">
           {fields.map(field => (
-            <>
+            <div key={field.id}>
               <label htmlFor="username" style={{ display: "none" }}>
                 {field.placeholder}
               </label>
@@ -39,7 +39,7 @@ const AuthCard = ({
                 type={field.type}
                 id={field.id}
               />
-            </>
+            </div>
           ))}
         </div>
         <button type="submit" className="login-card-container-form-button">
