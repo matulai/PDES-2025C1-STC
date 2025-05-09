@@ -1,4 +1,4 @@
-package SeguiTusCompras.Controller.Utils.Validators;
+package SeguiTusCompras.Errors;
 
 import lombok.Getter;
 

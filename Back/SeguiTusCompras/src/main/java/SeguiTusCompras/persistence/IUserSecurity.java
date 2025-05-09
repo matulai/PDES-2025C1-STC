@@ -4,7 +4,7 @@ import SeguiTusCompras.Security.UserSecurity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface IUserSecurityDao extends JpaRepository<UserSecurity, Long> {
+public interface IUserSecurity extends JpaRepository<UserSecurity, Long> {
 
     @Query("""
        SELECT us FROM UserSecurity us

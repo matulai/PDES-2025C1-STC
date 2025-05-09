@@ -6,8 +6,10 @@ import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
 import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Security.JwtService;
+import SeguiTusCompras.Security.UserSecurity;
 import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.model.user.User;
+import SeguiTusCompras.persistence.IUserSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +26,8 @@ public class AuthController {
     private JwtService jwtService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private IUserSecurity userSecurity;
 
     @PostMapping(value = "login")
     public ResponseEntity<UserDto> login(@RequestBody LoginDto login){
@@ -46,6 +50,7 @@ public class AuthController {
     }
 
     private String generateTokenFor(String name) {
-        return jwtService.getToken(name);
+        UserSecurity userSec = userSecurity.getByName(name);
+        return jwtService.getToken(userSec);
     }
 }

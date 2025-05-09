@@ -2,14 +2,11 @@ package SeguiTusCompras.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Set;
 
 @Entity
 @Data
-@NoArgsConstructor
 public class Product {
 
     @Id
@@ -19,7 +16,7 @@ public class Product {
     @Column(nullable = false)
     private String mlaId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(precision = 12, scale = 3)
@@ -35,10 +32,5 @@ public class Product {
     private String description;
 
     @OneToMany(mappedBy = "product")
-    private Set<Qualification> qualifications;
-
-    public void makeQualification(Qualification qualification){
-        qualifications.add(qualification);
-    }
-
+    private List<Qualification> qualifications;
 }

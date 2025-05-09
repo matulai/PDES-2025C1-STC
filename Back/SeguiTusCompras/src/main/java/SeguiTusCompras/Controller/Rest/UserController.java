@@ -1,17 +1,14 @@
 package SeguiTusCompras.Controller.Rest;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/client")
-@RequiredArgsConstructor
-public class ClientController {
-
-    @GetMapping(value = "string")
-    public String getString(){
-        return "Este endpoint es solo para cleintes";
+@RequestMapping("/user")
+public class UserController {
+    @GetMapping(value = "favs")
+    public String getFavs(){
+        return "asd";
     }
 }

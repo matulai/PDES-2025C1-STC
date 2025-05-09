@@ -1,6 +1,7 @@
 package SeguiTusCompras.Controller.Utils.Validators;
 
 import SeguiTusCompras.Controller.dtos.RegisterDto;
+import SeguiTusCompras.Errors.ValidatorsErrors;
 import SeguiTusCompras.model.user.Role;
 
 import java.util.Arrays;

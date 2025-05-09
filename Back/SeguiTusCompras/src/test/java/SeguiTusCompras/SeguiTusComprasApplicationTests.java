@@ -1,7 +1,7 @@
 package SeguiTusCompras;
 
 import SeguiTusCompras.persistence.IUserDao;
-import SeguiTusCompras.persistence.IUserSecurityDao;
+import SeguiTusCompras.persistence.IUserSecurity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,7 @@ class SeguiTusComprasApplicationTests {
 	@Autowired
 	IUserDao userDao;
 	@Autowired
-	IUserSecurityDao userSecurity;
+	IUserSecurity userSecurity;
 	@Test
 	void contextLoads() {
 		userDao.deleteAll();
