@@ -1,9 +1,32 @@
-import { LoginCard } from "@/components";
+import { AuthCard } from "@/components";
 
 const Login = () => {
+  const handleLogin = () => {
+    console.log("Login");
+    // hacer login...
+  };
+
   return (
     <>
-      <LoginCard />
+      <AuthCard
+        footerLinkPath="/register"
+        footerLinkText="Registrarse"
+        footerText="¿No tienes una cuenta?"
+        onSubmit={handleLogin}
+        fields={[
+          {
+            id: "username",
+            type: "text",
+            placeholder: "Nombre",
+          },
+          {
+            id: "password",
+            type: "password",
+            placeholder: "Contraseña",
+          },
+        ]}
+        title="Ingresar"
+      />
     </>
   );
 };
