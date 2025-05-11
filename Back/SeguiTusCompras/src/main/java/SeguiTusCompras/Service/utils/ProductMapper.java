@@ -3,14 +3,16 @@ package SeguiTusCompras.Service.utils;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
 import SeguiTusCompras.Controller.dtos.ProductDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
+import SeguiTusCompras.Controller.dtos.SimpleProductDto;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
-
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -32,6 +34,16 @@ public class ProductMapper {
         return product;
     }
 
+    public List<Product> toEntities(List<ProductAPIExternal> productAPIExternalList) {
+        if (productAPIExternalList == null) {
+            return Collections.emptyList();
+        }
+
+        return productAPIExternalList.stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+    }
+
     public Product toEntityFromDto(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
@@ -43,15 +55,7 @@ public class ProductMapper {
         return product;
     }
 
-    public List<Product> toEntities(List<ProductAPIExternal> productAPIExternalList) {
-        if (productAPIExternalList == null) {
-            return Collections.emptyList();
-        }
-
-        return productAPIExternalList.stream()
-                .map(this::toEntity)
-                .collect(Collectors.toList());
-    }
+    // Esto hay que refactorizarlo, se repite codigo
 
     public static ProductDto converToDto(Product product) {
         List<Qualification> qualifications = product.getQualifications();
@@ -65,6 +69,18 @@ public class ProductMapper {
         List<ProductDto> productDtos = new ArrayList<>();
         for(Product product : products){
             productDtos.add(converToDto(product));
+        }
+        return productDtos;
+    }
+
+    public static SimpleProductDto converToSimpleDto(Product product) {
+        return new SimpleProductDto(product.getName());
+    }
+
+    public static List<SimpleProductDto> convertToListSimpleDto(Collection<Product> products){
+        List<SimpleProductDto> productDtos = new ArrayList<>();
+        for(Product product : products){
+            productDtos.add(converToSimpleDto(product));
         }
         return productDtos;
     }

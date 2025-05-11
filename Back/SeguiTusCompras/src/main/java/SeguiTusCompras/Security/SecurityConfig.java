@@ -29,7 +29,7 @@ public class SecurityConfig {
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority(Role.Admin.name())
-                                .requestMatchers("/client/**").hasAuthority(Role.Client.name())
+                                .requestMatchers("/client/**").hasAnyAuthority(Role.Client.name(), Role.Admin.name())
                                 .requestMatchers("/products/**").hasAuthority(Role.Client.name())
                         )
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

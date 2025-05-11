@@ -1,6 +1,5 @@
-package SeguiTusCompras.Controller.Rest;
+package SeguiTusCompras.Controller.dtos;
 
-import SeguiTusCompras.Controller.dtos.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -3,10 +3,12 @@ package SeguiTusCompras.Service;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 
 @Service
 public class AuthService {

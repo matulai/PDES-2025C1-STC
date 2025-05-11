@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
+import SeguiTusCompras.Controller.dtos.FavoriteDto;
 import SeguiTusCompras.Controller.dtos.PurchaseDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.UserDto;

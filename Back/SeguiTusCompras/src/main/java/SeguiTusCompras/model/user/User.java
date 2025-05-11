@@ -51,7 +51,7 @@ public class User implements UserDetails{
     private Set<Qualification> qualifications = new HashSet<>();
 
 
-     public User(String name, String role, String password) {
+     public User(String name, String password, String role) {
         this.name = name;
         this.role = Role.valueOf(role);
         this.password = password;
