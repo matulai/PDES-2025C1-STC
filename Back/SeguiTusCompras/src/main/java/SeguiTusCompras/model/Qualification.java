@@ -1,19 +1,17 @@
 package SeguiTusCompras.model;
 
-import SeguiTusCompras.model.user.Client;
-import jakarta.persistence.Entity;
+import SeguiTusCompras.model.user.User;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.Id;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 public class Qualification {
 
-    public Qualification(Client client, Product product, Integer score) {
-        this.client = client;
+    public Qualification(User user, Integer score, Product product) {
+        this.user = user;
         this.product = product;
         this.score = score;
     }
@@ -25,14 +23,15 @@ public class Qualification {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name= "client_id", nullable = false)
-    private Client client;
+    private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private String comment;
-
     @Column(nullable = false)
     private Integer score;
+
+    @OneToOne(mappedBy = "qualification", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Comment comment;
 }

@@ -3,10 +3,14 @@ package SeguiTusCompras.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Product {
 
     @Id

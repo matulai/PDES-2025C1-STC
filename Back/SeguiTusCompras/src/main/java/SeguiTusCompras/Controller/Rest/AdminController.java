@@ -1,14 +1,58 @@
 package SeguiTusCompras.Controller.Rest;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
+import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
+import SeguiTusCompras.Controller.dtos.ProductDto;
+import SeguiTusCompras.Controller.dtos.QualificationDto;
+import SeguiTusCompras.Controller.dtos.UserDto;
+import SeguiTusCompras.Service.ClientService;
+import SeguiTusCompras.Service.utils.ProductMapper;
+import SeguiTusCompras.model.Product;
+import SeguiTusCompras.model.Qualification;
+import SeguiTusCompras.model.user.Role;
+import SeguiTusCompras.model.user.User;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
-    @GetMapping(value = "string")
-    public String getString(){
-        return "Este endpoint es solo para admin";
+    private final ClientService clientService;
+
+    @GetMapping(value = "registeredUsers")
+    public ResponseEntity<List<UserDto>> registeredUsers(){
+        List<User> clients = clientService.getAllUserByRole(Role.Client);
+        List<UserDto> clientsDto = UserMapper.convertListToDto(clients);
+        return ResponseEntity.status(HttpStatus.OK).body(clientsDto);
+    }
+
+    @GetMapping(value = "userQualifications")
+    public ResponseEntity<List<QualificationDto>> userQualifications(@RequestParam String userName){
+        List<Qualification> qualifications = clientService.getQualifications(userName);
+        List<QualificationDto> qualificationsDto = QualificationMapper.convertListToDto(qualifications);
+        return ResponseEntity.ok().body(qualificationsDto);
+    }
+
+    @GetMapping(value = "userPurchases")
+    public ResponseEntity<List<ProductDto>> userPurchases(@RequestParam String userName){
+        List<Product> purchases = clientService.getPurchases(userName);
+        List<ProductDto> productsDtos = ProductMapper.convertListToDto(purchases);
+        return ResponseEntity.ok().body(productsDtos);
+    }
+
+    @GetMapping(value="userFavorites")
+    public ResponseEntity<List<ProductDto>> userFavorites(@RequestParam String userName){
+        List<Product> favorites = clientService.getFavorites(userName);
+        List<ProductDto> favoritesDto = ProductMapper.convertListToDto(favorites);
+        return ResponseEntity.ok().body(favoritesDto);
     }
 }
