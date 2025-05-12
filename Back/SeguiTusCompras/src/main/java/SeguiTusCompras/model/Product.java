@@ -3,6 +3,8 @@ package SeguiTusCompras.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
+
+import SeguiTusCompras.model.report.ProductReport;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,4 +39,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Qualification> qualifications;
+
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
+    private ProductReport productReport;
 }

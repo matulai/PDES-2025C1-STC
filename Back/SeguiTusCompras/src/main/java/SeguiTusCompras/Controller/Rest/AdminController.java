@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
-import SeguiTusCompras.Controller.dtos.ProductDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.SimpleProductDto;
 import SeguiTusCompras.Controller.dtos.SimpleUserDto;
 import SeguiTusCompras.Service.ClientService;
+import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
@@ -26,6 +26,8 @@ import SeguiTusCompras.model.user.User;
 public class AdminController {
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping(value = "registeredUsers")
     public ResponseEntity<List<SimpleUserDto>> registeredUsers(){
@@ -53,5 +55,26 @@ public class AdminController {
         List<Product> favorites = clientService.getFavorites(userName);
         List<SimpleProductDto> favoritesDto = ProductMapper.convertToListSimpleDto(favorites);
         return ResponseEntity.ok().body(favoritesDto);
+    }
+
+    @GetMapping(value="topSellingProducts")
+    public ResponseEntity<List<SimpleProductDto>> topSellingProducts(){
+        List<Product> topSellingProducts = productService.getTopSellingProducts();
+        List<SimpleProductDto> topSoldProductsDto = ProductMapper.convertToListSimpleDto(topSellingProducts);
+        return ResponseEntity.ok().body(topSoldProductsDto);
+    }
+
+    @GetMapping(value="topBuyers")
+    public ResponseEntity<List<SimpleUserDto>> topBuyers(){
+        List<User> topBuyers = clientService.getTopBuyers();
+        List<SimpleUserDto> topBuyersDto = UserMapper.convertListToSimpleDto(topBuyers);
+        return ResponseEntity.status(HttpStatus.OK).body(topBuyersDto);
+    }
+
+    @GetMapping(value="topFavoriteProducts")
+    public ResponseEntity<List<SimpleProductDto>> topFavoriteProducts(){
+        List<Product> topSellingProducts = productService.getTopFavoriteProducts();
+        List<SimpleProductDto> topSoldProductsDto = ProductMapper.convertToListSimpleDto(topSellingProducts);
+        return ResponseEntity.ok().body(topSoldProductsDto);
     }
 }

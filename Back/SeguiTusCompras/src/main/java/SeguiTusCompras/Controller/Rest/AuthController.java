@@ -5,7 +5,6 @@ import SeguiTusCompras.Controller.Utils.Validators.AuthValidator;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
 import SeguiTusCompras.Controller.dtos.SimpleUserDto;
-import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Security.JwtService;
 import SeguiTusCompras.Service.AuthService;
 import SeguiTusCompras.model.user.User;
@@ -24,11 +23,11 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private AuthService userService;
+    private AuthService authService;
 
     @PostMapping(value = "login")
     public ResponseEntity<SimpleUserDto> login(@RequestBody LoginDto login){
-        User user = userService.getUser(login.getName(), login.getPassword());
+        User user = authService.getUser(login.getName(), login.getPassword());
         String token = generateTokenFor(user.getName());
         SimpleUserDto userDto = UserMapper.convertToSimpleDto(user);
         HttpHeaders headers = new HttpHeaders();
@@ -38,7 +37,7 @@ public class AuthController {
     @PostMapping(value = "register")
     public ResponseEntity<SimpleUserDto> register(@RequestBody RegisterDto register){
         AuthValidator.getInstance().ValidateRegister(register);
-        User newUser = userService.createUser(register.getName(), register.getPassword(), register.getRole());
+        User newUser = authService.createUser(register.getName(), register.getPassword(), register.getRole());
         String token = generateTokenFor(newUser.getName());
         SimpleUserDto userDto = UserMapper.convertToSimpleDto(newUser);
         HttpHeaders headers = new HttpHeaders();

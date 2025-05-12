@@ -11,12 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import SeguiTusCompras.model.Comment;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
+import SeguiTusCompras.model.report.UserReport;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "user_table")
 public class User implements UserDetails{
@@ -50,19 +53,36 @@ public class User implements UserDetails{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Qualification> qualifications = new HashSet<>();
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+    }
 
-     public User(String name, String password, String role) {
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+    private UserReport report;
+
+
+    public User(String name, String password, String role) {
         this.name = name;
         this.role = Role.valueOf(role);
         this.password = password;
     }
+    
+    
+    @Override
+    public String getUsername() {
+        return getName();
+    }
 
     public void addToPurchases(Product product){
         this.purchases.add(product);
+        this.report.addPurchase();
+        product.getProductReport().addPurchase();
     }
 
     public void addToFavorites(Product product){
         this.favorites.add(product);
+        product.getProductReport().addFavorite();
     }
 
     public void addToQualified(Product product, Integer score){
@@ -77,15 +97,7 @@ public class User implements UserDetails{
         return this.purchases.contains(product);
     }
     
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
-    }
-    @Override
-    public String getUsername() {
-        return getName();
-    }
-
+  
 
     public Comment generateComment(String comment, Qualification qualification) {
         return new Comment(comment, qualification);

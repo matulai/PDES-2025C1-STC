@@ -3,6 +3,8 @@ package SeguiTusCompras.Service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import SeguiTusCompras.model.Comment;
 import SeguiTusCompras.model.Product;
@@ -13,6 +15,7 @@ import SeguiTusCompras.persistence.ICommentDao;
 import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IQualificationDAO;
 import SeguiTusCompras.persistence.IUserDao;
+import SeguiTusCompras.persistence.report.IUserReportDao;
 @Service
 public class ClientService {
     @Autowired
@@ -23,6 +26,8 @@ public class ClientService {
     IQualificationDAO qualificationDao;
     @Autowired
     ICommentDao commentDao;
+    @Autowired
+    IUserReportDao userReportDao;
 
     public  User getClient(String userName) {
         return Optional.ofNullable(userDao.getByName(userName))
@@ -64,6 +69,11 @@ public class ClientService {
 
     public List<Product> getFavorites(String userName) {
         return userDao.getFavorites(userName);
+    }
+
+    public List<User> getTopBuyers() {
+        Pageable topFive = PageRequest.of(0, 5); 
+        return userReportDao.getTopBuyers(topFive);
     }
 
 }
