@@ -1,4 +1,4 @@
-import { AuthCard } from "@/components";
+import { RegisterCard } from "@/components";
 
 const Register = () => {
   const handleRegister = () => {
@@ -8,25 +8,7 @@ const Register = () => {
 
   return (
     <>
-      <AuthCard
-        footerLinkPath="/login"
-        footerLinkText="Ingresar"
-        footerText="¿Ya tienes una cuenta?"
-        onSubmit={handleRegister}
-        fields={[
-          {
-            id: "username",
-            type: "text",
-            placeholder: "Nombre",
-          },
-          {
-            id: "password",
-            type: "password",
-            placeholder: "Contraseña",
-          },
-        ]}
-        title="Registrarse"
-      />
+      <RegisterCard onSubmit={handleRegister} />
     </>
   );
 };
