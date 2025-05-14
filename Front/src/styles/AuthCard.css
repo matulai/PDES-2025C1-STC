@@ -1,4 +1,4 @@
-.login-card-container {
+.auth-card-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,21 +11,21 @@
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
-.login-card-container-title {
+.auth-card-container-title {
   font-size: 32px;
   font-weight: 500;
   line-height: 39px;
   color: var(--color-black-light);
 }
 
-.login-card-container-form {
+.auth-card-container-form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 16px;
 }
 
-.login-card-container-form-inputs {
+.auth-card-container-form-inputs {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -33,7 +33,7 @@
   padding: 24px 0;
 }
 
-.login-card-container-form-inputs-input {
+.auth-card-container-form-inputs-input {
   height: 32px;
   width: 100%;
   padding-bottom: 8px;
@@ -46,11 +46,11 @@
   border-bottom: 1.5px solid var(--color-grey-dark);
 }
 
-.login-card-container-form-inputs-input::placeholder {
+.auth-card-container-form-inputs-input::placeholder {
   color: var(--color-grey-dark);
 }
 
-.login-card-container-form-button {
+.auth-card-container-form-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,12 +65,12 @@
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
-.login-card-container-form-button:hover {
+.auth-card-container-form-button:hover {
   color: var(--color-white);
   background-color: var(--color-black-light);
 }
 
-.login-card-container-footer {
+.auth-card-container-footer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,7 +80,7 @@
   text-align: center;
 }
 
-.login-card-container-footer-link {
+.auth-card-container-footer-link {
   color: var(--color-blue);
   font-size: inherit;
   font-weight: 500;

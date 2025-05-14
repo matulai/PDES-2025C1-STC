@@ -7,15 +7,15 @@ interface AuthCardProps {
 
 const AuthCard = ({ onSubmit }: AuthCardProps) => {
   return (
-    <section className="login-card-container">
-      <h2 className="login-card-container-title">Registrarse</h2>
-      <form onSubmit={onSubmit} className="login-card-container-form">
-        <div className="login-card-container-form-inputs">
+    <section className="auth-card-container">
+      <h2 className="auth-card-container-title">Registrarse</h2>
+      <form onSubmit={onSubmit} className="auth-card-container-form">
+        <div className="auth-card-container-form-inputs">
           <label htmlFor="username" style={{ display: "none" }}>
             Nombre
           </label>
           <input
-            className="login-card-container-form-inputs-input"
+            className="auth-card-container-form-inputs-input"
             placeholder="Nombre"
             autoComplete="off"
             type="text"
@@ -25,7 +25,7 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
             Contraseña
           </label>
           <input
-            className="login-card-container-form-inputs-input"
+            className="auth-card-container-form-inputs-input"
             placeholder="Contraseña"
             autoComplete="off"
             type="password"
@@ -35,7 +35,7 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
             Rol
           </label>
           <select
-            className="login-card-container-form-inputs-input"
+            className="auth-card-container-form-inputs-input"
             defaultValue="Client"
             id="rolesOptions"
           >
@@ -43,13 +43,13 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
             <option value="Admin">Admin</option>
           </select>
         </div>
-        <button type="submit" className="login-card-container-form-button">
+        <button type="submit" className="auth-card-container-form-button">
           Registrarse
         </button>
       </form>
-      <div className="login-card-container-footer">
+      <div className="auth-card-container-footer">
         ¿Ya tienes una cuenta?
-        <Link to="/login" className="login-card-container-footer-link">
+        <Link to="/login" className="auth-card-container-footer-link">
           Ingresar
         </Link>
       </div>

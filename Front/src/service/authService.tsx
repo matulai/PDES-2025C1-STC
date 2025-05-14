@@ -6,8 +6,8 @@ function login(username: string, password: string) {
   return axios.post(`${API_URL}/auth/login`, { username, password });
 }
 
-function register(username: string, password: string) {
-  return axios.post(`${API_URL}/auth/register`, { username, password });
+function register(username: string, password: string, role: string) {
+  return axios.post(`${API_URL}/auth/register`, { username, password, role });
 }
 
 export { login, register };
