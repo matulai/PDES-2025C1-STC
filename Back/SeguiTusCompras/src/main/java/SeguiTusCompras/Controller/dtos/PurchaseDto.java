@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QualificationDto {
+public class PurchaseDto {
     private String userName;
-    private String productName;
-    private Integer score;
-    private String comment;
+    private ProductDto productDto;
 }

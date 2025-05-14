@@ -1,22 +1,19 @@
 package SeguiTusCompras.model;
 
-import SeguiTusCompras.model.user.Client;
-import jakarta.persistence.Entity;
-import lombok.*;
-import jakarta.persistence.Id;
+import SeguiTusCompras.model.user.User;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor
 public class Qualification {
 
-    public Qualification(Client client, Product product, Integer score, String comment) {
-        this.client = client;
+    public Qualification(User user, Integer score, Product product) {
+        this.user = user;
         this.product = product;
         this.score = score;
-        this.comment = comment;
     }
 
     @Id
@@ -26,7 +23,7 @@ public class Qualification {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name= "client_id", nullable = false)
-    private Client client;
+    private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id", nullable = false)
@@ -35,6 +32,6 @@ public class Qualification {
     @Column(nullable = false)
     private Integer score;
 
-    private String comment;
-
+    @OneToOne(mappedBy = "qualification", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Comment comment;
 }

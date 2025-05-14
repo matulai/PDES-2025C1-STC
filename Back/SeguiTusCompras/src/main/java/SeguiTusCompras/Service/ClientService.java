@@ -1,38 +1,79 @@
 package SeguiTusCompras.Service;
 
+import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import SeguiTusCompras.model.Comment;
 import SeguiTusCompras.model.Product;
-import SeguiTusCompras.model.user.Client;
-import SeguiTusCompras.persistence.IClientDao;
-import SeguiTusCompras.persistence.IProductDAO;
+import SeguiTusCompras.model.Qualification;
+import SeguiTusCompras.model.user.Role;
+import SeguiTusCompras.model.user.User;
+import SeguiTusCompras.persistence.ICommentDao;
+import SeguiTusCompras.persistence.IProductDao;
+import SeguiTusCompras.persistence.IQualificationDAO;
+import SeguiTusCompras.persistence.IUserDao;
+import SeguiTusCompras.persistence.report.IUserReportDao;
 @Service
 public class ClientService {
     @Autowired
-    IClientDao clientDao;
+    IUserDao userDao;
     @Autowired
-    IProductDAO productDao;
+    IProductDao productDao;
+    @Autowired
+    IQualificationDAO qualificationDao;
+    @Autowired
+    ICommentDao commentDao;
+    @Autowired
+    IUserReportDao userReportDao;
 
-    public  Client getClient(String clientName) {
-        return Optional.ofNullable(clientDao.getByName(clientName))
+    public  User getClient(String userName) {
+        return Optional.ofNullable(userDao.getByName(userName))
         .orElseThrow(() -> new RuntimeException(ServicesErrors.USER_NOT_FOUND.getMessage()));
     }
 
-    public  Client addProductToFavorites(Client client, Product product) {
+    public  User addProductToFavorites(User client, Product product) {
         client.addToFavorites(product);
-        return clientDao.save(client);
+        return userDao.save(client);
     }
 
-    public Client addPurchase(Client client, Product product) {
-        client.addToPurchases(product);
-        return clientDao.save(client);
+    public User addPurchase(User user, Product product) {
+        user.addToPurchases(product);
+        return userDao.save(user);
     }
 
-    public Client qualifyProduct(Client client, Product product, Integer score, String comment) {
-        client.addToQualified(product, score, comment);
-        return clientDao.save(client);
+    public User qualifyProduct(User user, Product product, Integer score, String comment) {
+        user.addToQualified(product, score);
+        User userWithQualification = userDao.save(user);
+        Qualification qualification = qualificationDao.getQualificationFor(user.getName(), product.getName());
+        if (comment != null) {
+            Comment newComment = userWithQualification.generateComment(comment, qualification);
+            commentDao.save(newComment);
+        }
+        return userWithQualification;
+    }
+
+    public List<User> getAllUserByRole(Role role) {
+        return userDao.UsersByRole(role);
+    }
+
+    public List<Qualification> getQualifications(String userName) {
+        return userDao.getQualifications(userName);
+    }
+
+    public List<Product> getPurchases(String userName) {
+        return userDao.getPurchases(userName);
+    }
+
+    public List<Product> getFavorites(String userName) {
+        return userDao.getFavorites(userName);
+    }
+
+    public List<User> getTopBuyers() {
+        Pageable topFive = PageRequest.of(0, 5); 
+        return userReportDao.getTopBuyers(topFive);
     }
 
 }

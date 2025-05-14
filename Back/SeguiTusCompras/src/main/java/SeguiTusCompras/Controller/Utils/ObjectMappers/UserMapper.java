@@ -1,32 +1,45 @@
 package SeguiTusCompras.Controller.Utils.ObjectMappers;
-
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-import SeguiTusCompras.Controller.dtos.AdminDto;
-import SeguiTusCompras.Controller.dtos.ClientDto;
-import SeguiTusCompras.Controller.dtos.ProductDto;
-import SeguiTusCompras.Controller.dtos.UserDto;
-import SeguiTusCompras.model.Product;
-import SeguiTusCompras.model.user.Client;
-import SeguiTusCompras.model.user.User;
+import org.springframework.stereotype.Component;
 
+import SeguiTusCompras.Controller.dtos.QualificationDto;
+import SeguiTusCompras.Controller.dtos.SimpleProductDto;
+import SeguiTusCompras.Controller.dtos.SimpleUserDto;
+import SeguiTusCompras.Controller.dtos.UserDto;
+import SeguiTusCompras.Service.utils.ProductMapper;
+import SeguiTusCompras.model.Product;
+import SeguiTusCompras.model.Qualification;
+import SeguiTusCompras.model.user.User;
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
+@Component
 public class UserMapper {
-    public static UserDto convertToDto(User newUser) {
-        if (newUser.getClass() == Client.class){
-            Client client = (Client) newUser;
-            Optional<Set<ProductDto>> productDtos = getProductDtos(client);
-            return new ClientDto(client.getName(), productDtos);
-        }
-        return new AdminDto(newUser.getName());
+
+    public static SimpleUserDto convertToSimpleDto(User user) {
+        SimpleUserDto userDto = new SimpleUserDto(user.getName(), user.getRole().name());
+        return userDto;
     }
 
-    private  static Optional<Set<ProductDto>> getProductDtos(Client client) {
-        Set <ProductDto> productDtos = new HashSet<>();
-        for (Product product : client.getFavorites()){
-            productDtos.add(new ProductDto(product.getName()));
+    public static List<SimpleUserDto> convertListToSimpleDto(List<User> clients) {
+        List<SimpleUserDto> clientsDtos = new ArrayList<>();
+        for (User client : clients){
+                clientsDtos.add(convertToSimpleDto(client));
         }
-        return Optional.of(productDtos);
+        return clientsDtos;
+    }
+
+    public static UserDto convertToDto(User clientWithNewFavorite) {
+        Set<Product> favorites = clientWithNewFavorite.getFavorites();
+        List<Product> purchases = clientWithNewFavorite.getPurchases();
+        Set<Qualification> qualifications = clientWithNewFavorite.getQualifications();
+        List<SimpleProductDto> favDtos = ProductMapper.convertToListSimpleDto(favorites);
+        List<SimpleProductDto> purchaseDtos = ProductMapper.convertToListSimpleDto(purchases);
+        List<QualificationDto> qualificationDtos = QualificationMapper.convertListToDto(qualifications);
+        UserDto userDto = new UserDto(clientWithNewFavorite.getName(), clientWithNewFavorite.getRole().name(), 
+                                        favDtos, purchaseDtos, qualificationDtos);
+        return userDto;
     }
 }

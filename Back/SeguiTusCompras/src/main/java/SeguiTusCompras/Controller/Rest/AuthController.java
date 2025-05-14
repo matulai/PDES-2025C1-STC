@@ -4,9 +4,9 @@ import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
 import SeguiTusCompras.Controller.Utils.Validators.AuthValidator;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
-import SeguiTusCompras.Controller.dtos.UserDto;
+import SeguiTusCompras.Controller.dtos.SimpleUserDto;
 import SeguiTusCompras.Security.JwtService;
-import SeguiTusCompras.Service.UserService;
+import SeguiTusCompras.Service.AuthService;
 import SeguiTusCompras.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +23,23 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @PostMapping(value = "login")
-    public ResponseEntity<UserDto> login(@RequestBody LoginDto login){
-        User user = userService.getUser(login.getName(), login.getPassword());
+    public ResponseEntity<SimpleUserDto> login(@RequestBody LoginDto login){
+        User user = authService.getUser(login.getName(), login.getPassword());
         String token = generateTokenFor(user.getName());
-        UserDto userDto = UserMapper.convertToDto(user);
+        SimpleUserDto userDto = UserMapper.convertToSimpleDto(user);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);
     }
     @PostMapping(value = "register")
-    public ResponseEntity<UserDto> register(@RequestBody RegisterDto register){
+    public ResponseEntity<SimpleUserDto> register(@RequestBody RegisterDto register){
         AuthValidator.getInstance().ValidateRegister(register);
-        User newUser = userService.createUser(register.getName(), register.getPassword(), register.getRole());
+        User newUser = authService.createUser(register.getName(), register.getPassword(), register.getRole());
         String token = generateTokenFor(newUser.getName());
-        UserDto userDto = UserMapper.convertToDto(newUser);
+        SimpleUserDto userDto = UserMapper.convertToSimpleDto(newUser);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);

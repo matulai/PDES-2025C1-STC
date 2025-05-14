@@ -1,29 +1,21 @@
 package SeguiTusCompras.Service;
 
-import SeguiTusCompras.model.UserGenerator.UserGenerator;
-import SeguiTusCompras.model.user.Role;
+import SeguiTusCompras.model.report.UserReport;
 import SeguiTusCompras.model.user.User;
-
-import SeguiTusCompras.persistence.IUserSecurityDao;
 import SeguiTusCompras.persistence.IUserDao;
+import SeguiTusCompras.persistence.report.IUserReportDao;
 
-import SeguiTusCompras.Security.UserSecurity;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
-@Service
-public class UserService {
-    private final IUserDao userDao;
-    private final IUserSecurityDao userSecurityDAO;
 
-    public UserService(IUserDao userDao, IUserSecurityDao userSecurity) {
-        this.userDao = userDao;
-        this.userSecurityDAO = userSecurity;
-    }
+@Service
+public class AuthService {
+    @Autowired
+    private IUserDao userDao;
+    @Autowired IUserReportDao reportDao;
 
     public User createUser(String name, String password, String role){
         User user = userDao.getByName(name);
@@ -34,21 +26,22 @@ public class UserService {
     }
 
     private User generateNewUser(String name, String password,  String role) {
-        User newUser = UserGenerator.getInstance().generateUser(role, name);
-        User persistedUser = userDao.save(newUser);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(password);
-        UserSecurity securityUser = new UserSecurity(Role.valueOf(role), persistedUser, encodedPassword);
-        userSecurityDAO.save(securityUser);
-        newUser.setUserSecurity(securityUser);
-        return userDao.save(newUser);
+        User newUser = new User(name, encodedPassword, role);
+        User persistedUser = userDao.save(newUser);
+        UserReport userReport = new UserReport();
+        userReport.setUser(persistedUser);
+        UserReport persistedReport = reportDao.save(userReport);
+        persistedUser.setReport(persistedReport);
+        return userDao.save(persistedUser);
     }
 
     public User getUser(String name, String password){
-        UserSecurity userSecurity = Optional.ofNullable(this.userSecurityDAO.getByName(name))
+        User user = Optional.ofNullable(this.userDao.getByName(name))
                 .orElseThrow(() -> new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()));
-        validatePassWord(userSecurity.getPassword(), password);
-        return userDao.getByName(name);
+        validatePassWord(user.getPassword(), password);
+        return user;
     }
 
 
@@ -59,12 +52,7 @@ public class UserService {
         }
     }
 
-    public User updateUser(User updatedUser){
-        // revisar que el usuario este en la base de datos
-        return  userDao.save(updatedUser);
-    }
-
-    public void deleteUsers(){
+    public void deleteUsers() {
         userDao.deleteAll();
     }
 

@@ -1,7 +1,7 @@
 package SeguiTusCompras;
 
 import SeguiTusCompras.Controller.dtos.RegisterDto;
-import SeguiTusCompras.Service.UserService;
+import SeguiTusCompras.Service.AuthService;
 import SeguiTusCompras.model.Product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +29,7 @@ public class MercadoLibreControllerE2ETest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private UserService userService;
+    private AuthService userService;
 
     @AfterEach
     void cleanUsers() {

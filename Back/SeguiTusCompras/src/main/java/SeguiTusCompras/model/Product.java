@@ -2,13 +2,16 @@ package SeguiTusCompras.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
-import java.util.Set;
+import SeguiTusCompras.model.report.ProductReport;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Product {
 
@@ -19,7 +22,7 @@ public class Product {
     @Column(nullable = false)
     private String mlaId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(precision = 12, scale = 3)
@@ -35,10 +38,8 @@ public class Product {
     private String description;
 
     @OneToMany(mappedBy = "product")
-    private Set<Qualification> qualifications;
+    private List<Qualification> qualifications;
 
-    public void makeQualification(Qualification qualification){
-        qualifications.add(qualification);
-    }
-
+    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
+    private ProductReport productReport;
 }

@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QualificationDto {
-    private String userName;
-    private String productName;
-    private Integer score;
-    private String comment;
+public class SimpleProductDto {
+    private String name;
 }
