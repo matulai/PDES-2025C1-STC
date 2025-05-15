@@ -1,9 +1,9 @@
 interface Product {
   id?: string;
-  MLId: string;
+  mlaId: string;
   name: string;
   description?: string;
-  imageUrl: string;
+  imageURL: string;
   qualify?: number;
   domain_id?: string;
 }
