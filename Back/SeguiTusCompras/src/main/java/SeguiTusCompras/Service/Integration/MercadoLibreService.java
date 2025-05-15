@@ -7,13 +7,12 @@ import SeguiTusCompras.model.Product;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -31,11 +30,19 @@ public class MercadoLibreService {
         this.productMapper = productMapper;
     }
 
-    public List<Product> searchProducts(String text) {
-        String endpoint = String.format("https://api.mercadolibre.com/products/search?status=active&site_id=MLA&q=%s",
-                URLEncoder.encode(text, StandardCharsets.UTF_8));
-        String json = sendGetRequest(endpoint);
+    public List<Product> searchProducts(String text, String category) {
         try {
+            UriComponentsBuilder builder = UriComponentsBuilder
+                    .newInstance()
+                    .uri(URI.create("https://api.mercadolibre.com/products/search"))
+                    .queryParam("status", "active")
+                    .queryParam("site_id", "MLA")
+                    .queryParam("q", text);
+
+            if (category != null) builder.queryParam("domain_id", category);
+
+            String endpoint = builder.build().encode().toUriString();
+            String json = sendGetRequest(endpoint);
             JsonNode root = objectMapper.readTree(json);
             JsonNode resultsNode = root.get("results");
             List<ProductAPIExternal> productAPIExternalList = objectMapper.readerForListOf(ProductAPIExternal.class).readValue(resultsNode);
@@ -46,8 +53,11 @@ public class MercadoLibreService {
     }
 
     public Product getProductById(String id) {
-        String endpoint = String.format("https://api.mercadolibre.com/products/%s",
-                URLEncoder.encode(id, StandardCharsets.UTF_8));
+        String endpoint = UriComponentsBuilder
+                .fromUriString("https://api.mercadolibre.com/products/{id}")
+                .buildAndExpand(id)
+                .encode()
+                .toUriString();
         String json = sendGetRequest(endpoint);
         try {
             ProductAPIExternal productAPIExternal = objectMapper.readValue(json, ProductAPIExternal.class);

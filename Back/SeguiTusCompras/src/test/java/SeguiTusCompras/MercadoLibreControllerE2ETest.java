@@ -1,6 +1,5 @@
 package SeguiTusCompras;
 
-import SeguiTusCompras.Controller.dtos.RegisterDto;
 import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.model.Product;
 
@@ -16,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 
 import org.springframework.http.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,39 +37,21 @@ public class MercadoLibreControllerE2ETest {
         userService.deleteUsers();
     }
 
-    private String registerForToken() {
-        String baseUrl = "http://localhost:" + port;
-
-        RegisterDto newUser = new RegisterDto();
-        newUser.setName("user");
-        newUser.setPassword("password$1");
-        newUser.setRole("Client");
-
-        ResponseEntity<Void> registerResponse = restTemplate.postForEntity(
-                baseUrl + "/auth/register",
-                newUser,
-                Void.class
-        );
-
-        return registerResponse.getHeaders().getFirst("Authorization");
-    }
-
     @Test
     void getProductById() {
         String baseUrl = "http://localhost:" + port;
-        String productId = "MLA37964944";
 
-        String token = registerForToken();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token.replace("Bearer ", ""));
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        URI uri = UriComponentsBuilder
+                .newInstance()
+                .uri(URI.create(baseUrl + "/products/MLA37964944"))
+                .build()
+                .encode()
+                .toUri();
 
         ResponseEntity<Product> response = restTemplate.exchange(
-                baseUrl + "/products/" + productId,
+                uri,
                 HttpMethod.GET,
-                entity,
+                null,
                 new ParameterizedTypeReference<>() {}
         );
 
@@ -80,17 +63,43 @@ public class MercadoLibreControllerE2ETest {
         String baseUrl = "http://localhost:" + port;
         String text = "samsung";
 
-        String token = registerForToken();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token.replace("Bearer ", ""));
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        URI uri = UriComponentsBuilder
+                .newInstance()
+                .uri(URI.create(baseUrl + "/products/search"))
+                .queryParam("text", text)
+                .build()
+                .encode()
+                .toUri();
 
         ResponseEntity<List<Product>> response = restTemplate.exchange(
-                baseUrl + "/products/search/" + text,
+                uri,
                 HttpMethod.GET,
-                entity,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void getProductByKeywordAndDomain() {
+        String baseUrl = "http://localhost:" + port;
+        String text = "samsung";
+        String domain_id = "MLA-CELLPHONES";
+
+        URI uri = UriComponentsBuilder
+                .newInstance()
+                .uri(URI.create(baseUrl + "/products/search"))
+                .queryParam("text", text)
+                .queryParam("domain_id", domain_id)
+                .build()
+                .encode()
+                .toUri();
+
+        ResponseEntity<List<Product>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
                 new ParameterizedTypeReference<>() {}
         );
 
