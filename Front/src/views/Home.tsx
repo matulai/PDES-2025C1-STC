@@ -1,9 +1,9 @@
-import { Carousel } from "@/components";
+import { CarouselContainer } from "@/components";
 
 const Home = () => {
   return (
     <>
-      <Carousel />
+      <CarouselContainer link="/" title="Samsung" category="MLA-CELLPHONES" />
     </>
   );
 };

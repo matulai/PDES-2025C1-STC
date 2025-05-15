@@ -8,10 +8,20 @@ const navLinksNoRegistered = [
   { label: "Compras", pathname: "/purchases" },
 ];
 
-const navLinksRegistered = [
-  { label: "perfil", pathname: "/profile" },
+const navLinksRegisteredClient = [
+  { label: "Perfil", pathname: "/profile" },
   { label: "Favoritos", pathname: "/favorites" },
   { label: "Compras", pathname: "/purchases" },
+];
+
+const navLinksRegisteredAdmin = [
+  { label: "Usuarios", pathname: "/admin/users" },
+  { label: "Todos los favoritos", pathname: "/admin/favorites" },
+  { label: "Todas las Reseñas", pathname: "/admin/reviews" },
+  { label: "Todas las Compras", pathname: "/admin/purchases" },
+  { label: "Top vendidos", pathname: "/admin/top-sellers" },
+  { label: "Top compradores", pathname: "/admin/top-buyers" },
+  { label: "Top favoritos", pathname: "/admin/top-favorites" },
 ];
 
 const Navbar = () => {

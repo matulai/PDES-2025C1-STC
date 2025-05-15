@@ -1,30 +1,34 @@
+import { Product } from "@/types";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import ScrollableCarousel from "./ScrollableCarousel";
-import "@/styles/Carousel.css";
 
-const Carousel = () => {
+interface CarouselProps {
+  link: string;
+  title: string;
+  products: Product[];
+}
+
+const Carousel = ({ link, title, products }: CarouselProps) => {
   return (
-    <section className="carousel-container">
+    <>
       <div className="carousel-container-header">
-        <h2 className="carousel-container-header-title">Título</h2>
-        <Link to="/link" className="carousel-container-header-link">
+        <h2 className="carousel-container-header-title">{title}</h2>
+        <Link to={link} className="carousel-container-header-link">
           Ir a título
         </Link>
       </div>
       <ScrollableCarousel>
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
+        {products.map(product => (
+          <ProductCard
+            key={product.mlaId}
+            mlaId={product.mlaId}
+            name={product.name}
+            imageURL={product.imageURL}
+          />
+        ))}
       </ScrollableCarousel>
-    </section>
+    </>
   );
 };
 

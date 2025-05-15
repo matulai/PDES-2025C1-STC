@@ -1,12 +1,20 @@
+import { Link } from "react-router-dom";
 import "@/styles/ProductCard.css";
 
-const ProductCard = () => {
+interface ProductCardProps {
+  key: string;
+  mlaId: string;
+  name: string;
+  imageURL: string;
+}
+
+const ProductCard = ({ mlaId, name, imageURL }: ProductCardProps) => {
   return (
     <div className="product-card-container">
-      <img src="/image-test.jpg" alt="Product" className="product-card-image" />
-      <h2 className="product-card-title">Product Name</h2>
-      {/* <button className="product-card-button-cart">Add to Cart</button>
-      <button className="product-card-button-fovorite">Favorite</button> */}
+      <Link to={`/products/${mlaId}`}>
+        <img src={imageURL} alt="Product" className="product-card-image" />
+        <h2 className="product-card-title">{name}</h2>
+      </Link>
     </div>
   );
 };

@@ -1,0 +1,28 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+.not-found-container-title {
+  font-size: 128px;
+  font-weight: 600;
+}
+
+.not-found-container-subtitle {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.not-found-container-text {
+  font-size: 20px;
+  text-align: center;
+}
+
+.not-found-container-link {
+  font-size: 24px;
+  color: var(--color-blue);
+}

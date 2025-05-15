@@ -2,10 +2,7 @@ package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Service.Integration.MercadoLibreService;
 import SeguiTusCompras.model.Product;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,8 +21,10 @@ public class MercadoLibreController {
         return mercadoLibreService.getProductById(id);
     }
 
-    @GetMapping("/search/{text}")
-    public List<Product> getProductsByKeyword(@PathVariable String text) {
-        return mercadoLibreService.searchProducts(text);
+    @GetMapping("/search")
+    public List<Product> getProductsByKeyword(
+            @RequestParam String text,
+            @RequestParam(required = false) String category) {
+        return mercadoLibreService.searchProducts(text, category);
     }
 }
