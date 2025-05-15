@@ -31,10 +31,10 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**", 
                                                         "/swagger-ui/**",
                                                         "/v3/api-docs/**",
-                                                        "/swagger-ui.html").permitAll()
+                                                        "/swagger-ui.html",
+                                                        "/products/**").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority(Role.Admin.name())
                                 .requestMatchers("/client/**").hasAuthority(Role.Client.name())
-                                .requestMatchers("/products/**").hasAuthority(Role.Client.name())
                         )
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                         .sessionManagement(sessionManager -> sessionManager
