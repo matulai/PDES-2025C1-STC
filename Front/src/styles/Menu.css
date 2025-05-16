@@ -21,13 +21,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 224px;
+  max-width: 256px;
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: flex-start;
   z-index: 10;
   background-color: var(--color-black-light);
   transition: transform 0.3s ease-in-out;
