@@ -1,7 +1,12 @@
 import { RegisterCard } from "@/components";
+import { useNavigate } from "react-router-dom";
 import { register } from "@/service/authService";
+import { useAuth } from "@/hooks";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { contextLogin } = useAuth();
+
   const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -18,9 +23,14 @@ const Register = () => {
     }
     register(username, password, role)
       .then(response => {
-        console.log("Registration successful", response.data);
+        contextLogin(
+          { name: response.data.name, role: response.data.role },
+          response.headers["authorization"]
+        );
+        navigate("/");
       })
       .catch(error => {
+        // Falta mostrar un mensaje de error al usuario
         console.error("Registration failed", error);
       });
   };
