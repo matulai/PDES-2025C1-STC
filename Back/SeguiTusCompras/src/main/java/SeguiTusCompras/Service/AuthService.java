@@ -44,6 +44,13 @@ public class AuthService {
         return user;
     }
 
+    public User getUserByName(String name) {
+        User user = this.userDao.getByName(name);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return user;
+    }
 
     private void validatePassWord(String encodedPassword, String rawPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

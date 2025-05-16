@@ -1,28 +1,33 @@
 package SeguiTusCompras.Security;
 
-import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import SeguiTusCompras.model.user.User;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+
 import java.security.Key;
-import java.util.Date;
+
 import java.util.HashMap;
+import java.util.Date;
 import java.util.Map;
 
 @Service
 public class JwtService {
-    @Autowired
-    IUserDao userDao;
+
     @Value("${jwt.key}")
     private String key;
+
+    private final IUserDao userDao;
+
+    public JwtService(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public String getToken(String name) {
         User user = userDao.getByName(name);
@@ -30,14 +35,13 @@ public class JwtService {
     }
 
     private String getNewToken(Map<String, Object> extraClaims, User user) {
-        extraClaims.put("role", user.getRole().toString());  // Agregar el rol al claim
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getName())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-                .signWith(this.getKey(), SignatureAlgorithm.HS256)// Se asegura de usar una clave válida.
+        extraClaims.put("role", user.getRole().toString());  // Add rol to the claim
+        return Jwts.builder()
+                .claims(extraClaims)
+                .subject(user.getName())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(getKey())
                 .compact();
     }
 
