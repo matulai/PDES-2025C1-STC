@@ -25,6 +25,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @CrossOrigin(exposedHeaders = "Authorization")
     @PostMapping(value = "login")
     public ResponseEntity<SimpleUserDto> login(@RequestBody LoginDto login){
         User user = authService.getUser(login.getName(), login.getPassword());
@@ -34,6 +35,8 @@ public class AuthController {
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);
     }
+
+    @CrossOrigin(exposedHeaders = "Authorization")
     @PostMapping(value = "register")
     public ResponseEntity<SimpleUserDto> register(@RequestBody RegisterDto register){
         AuthValidator.getInstance().ValidateRegister(register);
