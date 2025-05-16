@@ -19,7 +19,6 @@ const CarouselContainer = ({
   useEffect(() => {
     getProductsByKeywordAndCategory(title, category)
       .then(response => {
-        console.log(response.data);
         setProducts(response.data);
       })
       .catch(error => {
