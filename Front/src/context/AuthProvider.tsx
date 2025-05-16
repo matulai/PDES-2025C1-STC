@@ -5,6 +5,7 @@ import {
 } from "@/utils/localStorage";
 import { useState, useEffect, createContext } from "react";
 import { getCurrentUser } from "@/service/userService";
+import { Spinner } from "@/components";
 import { User } from "@/types";
 
 interface AuthContextType {
@@ -51,7 +52,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   return (
