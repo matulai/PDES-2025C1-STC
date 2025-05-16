@@ -1,14 +1,23 @@
 const addToLocalStorage = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(key, value);
 };
 
 const getFromLocalStorage = (key: string) => {
   const value = localStorage.getItem(key);
-  return value ? JSON.parse(value) : null;
+  return value ? value : null;
+};
+
+const removeItemFromLocalStorage = (key: string) => {
+  localStorage.removeItem(key);
 };
 
 const clearLocalStorage = () => {
   localStorage.clear();
 };
 
-export { addToLocalStorage, getFromLocalStorage, clearLocalStorage };
+export {
+  addToLocalStorage,
+  clearLocalStorage,
+  getFromLocalStorage,
+  removeItemFromLocalStorage,
+};
