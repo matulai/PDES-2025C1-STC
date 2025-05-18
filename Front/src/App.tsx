@@ -1,4 +1,4 @@
-import { Home, Login, Register, NotFound } from "@/views";
+import { Home, Login, Register, NotFound, Search } from "@/views";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrivateRoute, PublicOnlyRoute, RoleRoute } from "@/routes";
 import { AuthProvider } from "@/context";
@@ -11,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
+            <Route path="/search/:text" element={<Search />} />
 
             <Route element={<PublicOnlyRoute />}>
               <Route path="/register" element={<Register />} />
