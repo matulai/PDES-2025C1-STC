@@ -5,8 +5,12 @@ import SeguiTusCompras.model.Qualification;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import java.util.List;
+
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
 
 public interface IUserDao extends JpaRepository<User, Long> {
     @Query("""
@@ -17,7 +21,7 @@ public interface IUserDao extends JpaRepository<User, Long> {
     @Query("""
        SELECT u FROM User u WHERE u.role = ?1
        """)
-    List<User> UsersByRole(Role role);
+    Page<User> UsersByRole(Role role, Pageable pageable);
 
     @Query("""
        SELECT q FROM Qualification q WHERE q.user.name = ?1

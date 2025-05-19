@@ -2,7 +2,9 @@ package SeguiTusCompras.Controller.Utils.ObjectMappers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import SeguiTusCompras.Controller.dtos.QualificationDto;
@@ -29,6 +31,12 @@ public class UserMapper {
                 clientsDtos.add(convertToSimpleDto(client));
         }
         return clientsDtos;
+    }
+
+    public static List<SimpleUserDto> convertPagedListToSimpleDto(Page<User> clients) {
+    return clients.getContent().stream()
+                  .map(UserMapper::convertToSimpleDto)
+                  .collect(Collectors.toList());
     }
 
     public static UserDto convertToDto(User clientWithNewFavorite) {
