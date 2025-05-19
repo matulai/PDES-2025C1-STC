@@ -39,7 +39,7 @@ public class AuthService {
 
     public User getUser(String name, String password){
         User user = Optional.ofNullable(this.userDao.getByName(name))
-                .orElseThrow(() -> new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()));
+                .orElseThrow(() -> new IllegalArgumentException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()));
         validatePassWord(user.getPassword(), password);
         return user;
     }
@@ -47,7 +47,7 @@ public class AuthService {
     public User getUserByName(String name) {
         User user = this.userDao.getByName(name);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
         return user;
     }
@@ -55,7 +55,7 @@ public class AuthService {
     private void validatePassWord(String encodedPassword, String rawPassword) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(!encoder.matches(rawPassword, encodedPassword)){
-            throw  new RuntimeException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()); // cambiar
+            throw  new IllegalArgumentException(ServicesErrors.INVALID_PASSWORD_OR_USERNAME.getMessage()); // cambiar
         }
     }
 

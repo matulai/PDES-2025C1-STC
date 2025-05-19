@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
+import SeguiTusCompras.Controller.dtos.UserPageDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.SimpleProductDto;
 import SeguiTusCompras.Controller.dtos.SimpleUserDto;
@@ -30,10 +33,10 @@ public class AdminController {
     private ProductService productService;
 
     @GetMapping(value = "registeredUsers")
-    public ResponseEntity<List<SimpleUserDto>> registeredUsers(){
-        List<User> clients = clientService.getAllUserByRole(Role.Client);
-        List<SimpleUserDto> clientsDto = UserMapper.convertListToSimpleDto(clients);
-        return ResponseEntity.status(HttpStatus.OK).body(clientsDto);
+    public ResponseEntity<UserPageDto> registeredUsers(@RequestParam(defaultValue = "0") int page){
+        Page<User> clientsPage = clientService.getAllUserByRole(Role.Client, page);
+        List<SimpleUserDto> clientsDto = UserMapper.convertPagedListToSimpleDto(clientsPage);
+        return ResponseEntity.status(HttpStatus.OK).body(new UserPageDto(clientsDto, clientsPage.hasPrevious(), clientsPage.hasNext()));
     }
 
     @GetMapping(value = "userQualifications")
