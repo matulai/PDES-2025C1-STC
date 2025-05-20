@@ -1,6 +1,6 @@
-import { Home, Login, Register, NotFound, Search } from "@/views";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home, Login, Register, NotFound, Search, ProductInfo } from "@/views";
 import { PrivateRoute, PublicOnlyRoute, RoleRoute } from "@/routes";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context";
 import MainLayout from "@/layout/MainLayout";
 
@@ -12,6 +12,7 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="/search/:text" element={<Search />} />
+            <Route path="/products/:id" element={<ProductInfo />} />
 
             <Route element={<PublicOnlyRoute />}>
               <Route path="/register" element={<Register />} />
