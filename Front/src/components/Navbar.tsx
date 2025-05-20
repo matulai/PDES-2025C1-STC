@@ -12,13 +12,11 @@ const navLinksNoRegistered = [
 ];
 
 const navLinksRegisteredClient = [
-  { label: "Perfil", pathname: "/profile" },
   { label: "Favoritos", pathname: "/favorites" },
   { label: "Compras", pathname: "/purchases" },
 ];
 
 const adminOptions = [
-  { label: "Perfil", pathname: "/profile" },
   { label: "Usuarios", pathname: "/admin/users" },
   { label: "Todos los favoritos", pathname: "/admin/favorites" },
   { label: "Todas las Reseñas", pathname: "/admin/reviews" },
