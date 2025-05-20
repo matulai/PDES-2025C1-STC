@@ -22,7 +22,7 @@ const Searchbar = () => {
         </label>
         <input
           id="search-input"
-          type="text"
+          type="search"
           name="search-input"
           placeholder="Buscar productos, marcas y más..."
           className="searchbar-container-form-input"
