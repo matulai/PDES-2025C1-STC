@@ -31,16 +31,22 @@ const ProductInfo = () => {
 
   return (
     <div className="product-container">
-      <img
-        src={product?.imageURL}
-        alt={product?.name}
-        className="product-image"
-      />
-      <section className="product-details">
-        <h1 className="product-details-title">{product?.name}</h1>
-        <p className="product-details-description">{product?.description}</p>
-        <button className="product-details-button">Comprar ahora</button>
-        <button className="product-details-button">Agregar a Favoritos</button>
+      <section className="product-info">
+        <img
+          src={product?.imageURL}
+          alt={product?.name}
+          className="product-info-image"
+        />
+        <section className="product-info-details">
+          <h1 className="product-info-details-title">{product?.name}</h1>
+          <p className="product-info-details-description">
+            {product?.description}
+          </p>
+          <button className="product-info-details-button">Comprar ahora</button>
+          <button className="product-info-details-button">
+            Agregar a Favoritos
+          </button>
+        </section>
       </section>
       <section className="product-qualify">
         <h2 className="product-qualify-title">Opiniones del producto</h2>

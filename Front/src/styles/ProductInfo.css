@@ -1,5 +1,6 @@
 .product-container {
   display: flex;
+  flex-direction: column;
   padding: 24px;
   gap: 32px;
   border-radius: 12px;
@@ -8,36 +9,43 @@
   background-color: var(--color-white);
 }
 
-.product-image {
-  width: 512px;
-  height: 512px;
+.product-info {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 32px;
 }
 
-.product-details {
+.product-info-image {
+  height: 512px;
+  max-width: 512px;
+  width: 100%;
+  min-width: 256px;
+  min-height: 256px;
+}
+
+.product-info-details {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  flex: 1;
   gap: 24px;
-  padding: 0 32px;
   max-width: 576px;
   width: 100%;
-  border-left: 1px solid var(--color-grey-dark);
-  border-right: 1px solid var(--color-grey-dark);
 }
 
-.product-details-title {
+.product-info-details-title {
   font-size: 36px;
   line-height: 44px;
   font-weight: 500;
 }
 
-.product-details-description {
+.product-info-details-description {
   font-size: 20px;
 }
 
-.product-details-button {
+.product-info-details-button {
   padding: 12px;
   width: 256px;
   border-radius: 12px;
@@ -49,7 +57,7 @@
   background-color: var(--color-grey-light);
 }
 
-.product-details-button:hover {
+.product-info-details-button:hover {
   background-color: var(--color-black-light);
   color: var(--color-white);
 }
@@ -57,7 +65,7 @@
 .product-qualify {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
   gap: 12px;
 }
 
@@ -82,4 +90,34 @@
   font-size: 16px;
   line-height: 19px;
   color: var(--color-grey-dark);
+}
+
+@media (min-width: 768px) {
+  .product-info {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .product-info-details {
+    border-left: 1.5px solid var(--color-grey-dark);
+    padding: 0 0 0 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-container {
+    flex-direction: row;
+  }
+
+  .product-info-image {
+    height: 512px;
+    max-width: 512px;
+    width: 100%;
+  }
+
+  .product-info-details {
+    border-left: 1.5px solid var(--color-grey-dark);
+    border-right: 1.5px solid var(--color-grey-dark);
+    padding: 0 32px;
+  }
 }

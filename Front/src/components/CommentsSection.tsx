@@ -33,15 +33,17 @@ const CommentsSection = ({ comments, setComments }: CommentsSectionProps) => {
 
   return (
     <section className="comments-section">
-      <section className="comments-section-list">
-        {comments.map((comment, index) => (
-          <CommentItem
-            key={comment.text + index}
-            text={comment.text}
-            value={comment.value}
-          />
-        ))}
-      </section>
+      <div className="comments-section-list-container">
+        <section className="comments-section-list-container-content">
+          {comments.map((comment, index) => (
+            <CommentItem
+              key={comment.text + index}
+              text={comment.text}
+              value={comment.value}
+            />
+          ))}
+        </section>
+      </div>
       <section className="comments-section-qualify">
         <StarsQualify
           value={comment.value}
