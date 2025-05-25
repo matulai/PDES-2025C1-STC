@@ -9,7 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import SeguiTusCompras.model.Comment;
+
+import SeguiTusCompras.Error.ErrorMessages;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
 import SeguiTusCompras.model.user.Role;
@@ -20,7 +21,7 @@ import SeguiTusCompras.persistence.IQualificationDAO;
 import SeguiTusCompras.persistence.IUserDao;
 import SeguiTusCompras.persistence.report.IUserReportDao;
 @Service
-public class ClientService {
+public class UserService {
     @Autowired
     IUserDao userDao;
     @Autowired
@@ -32,9 +33,10 @@ public class ClientService {
     @Autowired
     IUserReportDao userReportDao;
 
-    public  User getClient(String userName) {
+    public  User getUser(String userName) {
+
         return Optional.ofNullable(userDao.getByName(userName))
-        .orElseThrow(() -> new RuntimeException(ServicesErrors.USER_NOT_FOUND.getMessage()));
+        .orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_FOUND.getMessage()));
     }
 
     public  User addProductToFavorites(User client, Product product) {
@@ -48,14 +50,23 @@ public class ClientService {
     }
 
     public User qualifyProduct(User user, Product product, Integer score, String comment) {
-        user.addToQualified(product, score);
+        checkIfScoreIsValid(score);
+        user.qualifyProduct(product, score);
         User userWithQualification = userDao.save(user);
-        Qualification qualification = qualificationDao.getQualificationFor(user.getName(), product.getName());
-        if (comment != null) {
-            Comment newComment = userWithQualification.generateComment(comment, qualification);
-            commentDao.save(newComment);
+        Qualification qualification = userWithQualification.getQualificationForProduct(product);
+        if (comment != null && qualification != null) {
+            userWithQualification.generateComment(comment, qualification);
+            qualificationDao.save(qualification);
+            User userWithComment = userDao.save(user);
+            return userWithComment;
         }
         return userWithQualification;
+    }
+
+    private void checkIfScoreIsValid(Integer score) {
+        if(score < 1 || score > 5) {
+            throw new RuntimeException(ErrorMessages.INVALID_SCORE.getMessage());
+        }
     }
 
     public Page<User> getAllUserByRole(Role role, int page) {
@@ -63,11 +74,11 @@ public class ClientService {
         return userDao.UsersByRole(role, pageable);
     }
 
-    public List<Qualification> getQualifications(String userName) {
+    public List<Qualification> getQualificationsMadeByUser(String userName) {
         return userDao.getQualifications(userName);
     }
 
-    public List<Product> getPurchases(String userName) {
+    public List<Product> getPurchasesFromUser(String userName) {
         return userDao.getPurchases(userName);
     }
 
@@ -80,4 +91,5 @@ public class ClientService {
         return userReportDao.getTopBuyers(topFive);
     }
 
+   
 }

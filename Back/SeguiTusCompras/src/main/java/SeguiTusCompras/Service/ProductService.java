@@ -18,7 +18,7 @@ public class ProductService {
     @Autowired
     IProductReport productReportDao;
 
-    public Product getProductForClient(Product product) {
+    public Product getProduct(Product product) {
         Product persistedProduct = productDao.getByName(product.getName());
         if (persistedProduct == null){
             Product newProduct = productDao.save(product);
@@ -28,10 +28,10 @@ public class ProductService {
             newProduct.setProductReport(report);
             return productDao.save(newProduct);
         }
-        return persistedProduct;
+        return persistedProduct;    
     }
 
-    public Product getProduct(String productName) {
+    public Product getProductByName(String productName) {
         return productDao.getByName(productName);
     }
 

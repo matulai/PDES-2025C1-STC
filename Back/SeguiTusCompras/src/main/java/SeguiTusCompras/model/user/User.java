@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -85,7 +86,7 @@ public class User implements UserDetails{
         product.getProductReport().addFavorite();
     }
 
-    public void addToQualified(Product product, Integer score){
+    public void qualifyProduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){
             Qualification qualification = new Qualification(this, score, product);
             qualifications.add(qualification);
@@ -100,7 +101,19 @@ public class User implements UserDetails{
   
 
     public Comment generateComment(String comment, Qualification qualification) {
-        return new Comment(comment, qualification);
+        Comment newComment = new Comment(comment, qualification);
+        qualification.setComment(newComment);
+        return newComment;
+    }
+
+
+    public Qualification getQualificationForProduct(Product product) {
+        for(Qualification qualification : qualifications){
+            if(qualification.getProduct().getName().equals(product.getName())){
+                return qualification;
+            }
+        }
+        return null;
     }
 }
 
