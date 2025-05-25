@@ -1,7 +1,6 @@
 package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
-import SeguiTusCompras.Controller.Utils.Validators.AuthValidator;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
 import SeguiTusCompras.Controller.dtos.SimpleUserDto;
@@ -39,10 +38,9 @@ public class AuthController {
     @CrossOrigin(exposedHeaders = "Authorization")
     @PostMapping(value = "register")
     public ResponseEntity<SimpleUserDto> register(@RequestBody RegisterDto register){
-        AuthValidator.getInstance().ValidateRegister(register);
-        User newUser = authService.createUser(register.getName(), register.getPassword(), register.getRole());
-        String token = generateTokenFor(newUser.getName());
-        SimpleUserDto userDto = UserMapper.convertToSimpleDto(newUser);
+        User persistedUser = authService.createUser(register.getName(), register.getPassword(), register.getRole());
+        String token = generateTokenFor(persistedUser.getName());
+        SimpleUserDto userDto = UserMapper.convertToSimpleDto(persistedUser);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);

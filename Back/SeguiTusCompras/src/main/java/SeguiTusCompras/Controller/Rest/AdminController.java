@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ import SeguiTusCompras.Controller.dtos.UserPageDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.SimpleProductDto;
 import SeguiTusCompras.Controller.dtos.SimpleUserDto;
-import SeguiTusCompras.Service.ClientService;
+import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.Product;
@@ -28,7 +27,7 @@ import SeguiTusCompras.model.user.User;
 @RequiredArgsConstructor
 public class AdminController {
     @Autowired
-    private ClientService clientService;
+    private UserService clientService;
     @Autowired
     private ProductService productService;
 
@@ -41,14 +40,14 @@ public class AdminController {
 
     @GetMapping(value = "userQualifications")
     public ResponseEntity<List<QualificationDto>> userQualifications(@RequestParam String userName){
-        List<Qualification> qualifications = clientService.getQualifications(userName);
+        List<Qualification> qualifications = clientService.getQualificationsMadeByUser(userName);
         List<QualificationDto> qualificationsDto = QualificationMapper.convertListToDto(qualifications);
         return ResponseEntity.ok().body(qualificationsDto);
     }
 
     @GetMapping(value = "userPurchases")
     public ResponseEntity<List<SimpleProductDto>> userPurchases(@RequestParam String userName){
-        List<Product> purchases = clientService.getPurchases(userName);
+        List<Product> purchases = clientService.getPurchasesFromUser(userName);
         List<SimpleProductDto> productsDtos = ProductMapper.convertToListSimpleDto(purchases);
         return ResponseEntity.ok().body(productsDtos);
     }
