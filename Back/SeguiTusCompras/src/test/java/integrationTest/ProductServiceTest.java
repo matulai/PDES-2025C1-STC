@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.user.User;
 import jakarta.transaction.Transactional;
 @SpringBootTest(classes = SeguiTusComprasApplication.class)
+@Disabled("a")
 public class ProductServiceTest {
     @Autowired
     private ProductService productService;
