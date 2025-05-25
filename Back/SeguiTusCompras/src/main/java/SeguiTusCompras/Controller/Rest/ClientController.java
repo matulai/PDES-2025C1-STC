@@ -12,7 +12,7 @@ import SeguiTusCompras.Controller.dtos.FavoriteDto;
 import SeguiTusCompras.Controller.dtos.PurchaseDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.UserDto;
-import SeguiTusCompras.Service.ClientService;
+import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.Product;
@@ -25,15 +25,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class ClientController {
     @Autowired
-    private ClientService clientService;
+    private UserService clientService;
     @Autowired
     private ProductService productService;
     private final ProductMapper productMapper;
 
     @PostMapping(value = "addProductToFavorites")
     public ResponseEntity<UserDto> addProductToFavorites(@RequestBody FavoriteDto favoriteDto){
-        User client = clientService.getClient(favoriteDto.getUserName());
-        Product product = productService.getProductForClient(productMapper.toEntityFromDto(favoriteDto.getProductDto()));
+        User client = clientService.getUser(favoriteDto.getUserName());
+        Product product = productService.getProduct(productMapper.toEntityFromDto(favoriteDto.getProductDto()));
         User clientWithNewFavorite = clientService.addProductToFavorites(client, product);
         UserDto clientDto = UserMapper.convertToDto(clientWithNewFavorite);
         return ResponseEntity.status(HttpStatus.OK).body(clientDto);
@@ -41,16 +41,16 @@ public class ClientController {
 
     @PostMapping(value = "addPurchase")
     public ResponseEntity<Void> addPurchase(@RequestBody PurchaseDto purchaseDto){
-        User client = clientService.getClient(purchaseDto.getUserName());
-        Product product = productService.getProductForClient(productMapper.toEntityFromDto(purchaseDto.getProductDto()));
+        User client = clientService.getUser(purchaseDto.getUserName());
+        Product product = productService.getProduct(productMapper.toEntityFromDto(purchaseDto.getProductDto()));
         clientService.addPurchase(client, product);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping(value = "qualifyProduct")
     public ResponseEntity<Void> qualifyProduct(@RequestBody QualificationDto qualificationDto){
-        User client = clientService.getClient(qualificationDto.getUserName());
-        Product product = productService.getProduct(qualificationDto.getProductName()); 
+        User client = clientService.getUser(qualificationDto.getUserName());
+        Product product = productService.getProductByName(qualificationDto.getProductName()); 
         clientService.qualifyProduct(client, product, qualificationDto.getScore(), qualificationDto.getComment());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

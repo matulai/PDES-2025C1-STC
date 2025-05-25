@@ -2,11 +2,13 @@ package SeguiTusCompras.model;
 
 import SeguiTusCompras.model.user.User;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Qualification {
 
