@@ -17,7 +17,7 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB_TEST }}
+          POSTGRES_DB: SeguiTusCompras  # ${{ secrets.POSTGRES_DB_TEST }}
           POSTGRES_USER: ${{ secrets.DB_USERNAME }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
