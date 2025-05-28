@@ -78,15 +78,22 @@ jobs:
       permissions:
         contents: read
       environment: test-and-create-image
-      env:
-        IMAGE_TAG: ${{ needs.tag.outputs.new_tag }}
-        BACKEND_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/seguituscompras_backend
-        FRONTEND_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend
+
       steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Definir variable FRONTEND_IMAGE_NAME
+        run: echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend" >> $GITHUB_ENV
+
+      - name: Definir variable BACKEND_IMAGE_NAME
+        run: echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_backend" >> $GITHUB_ENV
+
+      - name: Definir variable IMAGE_TAG
+        run: echo "TAG_IMAGE_NAME=${{ needs.tag.outputs.new_tag }} >> $GITHUB_ENV
+        
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
