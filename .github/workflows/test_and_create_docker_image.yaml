@@ -92,7 +92,7 @@ jobs:
         run: echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_backend" >> $GITHUB_ENV
 
       - name: Definir variable IMAGE_TAG
-        run: echo "TAG_IMAGE_NAME=${{ needs.tag.outputs.new_tag }} >> $GITHUB_ENV
+        run: echo "TAG_IMAGE_NAME=${{ needs.tag.outputs.new_tag }}" >> $GITHUB_ENV
         
         
       - name: Set up QEMU
