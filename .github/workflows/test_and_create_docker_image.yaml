@@ -93,7 +93,13 @@ jobs:
 
       - name: Definir variable IMAGE_TAG
         run: echo "TAG_IMAGE_NAME=${{ needs.tag.outputs.new_tag }}" >> $GITHUB_ENV
+
+      
+      - name: Debug - Verificar tag generado
+        run: echo "El tag output es ${{ needs.tag.outputs.new_tag }}}"
         
+      - name: Debug - Verificar tag generado
+        run: echo "El tag generado es ${{ env.TAG_IMAGE_NAME}}" 
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
