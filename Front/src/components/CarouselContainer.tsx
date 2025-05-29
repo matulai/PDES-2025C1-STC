@@ -1,4 +1,4 @@
-import { getProductsByKeywordAndCategory } from "@/service/productService";
+import { getProductsByKeyword } from "@/service/productService";
 import { useEffect, useState } from "react";
 import Carousel from "./Carousel";
 import "@/styles/Carousel.css";
@@ -17,7 +17,7 @@ const CarouselContainer = ({
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    getProductsByKeywordAndCategory(title, category)
+    getProductsByKeyword({ text: title, category: category })
       .then(response => {
         setProducts(response.data);
       })

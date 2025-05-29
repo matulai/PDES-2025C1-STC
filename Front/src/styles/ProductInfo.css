@@ -1,0 +1,123 @@
+.product-container {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 32px;
+  border-radius: 12px;
+  width: 100%;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  background-color: var(--color-white);
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 32px;
+}
+
+.product-info-image {
+  height: 512px;
+  max-width: 512px;
+  width: 100%;
+  min-width: 256px;
+  min-height: 256px;
+}
+
+.product-info-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  max-width: 576px;
+  width: 100%;
+}
+
+.product-info-details-title {
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 500;
+}
+
+.product-info-details-description {
+  font-size: 20px;
+}
+
+.product-info-details-button {
+  padding: 12px;
+  width: 256px;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 29px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  color: var(--color-black-dark);
+  background-color: var(--color-grey-light);
+}
+
+.product-info-details-button:hover {
+  background-color: var(--color-black-light);
+  color: var(--color-white);
+}
+
+.product-qualify {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 12px;
+}
+
+.product-qualify-title {
+  font-size: 32px;
+  line-height: 39px;
+}
+
+.product-qualify-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.product-qualify-content-average {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 58px;
+}
+
+.product-quealify-content-stadistics-amount {
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--color-grey-dark);
+}
+
+@media (min-width: 768px) {
+  .product-info {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .product-info-details {
+    border-left: 1.5px solid var(--color-grey-dark);
+    padding: 0 0 0 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-container {
+    flex-direction: row;
+  }
+
+  .product-info-image {
+    height: 512px;
+    max-width: 512px;
+    width: 100%;
+  }
+
+  .product-info-details {
+    border-left: 1.5px solid var(--color-grey-dark);
+    border-right: 1.5px solid var(--color-grey-dark);
+    padding: 0 32px;
+  }
+}
