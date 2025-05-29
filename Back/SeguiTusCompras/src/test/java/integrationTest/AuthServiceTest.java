@@ -15,8 +15,6 @@ import SeguiTusCompras.SeguiTusComprasApplication;
 public class AuthServiceTest {
     @Autowired
     private AuthService authService;
-   
-
 
     @Test
     @Transactional
