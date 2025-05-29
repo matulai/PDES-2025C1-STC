@@ -1,5 +1,5 @@
 import { Home, Login, Register, NotFound, Search, ProductInfo } from "@/views";
-import { PrivateRoute, PublicOnlyRoute, RoleRoute } from "@/routes";
+import { PublicOnlyRoute } from "@/routes";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context";
 import MainLayout from "@/layout/MainLayout";
