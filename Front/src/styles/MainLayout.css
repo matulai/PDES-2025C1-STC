@@ -1,0 +1,21 @@
+.layout-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  flex: 1;
+  gap: 36px;
+  padding: 16px;
+}
+
+@media (min-width: 600px) {
+  .layout-content {
+    padding: 24px 40px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .layout-content {
+    padding: 36px 56px;
+  }
+}

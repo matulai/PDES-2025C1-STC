@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+  spring:
+    image: maven:3.9.9-amazoncorretto-21-al2023
+    container_name: backend_container
+    volumes:
+      - ./Back/SeguiTusCompras:/SourceCode
+    working_dir: /SourceCode
+    command: mvn spring-boot:run
+    environment:
+      SPRING_DATASOURCE_URL: ${POSTGRES_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_KEY: ${JWT_KEY}
+      MAVEN_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+
+
+
+
+
+
+
+
+
+  

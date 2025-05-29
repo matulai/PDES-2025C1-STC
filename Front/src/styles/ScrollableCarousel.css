@@ -1,0 +1,59 @@
+.scrollable-carousel-container {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; /* IE y Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollable-carousel-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+.scrollable-carousel-container-content {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+}
+
+.scrollable-carousel-button {
+  position: absolute;
+  top: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  background-color: var(--color-white);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px #00000040;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.scrollable-carousel-button:hover {
+  box-shadow: 0 3px 2px #00000040;
+}
+
+.scrollable-carousel-button-prev {
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.scrollable-carousel-button-next {
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+@media (min-width: 600px) {
+  .scrollable-carousel-container {
+    overflow-x: hidden; /* on overflow-x: auto the snap could be used */
+  }
+
+  .scrollable-carousel-button-next {
+    display: flex;
+  }
+
+  .scrollable-carousel-button-prev {
+    display: flex;
+  }
+}

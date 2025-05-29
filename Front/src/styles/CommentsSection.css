@@ -1,0 +1,21 @@
+.comments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comments-section-list-container {
+  max-height: 384px;
+  overflow-y: auto;
+}
+
+.comments-section-list-container-content {
+  border-bottom: 1.5px solid var(--color-grey-dark);
+}
+
+.comments-section-qualify {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}

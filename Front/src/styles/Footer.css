@@ -1,0 +1,6 @@
+.footer-container {
+  background-color: var(--color-black-light);
+  color: var(--color-grey-light);
+  padding: 12px;
+  text-align: left;
+}
