@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -78,13 +77,15 @@ public class User implements UserDetails{
     public void addToPurchases(Product product){
         this.purchases.add(product);
         this.report.addPurchase();
-        product.getProductReport().addPurchase();
+        product.increasePurchasesCounter();
     }
+
 
     public void addToFavorites(Product product){
         this.favorites.add(product);
-        product.getProductReport().addFavorite();
+        product.increaseFavoritesCounter();
     }
+
 
     public void qualifyProduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){

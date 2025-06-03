@@ -1,6 +1,13 @@
 # Usa la imagen base de Node.js para compilar la aplicación
 FROM node:22-slim AS build
 
+# Declara el argumento de construcción que se pasará desde docker-compose.yaml
+ARG VITE_API_URL
+
+# Establece la variable de entorno VITE_API_URL para que esté disponible durante el proceso de build
+# Es importante que las variables que Vite debe procesar comiencen con VITE_
+ENV VITE_API_URL=${VITE_API_URL}
+
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 

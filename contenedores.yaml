@@ -1,3 +1,4 @@
+  
 services:
   postgres:
     image: postgres:latest
@@ -8,6 +9,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
+
   spring:
     image: maven:3.9.9-amazoncorretto-21-al2023
     container_name: backend_container
@@ -16,16 +18,33 @@ services:
     working_dir: /SourceCode
     command: mvn spring-boot:run
     environment:
-      SPRING_DATASOURCE_URL: ${POSTGRES_URL}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: ${DB_URL_DOCKER}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_KEY: ${JWT_KEY}
-      MAVEN_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      REFRESH_TOKEN: ${REFRESH_TOKEN}
+      FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
     depends_on:
       - postgres
     ports:
       - "8080:8080"
-      - "5005:5005"
+
+  frontend:
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+    build:
+      context: ./Front
+      args:
+        # Pasa el valor de VITE_API_URL_DOCKER (de tu .env) como un build argument llamado VITE_API_URL
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - "80:80"
+    depends_on:
+      - spring
+    container_name: segui-tus-compras
+
 
 
 

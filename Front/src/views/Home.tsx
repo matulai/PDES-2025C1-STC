@@ -1,5 +1,4 @@
 import { CarouselContainer } from "@/components";
-
 const Home = () => {
   return (
     <>

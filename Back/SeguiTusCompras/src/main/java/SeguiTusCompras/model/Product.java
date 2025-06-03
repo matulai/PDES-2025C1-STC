@@ -42,4 +42,12 @@ public class Product {
 
     @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
     private ProductReport productReport;
+
+    public void increaseFavoritesCounter() {
+        this.getProductReport().addFavorite();
+    }
+
+    public void increasePurchasesCounter() {
+        this.getProductReport().addPurchase();
+    }
 }
