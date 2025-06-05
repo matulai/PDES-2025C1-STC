@@ -26,10 +26,6 @@ class UserTest {
     @Mock
     private UserReport mockUserReport;
 
-    @Mock
-    private ProductReport mockProductReport1;
-
-
     @BeforeEach
     void setUp() {
         user = new User("testUser", "password123", "Client");
@@ -62,18 +58,14 @@ class UserTest {
     @Test
     void addToPurchases_AddsProductAndUpdatesReports() {
 
-        when(mockProduct1.getProductReport()).thenReturn(mockProductReport1);
-
         user.addToPurchases(mockProduct1);
-
 
 
         assertTrue(user.getPurchases().contains(mockProduct1));
         assertEquals(1, user.getPurchases().size());
 
 
-        verify(mockUserReport, times(1)).addPurchase();
-        verify(mockProductReport1, times(1)).addPurchase();
+        verify(mockProduct1, times(1)).increasePurchasesCounter();
     }
     
     @Test
@@ -83,40 +75,18 @@ class UserTest {
         assertThrows(NullPointerException.class, () -> {
             user.addToPurchases(mockProduct1);
         });
-        
-        verify(mockProduct1, never()).getProductReport();
-    }
 
-    @Test
-    void addToPurchases_NullProductReport_ThrowsNullPointerException() {
-        when(mockProduct1.getProductReport()).thenReturn(null); 
-
-        assertThrows(NullPointerException.class, () -> {
-            user.addToPurchases(mockProduct1);
-        });
-
-        verify(mockUserReport, times(1)).addPurchase();
     }
 
 
     @Test
     void addToFavorites_AddsProductAndUpdatesReport() {
-        when(mockProduct1.getProductReport()).thenReturn(mockProductReport1);
 
         user.addToFavorites(mockProduct1);
 
         assertTrue(user.getFavorites().contains(mockProduct1));
         assertEquals(1, user.getFavorites().size());
-        verify(mockProductReport1, times(1)).addFavorite();
-    }
-    
-    @Test
-    void addToFavorites_NullProductReport_ThrowsNullPointerException() {
-        when(mockProduct1.getProductReport()).thenReturn(null); 
-
-        assertThrows(NullPointerException.class, () -> {
-            user.addToFavorites(mockProduct1);
-        });
+        verify(mockProduct1, times(1)).increaseFavoritesCounter();
     }
 
 

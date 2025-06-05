@@ -1,4 +1,4 @@
-package integrationTest;
+package integrationTest.serviceTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -24,7 +24,6 @@ import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import jakarta.transaction.Transactional;
 @SpringBootTest(classes = SeguiTusComprasApplication.class)
-@Disabled("a")
 public class UserServiceTest {
     @Autowired
     private UserService userService;
