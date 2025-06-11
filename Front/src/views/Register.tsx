@@ -24,7 +24,13 @@ const Register = () => {
     register(username, password, role)
       .then(response => {
         contextLogin(
-          { name: response.data.name, role: response.data.role },
+          {
+            name: response.data.name,
+            role: response.data.role,
+            favorites: response.data.favorites,
+            purchases: response.data.purchases,
+            qualifications: response.data.qualifications,
+          },
           response.headers["authorization"]
         );
         navigate("/");

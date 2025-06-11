@@ -50,6 +50,15 @@
   color: var(--color-grey-dark);
 }
 
+.auth-card-container-form-inputs-password-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.auth-card-container-form-inputs-password-wrapper-button {
+  border-bottom: 1.5px solid var(--color-grey-dark);
+}
+
 .auth-card-container-form-button {
   display: flex;
   justify-content: center;
