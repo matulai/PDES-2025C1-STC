@@ -1,6 +1,6 @@
 import { StarsQualify, CommentsSection } from "@/components";
 import { useState, useEffect } from "react";
-import { Product, Comment } from "@/types";
+import { Product, Qualification } from "@/types";
 import { getProductById } from "@/service/productService";
 import { useParams } from "react-router-dom";
 import "@/styles/ProductInfo.css";
@@ -8,13 +8,43 @@ import "@/styles/ProductInfo.css";
 const ProductInfo = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
-  const [comments, setComments] = useState<Comment[]>([
-    { text: "Me encanta este producto, es increíble", value: 5 },
-    { text: "No me gusta, no lo volvería a comprar", value: 1 },
-    { text: "Es bueno, pero podría ser mejor", value: 3 },
-    { text: "Es un producto normal, no me gusta", value: 2 },
-    { text: "Le gusto", value: 5 },
-    { text: "Es un producto normal", value: 3 },
+  const [comments, setComments] = useState<Qualification[]>([
+    {
+      userName: "Juan",
+      productName: "Producto A",
+      comment: "Me encanta este producto, es increíble",
+      score: 5,
+    },
+    {
+      userName: "Ana",
+      productName: "Producto A",
+      comment: "No me gusta, no lo volvería a comprar",
+      score: 1,
+    },
+    {
+      userName: "Luis",
+      productName: "Producto A",
+      comment: "Es bueno, pero podría ser mejor",
+      score: 3,
+    },
+    {
+      userName: "Maria",
+      productName: "Producto A",
+      comment: "Es un producto normal, no me gusta",
+      score: 2,
+    },
+    {
+      userName: "Pedro",
+      productName: "Producto A",
+      comment: "Le gustó",
+      score: 5,
+    },
+    {
+      userName: "Lucia",
+      productName: "Producto A",
+      comment: "Es un producto normal",
+      score: 3,
+    },
   ]);
 
   useEffect(() => {
@@ -59,7 +89,11 @@ const ProductInfo = () => {
             </div>
           </div>
         </div>
-        <CommentsSection comments={comments} setComments={setComments} />
+        <CommentsSection
+          productName={product?.name ?? ""}
+          comments={comments}
+          setComments={setComments}
+        />
       </section>
     </div>
   );
