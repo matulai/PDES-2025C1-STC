@@ -1,33 +1,48 @@
-import type { Comment } from "@/types";
+import type { Qualification } from "@/types";
 import { SendIcon } from "@/icons";
 import { useState } from "react";
-import InputText from "./InputText";
+import { useAuth } from "@/hooks";
 import StarsQualify from "./StarsQualify";
 import CommentItem from "./CommentItem";
+import InputText from "./InputText";
 import "@/styles/CommentsSection.css";
 
 interface CommentsSectionProps {
-  comments: Comment[];
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
+  productName: string;
+  comments: Qualification[];
+  setComments: React.Dispatch<React.SetStateAction<Qualification[]>>;
 }
 
-const CommentsSection = ({ comments, setComments }: CommentsSectionProps) => {
-  const [comment, setComment] = useState<Comment>({
-    text: "",
-    value: 0,
+const CommentsSection = ({
+  productName,
+  comments,
+  setComments,
+}: CommentsSectionProps) => {
+  const { user } = useAuth();
+
+  const [comment, setComment] = useState<Qualification>({
+    userName: user?.name!,
+    productName: productName,
+    comment: "",
+    score: 0,
   });
 
   const handleSetValue = (value: number) => {
     if (value && value > 0 && value <= 5) {
-      comment.value = value;
+      comment.score = value;
       setComment({ ...comment });
     }
   };
 
   const handleAddComment = (text: string) => {
-    if (text && comment.value > 0) {
-      comment.text = text;
+    if (text && comment.score > 0) {
+      comment.comment = text;
       setComments(prev => [...prev, comment]);
+      setComment({
+        ...comment,
+        comment: "",
+        score: 0,
+      });
     }
   };
 
@@ -37,16 +52,17 @@ const CommentsSection = ({ comments, setComments }: CommentsSectionProps) => {
         <section className="comments-section-list-container-content">
           {comments.map((comment, index) => (
             <CommentItem
-              key={comment.text + index}
-              text={comment.text}
-              value={comment.value}
+              key={comment.comment + index}
+              userName={comment.userName}
+              text={comment.comment}
+              value={comment.score}
             />
           ))}
         </section>
       </div>
       <section className="comments-section-qualify">
         <StarsQualify
-          value={comment.value}
+          value={comment.score}
           starsSize={20}
           setValue={handleSetValue}
         />
