@@ -44,6 +44,7 @@ public class SecurityConfig {
                                         "/swagger-ui.html").permitAll()
                                 .requestMatchers("/admin/**").hasAuthority(Role.Admin.name())
                                 .requestMatchers("/client/**").hasAuthority(Role.Client.name())
+                                .requestMatchers("/user/**").hasAnyAuthority(Role.Client.name(), Role.Admin.name())
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManager -> sessionManager
