@@ -1,5 +1,5 @@
+import { ChevronLeftIcon } from "@/icons";
 import { useRef } from "react";
-import ChevronLeftIcon from "./ChevronLeftIcon";
 import "@/styles/ScrollableCarousel.css";
 
 interface ScrollableCarouselProps {

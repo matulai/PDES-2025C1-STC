@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { EyeIcon, EyeOffIcon } from "@/icons";
 import { useState } from "react";
-import { EyeIcon, EyeOffIcon } from "@/components";
+import { Link } from "react-router-dom";
 import "@/styles/AuthCard.css";
 
 interface AuthCardProps {

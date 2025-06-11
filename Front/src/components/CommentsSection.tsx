@@ -60,19 +60,21 @@ const CommentsSection = ({
           ))}
         </section>
       </div>
-      <section className="comments-section-qualify">
-        <StarsQualify
-          value={comment.score}
-          starsSize={20}
-          setValue={handleSetValue}
-        />
-        <InputText
-          handleSubmit={handleAddComment}
-          iconComponent={<SendIcon />}
-          placeholder={"Agrega un comentario..."}
-          id="comment-input"
-        />
-      </section>
+      {user?.qualifications.find(q => q.productName === productName) ? (
+        <section className="comments-section-qualify">
+          <StarsQualify
+            value={comment.score}
+            starsSize={20}
+            setValue={handleSetValue}
+          />
+          <InputText
+            handleSubmit={handleAddComment}
+            iconComponent={<SendIcon />}
+            placeholder={"Agrega un comentario..."}
+            id="comment-input"
+          />
+        </section>
+      ) : null}
     </section>
   );
 };
