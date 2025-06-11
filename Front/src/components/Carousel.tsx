@@ -20,7 +20,7 @@ const Carousel = ({ link, title, products }: CarouselProps) => {
       </div>
       <ScrollableCarousel>
         {products.map(product => (
-          <ProductCard product={product} />
+          <ProductCard key={product.mlaId} product={product} />
         ))}
       </ScrollableCarousel>
     </>
