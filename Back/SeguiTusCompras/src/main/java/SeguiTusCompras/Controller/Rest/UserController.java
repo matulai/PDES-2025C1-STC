@@ -1,7 +1,7 @@
 package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
-import SeguiTusCompras.Controller.dtos.SimpleUserDto;
+import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Service.AuthService;
 import SeguiTusCompras.model.user.User;
 
@@ -25,11 +25,11 @@ public class UserController {
     }
 
     @GetMapping(value = "/me")
-    public ResponseEntity<SimpleUserDto> getUserMe() {
+    public ResponseEntity<UserDto> getUserMe() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = authService.getUserByName(username);
-        SimpleUserDto simpleUserDto = UserMapper.convertToSimpleDto(user);
-        return ResponseEntity.status(HttpStatus.OK).body(simpleUserDto);
+        UserDto userDto = UserMapper.convertToDto(user);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @GetMapping(value = "favs")
