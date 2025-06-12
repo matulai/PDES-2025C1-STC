@@ -40,7 +40,11 @@ public class UserService {
     }
 
     public  User addProductToFavorites(User client, Product product) {
-        client.addToFavorites(product);
+        if (client.getFavorites().contains(product)) {
+            client.deleteFromFavorites(product);
+        } else {
+            client.addToFavorites(product);
+        }
         return userDao.save(client);
     }
 

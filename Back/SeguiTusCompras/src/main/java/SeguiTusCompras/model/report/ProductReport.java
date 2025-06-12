@@ -36,10 +36,10 @@ public class ProductReport extends Report {
        this.purchaseCount++;
     }
 
+    public void decreaseFavorite() { this.favoritesCount--; }
+
     public void addFavorite() {
         this.favoritesCount++;
     }
-
-   
 
 }

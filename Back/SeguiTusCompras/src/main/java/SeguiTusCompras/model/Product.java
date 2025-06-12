@@ -47,6 +47,10 @@ public class Product {
         this.getProductReport().addFavorite();
     }
 
+    public void decreaseFavoritesCounter() {
+        this.getProductReport().decreaseFavorite();
+    }
+
     public void increasePurchasesCounter() {
         this.getProductReport().addPurchase();
     }

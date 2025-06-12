@@ -86,6 +86,10 @@ public class User implements UserDetails{
         product.increaseFavoritesCounter();
     }
 
+    public void deleteFromFavorites(Product product) {
+        this.favorites.remove(product);
+        product.decreaseFavoritesCounter();
+    }
 
     public void qualifyProduct(Product product, Integer score){
         if(doIOwnTheProduct(product)){
