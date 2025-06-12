@@ -11,7 +11,7 @@ const navLinksNoRegistered = [
   { label: "Compras", pathname: "/purchases" },
 ];
 
-const navLinksRegisteredClient = [
+const navLinksRegistered = [
   { label: "Favoritos", pathname: "/favorites" },
   { label: "Compras", pathname: "/purchases" },
 ];
@@ -26,25 +26,20 @@ const adminOptions = [
   { label: "Top favoritos", pathname: "/admin/top-favorites" },
 ];
 
-const extraAdminLinks = [
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
-];
-
 type NavLink = { label: string; pathname: string };
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, contextLogout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   let navLinks: NavLink[] = navLinksNoRegistered;
+  let roleOptions = [];
 
   if (user) {
-    if (user.role === "Client") {
-      navLinks = navLinksRegisteredClient;
-    } else {
-      navLinks = extraAdminLinks;
+    navLinks = navLinksRegistered;
+    if (user.role === "Admin") {
+      roleOptions = adminOptions;
     }
   }
 
@@ -73,6 +68,10 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleLogout = () => {
+    contextLogout();
+  };
+
   return (
     <nav className="navbar-container">
       {user?.role === "Admin" && (
@@ -81,7 +80,7 @@ const Navbar = () => {
             className="dropdown-toggle"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            Admin <ChevronDownIcon />
+            Options <ChevronDownIcon />
           </button>
           {showDropdown && (
             <div className="dropdown-menu">
@@ -92,6 +91,9 @@ const Navbar = () => {
                   pathname={option.pathname}
                 />
               ))}
+              <button className="dropdown-toggle" onClick={handleLogout}>
+                logout
+              </button>
             </div>
           )}
         </div>
