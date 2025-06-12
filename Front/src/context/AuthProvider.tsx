@@ -26,7 +26,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (token) {
       getCurrentUser(token)
         .then(response => {
-          console.log(response.data);
           const currentUser: User = response.data;
           setUser(currentUser);
         })
@@ -43,7 +42,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const contextLogin = (userData: User, token: string) => {
-    console.log(userData);
     setUser(userData);
     addToLocalStorage("token", token);
   };
@@ -56,13 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   if (isLoading) {
     return <Spinner />;
   }
-  console.log(
-    user?.favorites,
-    user?.purchases,
-    user?.qualifications,
-    user?.role,
-    user?.name
-  );
+
   return (
     <AuthContext.Provider value={{ user, contextLogin, contextLogout }}>
       {children}

@@ -1,3 +1,5 @@
+import { Qualification } from "./";
+
 interface Product {
   id?: string;
   mlaId: string;
@@ -5,7 +7,7 @@ interface Product {
   price: number;
   description?: string;
   imageURL: string;
-  qualify?: number;
+  qualifications?: Qualification[];
   domain_id?: string;
 }
 
