@@ -35,6 +35,8 @@ public class ProductService {
         return productDao.getByName(productName);
     }
 
+    public Product getProductByMlaId(String id) { return productDao.getByMlaId(id);}
+
     public List<Product> getTopSellingProducts() {
         Pageable topFive = PageRequest.of(0, 5); 
         return productReportDao.getTopSellingProducts(topFive);
