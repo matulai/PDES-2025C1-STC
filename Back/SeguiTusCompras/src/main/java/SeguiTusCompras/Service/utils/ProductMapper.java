@@ -53,6 +53,14 @@ public class ProductMapper {
         return product;
     }
 
+    public List<Product> toEntitiesFromDto(List<ProductDto> productDtos) {
+        List<Product> entities = new ArrayList<Product>();
+        for(ProductDto productDto: productDtos) {
+            entities.add(toEntityFromDto(productDto));
+        }
+        return entities;
+    }
+
     // Esto hay que refactorizarlo, se repite codigo
 
     public static ProductDto converToDto(Product product) {

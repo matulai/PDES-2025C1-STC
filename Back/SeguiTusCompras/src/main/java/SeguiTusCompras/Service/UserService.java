@@ -44,22 +44,22 @@ public class UserService {
         return userDao.save(client);
     }
 
-    public void addPurchase(User user, Product product) {
-        user.addToPurchases(product);
+    public void addToCart(User user, Product product) {
+        user.addToCart(product);
+        userDao.save(user);
+    }
+
+    public void addPurchases(User user, List<Product> products) {
+        for(Product product: products) {
+            user.addToPurchase(product);
+        }
         userDao.save(user);
     }
 
     public User qualifyProduct(User user, Product product, Integer score, String comment) {
         checkIfScoreIsValid(score);
-        user.qualifyProduct(product, score);
-        User userWithQualification = userDao.save(user);
-        Qualification qualification = userWithQualification.getQualificationForProduct(product);
-        if (comment != null && qualification != null) {
-            userWithQualification.generateComment(comment, qualification);
-            qualificationDao.save(qualification);
-            return userDao.save(user);
-        }
-        return userWithQualification;
+        user.qualifyProduct(product, score, comment);
+        return userDao.save(user);
     }
 
     private void checkIfScoreIsValid(Integer score) {

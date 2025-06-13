@@ -24,8 +24,6 @@ public class ProductService {
             Product newProduct = productDao.save(product);
             ProductReport productReport = new ProductReport();
             productReport.setProduct(newProduct);
-            ProductReport report = productReportDao.save(productReport);
-            newProduct.setProductReport(report);
             return productDao.save(newProduct);
         }
         return persistedProduct;    
