@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseDto {
     private String userName;
-    private ProductDto productDto;
+    private List<ProductDto> productsDto;
 }
