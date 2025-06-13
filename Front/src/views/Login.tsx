@@ -21,7 +21,6 @@ const Login = () => {
     }
     login(username, password)
       .then(response => {
-        console.log(response);
         contextLogin(
           {
             name: response.data.name,
