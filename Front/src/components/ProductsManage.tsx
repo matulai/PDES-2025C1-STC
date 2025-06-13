@@ -13,12 +13,7 @@ const ProductsManage = ({ products }: ProductsManageProps) => {
       {/* <Filter setProducts={setProducts} /> */}
       <div className="search-content-results">
         {products.map(product => (
-          <ProductCard
-            key={product.mlaId}
-            mlaId={product.mlaId}
-            name={product.name}
-            imageURL={product.imageURL}
-          />
+          <ProductCard key={product.mlaId} product={product} />
         ))}
       </div>
       {/* <Pagination products={products.pagination}/> */}
