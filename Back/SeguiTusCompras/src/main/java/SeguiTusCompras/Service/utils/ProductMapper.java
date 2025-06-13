@@ -58,7 +58,7 @@ public class ProductMapper {
     public static ProductDto converToDto(Product product) {
         List<Qualification> qualifications = product.getQualifications();
         List<QualificationDto> qualificationDtos = QualificationMapper.convertListToDto(qualifications);
-        ProductDto productDto = new ProductDto(product.getName(), product.getMlaId(), product.getPrice(), 
+        ProductDto productDto = new ProductDto(product.getName(), product.getMlaId(), product.getPrice(),
                                 product.getImageURL(), product.getDomainId(), product.getDescription(), qualificationDtos);
         return productDto;
     }

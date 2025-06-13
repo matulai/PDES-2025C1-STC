@@ -34,7 +34,7 @@ public class Product {
     @Column
     private String domainId;
 
-    @Column
+    @Column(length = 1000)
     private String description;
 
     @OneToMany(mappedBy = "product")
