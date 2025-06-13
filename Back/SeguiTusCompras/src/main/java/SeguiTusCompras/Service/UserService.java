@@ -3,8 +3,6 @@ package SeguiTusCompras.Service;
 import java.util.List;
 import java.util.Optional;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,23 +13,21 @@ import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
 import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
-import SeguiTusCompras.persistence.ICommentDao;
-import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IQualificationDAO;
 import SeguiTusCompras.persistence.IUserDao;
 import SeguiTusCompras.persistence.report.IUserReportDao;
 @Service
 public class UserService {
-    @Autowired
-    IUserDao userDao;
-    @Autowired
-    IProductDao productDao;
-    @Autowired
-    IQualificationDAO qualificationDao;
-    @Autowired
-    ICommentDao commentDao;
-    @Autowired
-    IUserReportDao userReportDao;
+
+    private final IUserDao userDao;
+    private final IQualificationDAO qualificationDao;
+    private final IUserReportDao userReportDao;
+
+    public UserService(IUserDao userDao, IQualificationDAO qualificationDao, IUserReportDao userReportDao) {
+        this.userDao = userDao;
+        this.qualificationDao = qualificationDao;
+        this.userReportDao = userReportDao;
+    }
 
     public  User getUser(String userName) {
 
@@ -48,9 +44,9 @@ public class UserService {
         return userDao.save(client);
     }
 
-    public User addPurchase(User user, Product product) {
+    public void addPurchase(User user, Product product) {
         user.addToPurchases(product);
-        return userDao.save(user);
+        userDao.save(user);
     }
 
     public User qualifyProduct(User user, Product product, Integer score, String comment) {
@@ -61,8 +57,7 @@ public class UserService {
         if (comment != null && qualification != null) {
             userWithQualification.generateComment(comment, qualification);
             qualificationDao.save(qualification);
-            User userWithComment = userDao.save(user);
-            return userWithComment;
+            return userDao.save(user);
         }
         return userWithQualification;
     }
