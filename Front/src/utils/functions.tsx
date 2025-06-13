@@ -1,7 +1,12 @@
 function calculateProductPrice(mlaId: String, name: String) {
   const initialPrice = Number(mlaId.slice(3));
-  const result = Math.floor(initialPrice / name.length);
-  return result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return Math.floor(initialPrice / name.length);
 }
 
-export { calculateProductPrice };
+function convertUndefinedToNull<T>(obj: T): T {
+  return JSON.parse(
+    JSON.stringify(obj, (_key, value) => (value === undefined ? null : value))
+  );
+}
+
+export { calculateProductPrice, convertUndefinedToNull };
