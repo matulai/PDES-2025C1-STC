@@ -34,7 +34,7 @@ const Navbar = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   let navLinks: NavLink[] = navLinksNoRegistered;
-  let roleOptions = [];
+  let roleOptions: NavLink[] = [];
 
   if (user) {
     navLinks = navLinksRegistered;
@@ -74,7 +74,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar-container">
-      {user?.role === "Admin" && (
+      {user?.role !== undefined && (
         <div className="dropdown" ref={dropdownRef}>
           <button
             className="dropdown-toggle"
@@ -84,7 +84,7 @@ const Navbar = () => {
           </button>
           {showDropdown && (
             <div className="dropdown-menu">
-              {adminOptions.map(option => (
+              {roleOptions.map(option => (
                 <NavbarItem
                   key={option.label}
                   label={option.label}
