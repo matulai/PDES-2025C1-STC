@@ -39,19 +39,4 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Qualification> qualifications;
-
-    @OneToOne(mappedBy = "product", fetch = FetchType.EAGER)
-    private ProductReport productReport;
-
-    public void increaseFavoritesCounter() {
-        this.getProductReport().addFavorite();
-    }
-
-    public void decreaseFavoritesCounter() {
-        this.getProductReport().decreaseFavorite();
-    }
-
-    public void increasePurchasesCounter() {
-        this.getProductReport().addPurchase();
-    }
 }
