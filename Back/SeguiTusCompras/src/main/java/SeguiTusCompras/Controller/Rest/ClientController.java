@@ -1,24 +1,19 @@
 package SeguiTusCompras.Controller.Rest;
 
+import SeguiTusCompras.Controller.dtos.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
-import SeguiTusCompras.Controller.dtos.FavoriteDto;
-import SeguiTusCompras.Controller.dtos.PurchaseDto;
-import SeguiTusCompras.Controller.dtos.QualificationDto;
-import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.user.User;
 
-import org.springframework.web.bind.annotation.RequestBody;
+import java.util.List;
 
 @RestController
 @RequestMapping("/client")
@@ -39,11 +34,19 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(clientDto);
     }
 
-    @PostMapping(value = "addPurchase")
-    public ResponseEntity<Void> addPurchase(@RequestBody PurchaseDto purchaseDto){
+    @PostMapping(value = "purchaseProducts")
+    public ResponseEntity<Void> purchaseProducts(@RequestBody PurchaseDto purchaseDto){
         User client = clientService.getUser(purchaseDto.getUserName());
-        Product product = productService.getProduct(productMapper.toEntityFromDto(purchaseDto.getProductDto()));
-        clientService.addPurchase(client, product);
+        List<Product> products = productMapper.toEntitiesFromDto(purchaseDto.getProductsDto());
+        clientService.addPurchases(client, products);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping(value = "addToCart")
+    public ResponseEntity<Void> addToCart(@RequestBody CartDto cartDto){
+        User client = clientService.getUser(cartDto.getUserName());
+        Product product = productMapper.toEntityFromDto(cartDto.getProductDto());
+        clientService.addToCart(client, product);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
