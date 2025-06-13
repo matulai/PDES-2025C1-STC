@@ -8,7 +8,6 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import SeguiTusCompras.model.Comment;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
 import SeguiTusCompras.model.report.UserReport;
@@ -61,6 +60,13 @@ public class User implements UserDetails{
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private UserReport report;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "cart",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> cart = new ArrayList<>();
 
     public User(String name, String password, String role) {
         this.name = name;
@@ -74,26 +80,26 @@ public class User implements UserDetails{
         return getName();
     }
 
-    public void addToPurchases(Product product){
+    public void addToPurchase(Product product){
         this.purchases.add(product);
         this.report.addPurchase();
-        product.increasePurchasesCounter();
     }
 
+    public void addToCart(Product product) {
+        this.cart.add(product);
+    }
 
     public void addToFavorites(Product product){
         this.favorites.add(product);
-        product.increaseFavoritesCounter();
     }
 
     public void deleteFromFavorites(Product product) {
         this.favorites.remove(product);
-        product.decreaseFavoritesCounter();
     }
 
-    public void qualifyProduct(Product product, Integer score){
+    public void qualifyProduct(Product product, Integer score, String comment){
         if(doIOwnTheProduct(product)){
-            Qualification qualification = new Qualification(this, score, product);
+            Qualification qualification = new Qualification(this, score, product, comment);
             qualifications.add(qualification);
         }
     }
@@ -102,15 +108,6 @@ public class User implements UserDetails{
     private boolean doIOwnTheProduct(Product product) {
         return this.purchases.contains(product);
     }
-    
-  
-
-    public Comment generateComment(String comment, Qualification qualification) {
-        Comment newComment = new Comment(comment, qualification);
-        qualification.setComment(newComment);
-        return newComment;
-    }
-
 
     public Qualification getQualificationForProduct(Product product) {
         for(Qualification qualification : qualifications){
