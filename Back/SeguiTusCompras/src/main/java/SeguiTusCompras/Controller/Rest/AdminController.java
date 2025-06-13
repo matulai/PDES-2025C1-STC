@@ -45,20 +45,6 @@ public class AdminController {
         return ResponseEntity.ok().body(qualificationsDto);
     }
 
-    @GetMapping(value = "userPurchases")
-    public ResponseEntity<List<SimpleProductDto>> userPurchases(@RequestParam String userName){
-        List<Product> purchases = clientService.getPurchasesFromUser(userName);
-        List<SimpleProductDto> productsDtos = ProductMapper.convertToListSimpleDto(purchases);
-        return ResponseEntity.ok().body(productsDtos);
-    }
-
-    @GetMapping(value="userFavorites")
-    public ResponseEntity<List<SimpleProductDto>> userFavorites(@RequestParam String userName){
-        List<Product> favorites = clientService.getFavorites(userName);
-        List<SimpleProductDto> favoritesDto = ProductMapper.convertToListSimpleDto(favorites);
-        return ResponseEntity.ok().body(favoritesDto);
-    }
-
     @GetMapping(value="topSellingProducts")
     public ResponseEntity<List<SimpleProductDto>> topSellingProducts(){
         List<Product> topSellingProducts = productService.getTopSellingProducts();

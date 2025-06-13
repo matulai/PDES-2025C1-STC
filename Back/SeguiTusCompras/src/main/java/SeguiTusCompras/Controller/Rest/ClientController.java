@@ -58,4 +58,18 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @GetMapping(value = "userPurchases")
+    public ResponseEntity<List<ProductDto>> userPurchases(@RequestParam String userName){
+        List<Product> purchases = clientService.getPurchasesFromUser(userName);
+        List<ProductDto> productsDtos = ProductMapper.convertListToDto(purchases);
+        return ResponseEntity.ok().body(productsDtos);
+    }
+
+    @GetMapping(value="userFavorites")
+    public ResponseEntity<List<ProductDto>> userFavorites(@RequestParam String userName){
+        List<Product> favorites = clientService.getFavorites(userName);
+        List<ProductDto> favoritesDto = ProductMapper.convertListToDto(favorites);
+        return ResponseEntity.ok().body(favoritesDto);
+    }
+
 }
