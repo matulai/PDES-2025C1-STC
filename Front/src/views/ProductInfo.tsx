@@ -1,13 +1,19 @@
+import { addFavouriteProduct, purchaseProduct } from "@/service/userService";
 import { StarsQualify, CommentsSection } from "@/components";
-import { useState, useEffect } from "react";
 import { Product, Qualification } from "@/types";
+import { useParams, useNavigate } from "react-router-dom";
+import { calculateProductPrice } from "@/utils/functions";
+import { useState, useEffect } from "react";
 import { getProductById } from "@/service/productService";
-import { useParams } from "react-router-dom";
+import { useAuth } from "@/hooks";
 import "@/styles/ProductInfo.css";
 
 const ProductInfo = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isFavourite, setIsFavourite] = useState(false);
   const [comments, setComments] = useState<Qualification[]>([
     {
       userName: "Juan",
@@ -51,13 +57,42 @@ const ProductInfo = () => {
     if (id) {
       getProductById(id)
         .then(res => {
+          res.data.price = calculateProductPrice(res.data.mlaId, res.data.name);
           setProduct(res.data);
+          setIsFavourite(res.data && user?.favorites.includes(res.data));
         })
         .catch(err => {
           console.error(err);
         });
     }
   }, [id]);
+
+  const handleOnClickAddFavourite = () => {
+    if (product) {
+      if (user) {
+        addFavouriteProduct(product, user.name);
+        if (user.favorites.includes(product)) {
+          user.favorites.filter(p => p != product);
+        } else {
+          user.favorites.push(product);
+        }
+        setIsFavourite(!isFavourite);
+      } else {
+        navigate("/register");
+      }
+    }
+  };
+
+  const handleOnClickPurchase = () => {
+    if (product) {
+      if (user) {
+        purchaseProduct(product, user.name);
+        // CARRITO
+      } else {
+        navigate("/register");
+      }
+    }
+  };
 
   return (
     <div className="product-container">
@@ -72,8 +107,13 @@ const ProductInfo = () => {
           <p className="product-info-details-description">
             {product?.description}
           </p>
-          <button className="product-info-details-button">Comprar ahora</button>
           <button className="product-info-details-button">
+            Agregar al carrito
+          </button>
+          <button
+            onClick={handleOnClickAddFavourite}
+            className={`${isFavourite ? "product-info-details-button-active" : ""} product-info-details-button`}
+          >
             Agregar a Favoritos
           </button>
         </section>
