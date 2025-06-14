@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
 import SeguiTusCompras.Service.UserService;
@@ -35,10 +36,10 @@ public class ClientController {
     }
 
     @PostMapping(value = "purchaseProducts")
-    public ResponseEntity<Void> purchaseProducts(@RequestBody PurchaseDto purchaseDto){
-        User client = clientService.getUser(purchaseDto.getUserName());
-        List<Product> products = productMapper.toEntitiesFromDto(purchaseDto.getProductsDto());
-        clientService.addPurchases(client, products);
+    public ResponseEntity<Void> purchaseProducts(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User client = clientService.getUser(username);
+        clientService.addPurchases(client);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

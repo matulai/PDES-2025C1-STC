@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import SeguiTusCompras.model.PurchaseRecipe;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -41,13 +43,8 @@ public class User implements UserDetails{
     )
     private Set<Product> favorites = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "purchase",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> purchases = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchaseRecipe> purchases = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Qualification> qualifications = new HashSet<>();
@@ -80,10 +77,11 @@ public class User implements UserDetails{
         return getName();
     }
 
-    public void addToPurchase(Product product){
-        this.purchases.add(product);
-        this.report.addPurchase();
+    public void addToPurchase(PurchaseRecipe purchaseRecipe){
+        this.purchases.add(purchaseRecipe);
     }
+
+    public void cleanCart() { this.cart.removeAll(this.cart); }
 
     public void addToCart(Product product) {
         this.cart.add(product);

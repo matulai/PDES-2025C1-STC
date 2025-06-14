@@ -3,6 +3,8 @@ package SeguiTusCompras.Service;
 import java.util.List;
 import java.util.Optional;
 
+import SeguiTusCompras.model.PurchaseRecipe;
+import SeguiTusCompras.persistence.IPurchaseRecipeDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,11 +24,14 @@ public class UserService {
     private final IUserDao userDao;
     private final IQualificationDAO qualificationDao;
     private final IUserReportDao userReportDao;
+    private final IPurchaseRecipeDao purchaseRecipeDao;
 
-    public UserService(IUserDao userDao, IQualificationDAO qualificationDao, IUserReportDao userReportDao) {
+    public UserService(IUserDao userDao, IQualificationDAO qualificationDao,
+                       IUserReportDao userReportDao, IPurchaseRecipeDao purchaseRecipeDao) {
         this.userDao = userDao;
         this.qualificationDao = qualificationDao;
         this.userReportDao = userReportDao;
+        this.purchaseRecipeDao = purchaseRecipeDao;
     }
 
     public  User getUser(String userName) {
@@ -49,10 +54,10 @@ public class UserService {
         userDao.save(user);
     }
 
-    public void addPurchases(User user, List<Product> products) {
-        for(Product product: products) {
-            user.addToPurchase(product);
-        }
+    public void addPurchases(User user) {
+        PurchaseRecipe purchaseRecipe = purchaseRecipeDao.save(new PurchaseRecipe(user.getCart(), user));
+        user.addToPurchase(purchaseRecipe);
+        user.cleanCart();
         userDao.save(user);
     }
 
