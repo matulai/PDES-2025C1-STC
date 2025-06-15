@@ -41,7 +41,7 @@ public class User implements UserDetails{
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> favorites = new HashSet<>();
+    private List<Product> favorites = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseRecipe> purchases = new ArrayList<>();
