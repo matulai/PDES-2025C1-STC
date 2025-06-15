@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDownIcon, CartIcon } from "@/icons";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDownIcon } from "@/icons";
 import { useAuth } from "@/hooks";
 import "@/styles/Navbar.css";
 
@@ -119,6 +119,14 @@ const Navbar = () => {
           {link.label}
         </Link>
       ))}
+      {user?.role === "Client" ? (
+        <Link
+          to="/cart"
+          className={`navbar-link ${location.pathname === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
+        >
+          <CartIcon />
+        </Link>
+      ) : null}
     </nav>
   );
 };
