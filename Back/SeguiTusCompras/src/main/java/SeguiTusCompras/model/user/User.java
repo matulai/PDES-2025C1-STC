@@ -96,15 +96,12 @@ public class User implements UserDetails{
     }
 
     public void qualifyProduct(Product product, Integer score, String comment){
-        if(doIOwnTheProduct(product)){
-            Qualification qualification = new Qualification(this, score, product, comment);
-            qualifications.add(qualification);
-        }
+
     }
 
-
-    private boolean doIOwnTheProduct(Product product) {
-        return this.purchases.contains(product);
+    public boolean ownsProduct(Product product) {
+        return purchases.stream()
+                .anyMatch(recipe -> recipe.getPurchaseProducts().contains(product));
     }
 
     public Qualification getQualificationForProduct(Product product) {

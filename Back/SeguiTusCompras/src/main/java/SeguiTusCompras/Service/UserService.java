@@ -17,20 +17,18 @@ import SeguiTusCompras.model.user.Role;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IQualificationDAO;
 import SeguiTusCompras.persistence.IUserDao;
-import SeguiTusCompras.persistence.report.IUserReportDao;
+
 @Service
 public class UserService {
 
     private final IUserDao userDao;
     private final IQualificationDAO qualificationDao;
-    private final IUserReportDao userReportDao;
     private final IPurchaseRecipeDao purchaseRecipeDao;
 
     public UserService(IUserDao userDao, IQualificationDAO qualificationDao,
-                       IUserReportDao userReportDao, IPurchaseRecipeDao purchaseRecipeDao) {
+                       IPurchaseRecipeDao purchaseRecipeDao) {
         this.userDao = userDao;
         this.qualificationDao = qualificationDao;
-        this.userReportDao = userReportDao;
         this.purchaseRecipeDao = purchaseRecipeDao;
     }
 
@@ -61,10 +59,11 @@ public class UserService {
         userDao.save(user);
     }
 
-    public User qualifyProduct(User user, Product product, Integer score, String comment) {
+    public void qualifyProduct(User user, Product product, Integer score, String comment) {
         checkIfScoreIsValid(score);
-        user.qualifyProduct(product, score, comment);
-        return userDao.save(user);
+        if(user.ownsProduct(product)) {
+            Qualification qualification = qualificationDao.save(new Qualification(user, score, product, comment));
+        }
     }
 
     private void checkIfScoreIsValid(Integer score) {
@@ -73,16 +72,7 @@ public class UserService {
         }
     }
 
-    public Page<User> getAllUserByRole(Role role, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return userDao.UsersByRole(role, pageable);
-    }
-
-    public List<Qualification> getQualificationsMadeByUser(String userName) {
-        return userDao.getQualifications(userName);
-    }
-
-    public List<Product> getPurchasesFromUser(String userName) {
+    public List<PurchaseRecipe> getPurchasesFromUser(String userName) {
         return userDao.getPurchases(userName);
     }
 
@@ -90,10 +80,22 @@ public class UserService {
         return userDao.getFavorites(userName);
     }
 
-    public List<User> getTopBuyers() {
-        Pageable topFive = PageRequest.of(0, 5); 
-        return userReportDao.getTopBuyers(topFive);
+    public Page<User> getAllUserByRole(Role role, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return userDao.UsersByRole(role, pageable);
     }
 
+    public List<User> getTopBuyers() {
+        Pageable topFive = PageRequest.of(0, 5);
+        return userDao.findTopUsersWithMostPurchasesOfAllUsers(topFive);
+    }
+
+    public List<Qualification> getAllUsersQualifications() {
+        return qualificationDao.findAll();
+    }
+
+    public List<PurchaseRecipe> getAllUsersPurchases() {
+        return purchaseRecipeDao.findAll();
+    }
    
 }

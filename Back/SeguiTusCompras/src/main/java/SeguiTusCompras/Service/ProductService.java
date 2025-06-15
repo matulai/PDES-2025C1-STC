@@ -8,15 +8,12 @@ import org.springframework.stereotype.Service;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.report.ProductReport;
 import SeguiTusCompras.persistence.IProductDao;
-import SeguiTusCompras.persistence.report.IProductReport;
 import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService {
     @Autowired
     IProductDao productDao;
-    @Autowired
-    IProductReport productReportDao;
 
     public Product getProduct(Product product) {
         Product persistedProduct = productDao.getByName(product.getName());
@@ -35,14 +32,17 @@ public class ProductService {
 
     public Product getProductByMlaId(String id) { return productDao.getByMlaId(id);}
 
+    public List<Product> getAllFavoritesProducts() {
+        return productDao.findAllFavoriteProductsOfAllUsers();
+    }
+
     public List<Product> getTopSellingProducts() {
         Pageable topFive = PageRequest.of(0, 5); 
-        return productReportDao.getTopSellingProducts(topFive);
+        return productDao.findTopPurchasesProductsOfAllUsers(topFive);
     }
 
     public List<Product> getTopFavoriteProducts() {
         Pageable topFive = PageRequest.of(0, 5); 
-        return productReportDao.getTopFavoriteProducts(topFive);
+        return productDao.findTopProductsFavoritesOfAllUsers(topFive);
     }
-
 }
