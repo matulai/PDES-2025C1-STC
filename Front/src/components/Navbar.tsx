@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDownIcon } from "@/icons";
 import { useAuth } from "@/hooks";
-import NavbarItem from "./NavbarItem";
 import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
@@ -26,12 +26,16 @@ const adminOptions = [
   { label: "Top favoritos", pathname: "/admin/top-favorites" },
 ];
 
-type NavLink = { label: string; pathname: string };
+interface NavLink {
+  label: string;
+  pathname: string;
+}
 
 const Navbar = () => {
   const { user, contextLogout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   let navLinks: NavLink[] = navLinksNoRegistered;
   let roleOptions: NavLink[] = [];
@@ -39,6 +43,8 @@ const Navbar = () => {
   if (user) {
     navLinks = navLinksRegistered;
     if (user.role === "Admin") {
+      // El admin no debe poder hacer lo que un cliente puede
+      navLinks = [];
       roleOptions = adminOptions;
     }
   }
@@ -77,7 +83,7 @@ const Navbar = () => {
       {user?.role !== undefined && (
         <div className="dropdown" ref={dropdownRef}>
           <button
-            className="dropdown-toggle"
+            className="navbar-link navbar-link-inactive"
             onClick={() => setShowDropdown(!showDropdown)}
           >
             Options <ChevronDownIcon />
@@ -85,14 +91,19 @@ const Navbar = () => {
           {showDropdown && (
             <div className="dropdown-menu">
               {roleOptions.map(option => (
-                <NavbarItem
+                <Link
                   key={option.label}
-                  label={option.label}
-                  pathname={option.pathname}
-                />
+                  to={option.pathname}
+                  className={`navbar-link ${location.pathname === option.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+                >
+                  {option.label}
+                </Link>
               ))}
-              <button className="dropdown-toggle" onClick={handleLogout}>
-                logout
+              <button
+                className="navbar-link navbar-link-inactive"
+                onClick={handleLogout}
+              >
+                Logout
               </button>
             </div>
           )}
@@ -100,11 +111,13 @@ const Navbar = () => {
       )}
 
       {navLinks.map(link => (
-        <NavbarItem
+        <Link
           key={link.label}
-          label={link.label}
-          pathname={link.pathname}
-        />
+          to={link.pathname}
+          className={`navbar-link ${location.pathname === link.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+        >
+          {link.label}
+        </Link>
       ))}
     </nav>
   );
