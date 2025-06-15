@@ -38,7 +38,7 @@ public class UserMapper {
     }
 
     public static UserDto convertToDto(User clientWithNewFavorite) {
-        Set<Product> favorites = clientWithNewFavorite.getFavorites();
+        List<Product> favorites = clientWithNewFavorite.getFavorites();
         List<PurchaseRecipe> purchases = clientWithNewFavorite.getPurchases();
         Set<Qualification> qualifications = clientWithNewFavorite.getQualifications();
         List<Product> cartProducts = clientWithNewFavorite.getCart();
