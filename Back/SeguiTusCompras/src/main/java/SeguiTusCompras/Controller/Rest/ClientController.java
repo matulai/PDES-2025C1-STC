@@ -1,8 +1,7 @@
 package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.dtos.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import SeguiTusCompras.model.PurchaseRecipe;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,13 +17,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-@RequiredArgsConstructor
 public class ClientController {
-    @Autowired
-    private UserService clientService;
-    @Autowired
-    private ProductService productService;
+
+    private final UserService clientService;
+    private final ProductService productService;
     private final ProductMapper productMapper;
+
+    public ClientController(UserService userService, ProductService productService, ProductMapper productMapper) {
+        this.clientService = userService;
+        this.productService = productService;
+        this.productMapper = productMapper;
+    }
 
     @PostMapping(value = "addProductToFavorites")
     public ResponseEntity<UserDto> addProductToFavorites(@RequestBody FavoriteDto favoriteDto){
@@ -60,15 +63,17 @@ public class ClientController {
     }
 
     @GetMapping(value = "userPurchases")
-    public ResponseEntity<List<ProductDto>> userPurchases(@RequestParam String userName){
-        List<Product> purchases = clientService.getPurchasesFromUser(userName);
-        List<ProductDto> productsDtos = ProductMapper.convertListToDto(purchases);
-        return ResponseEntity.ok().body(productsDtos);
+    public ResponseEntity<List<PurchaseRecipeDto>> userPurchases(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<PurchaseRecipe> purchasesRecipes = clientService.getPurchasesFromUser(username);
+        List<PurchaseRecipeDto> purchasesRecipesDto = ProductMapper.convertToListPurchaseRecipeDto(purchasesRecipes);
+        return ResponseEntity.ok().body(purchasesRecipesDto);
     }
 
     @GetMapping(value="userFavorites")
-    public ResponseEntity<List<ProductDto>> userFavorites(@RequestParam String userName){
-        List<Product> favorites = clientService.getFavorites(userName);
+    public ResponseEntity<List<ProductDto>> userFavorites(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Product> favorites = clientService.getFavorites(username);
         List<ProductDto> favoritesDto = ProductMapper.convertListToDto(favorites);
         return ResponseEntity.ok().body(favoritesDto);
     }
