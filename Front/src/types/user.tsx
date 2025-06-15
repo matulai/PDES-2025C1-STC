@@ -1,11 +1,12 @@
-import { Product, Qualification } from "./";
+import { Product, Qualification, PurchaseRecipe } from "./";
 
 interface User {
   name: string;
   role: string;
   favorites: Product[];
-  purchases: Product[];
+  purchases: PurchaseRecipe[];
   qualifications: Qualification[];
+  cart: Product[];
 }
 
 export default User;
