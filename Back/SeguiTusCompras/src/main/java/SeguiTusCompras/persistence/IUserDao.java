@@ -1,5 +1,6 @@
 package SeguiTusCompras.persistence;
 
+import SeguiTusCompras.model.PurchaseRecipe;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
 import SeguiTusCompras.model.user.Role;
@@ -29,12 +30,15 @@ public interface IUserDao extends JpaRepository<User, Long> {
     List<Qualification> getQualifications(String userName);
 
     @Query("""
-            SELECT p FROM User u JOIN u.purchases p WHERE u.name = ?1
+            SELECT pr FROM User u JOIN u.purchases pr WHERE u.name = ?1
             """)
-    List<Product> getPurchases(String userName);
+    List<PurchaseRecipe> getPurchases(String userName);
 
     @Query("""
             SELECT f FROM User u JOIN u.favorites f WHERE u.name = ?1
             """)
     List<Product> getFavorites(String userName);
+
+    @Query("SELECT u FROM User u LEFT JOIN u.purchases p GROUP BY u ORDER BY COUNT(p) DESC")
+    List<User> findTopUsersWithMostPurchasesOfAllUsers(Pageable pageable);
 }
