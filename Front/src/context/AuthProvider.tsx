@@ -29,9 +29,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const currentUser: User = response.data;
           setUser(currentUser);
         })
-        .catch(() => {
+        .catch(error => {
           // Pensar si es necesario eliminar el token
-          contextLogout();
+          console.log(error);
         })
         .finally(() => {
           setIsLoading(false);
