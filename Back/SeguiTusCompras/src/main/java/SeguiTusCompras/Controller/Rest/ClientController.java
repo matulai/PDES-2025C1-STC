@@ -29,9 +29,10 @@ public class ClientController {
     }
 
     @PostMapping(value = "addProductToFavorites")
-    public ResponseEntity<List<ProductDto>> addProductToFavorites(@RequestBody FavoriteDto favoriteDto){
-        User client = clientService.getUser(favoriteDto.getUserName());
-        Product product = productService.getProduct(productMapper.toEntityFromDto(favoriteDto.getProductDto()));
+    public ResponseEntity<List<ProductDto>> addProductToFavorites(@RequestBody ProductDto productDto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User client = clientService.getUser(username);
+        Product product = productService.getProduct(productMapper.toEntityFromDto(productDto));
         User clientWithNewFavorite = clientService.addProductToFavorites(client, product);
         return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.convertListToDto(clientWithNewFavorite.getFavorites()));
     }
@@ -45,9 +46,10 @@ public class ClientController {
     }
 
     @PostMapping(value = "addToCart")
-    public ResponseEntity<List<ProductDto>> addToCart(@RequestBody CartDto cartDto){
-        User client = clientService.getUser(cartDto.getUserName());
-        Product product = productMapper.toEntityFromDto(cartDto.getProductDto());
+    public ResponseEntity<List<ProductDto>> addToCart(@RequestBody ProductDto productDto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User client = clientService.getUser(username);
+        Product product = productMapper.toEntityFromDto(productDto);
         User clientUpdated = clientService.addToCart(client, product);
         return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.convertListToDto(clientUpdated.getCart()));
     }

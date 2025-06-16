@@ -58,7 +58,7 @@ class UserTest {
     @Test
     void addToPurchases_AddsProductAndUpdatesReports() {
 
-        user.addToPurchases(mockProduct1);
+        user.addToPurchase(mockProduct1);
 
 
         assertTrue(user.getPurchases().contains(mockProduct1));
@@ -73,7 +73,7 @@ class UserTest {
         user.setReport(null);
         
         assertThrows(NullPointerException.class, () -> {
-            user.addToPurchases(mockProduct1);
+            user.addToPurchase(mockProduct1);
         });
 
     }
@@ -94,7 +94,7 @@ class UserTest {
     void addToQualified_WhenUserOwnsProduct_AddsQualification() {
         user.getPurchases().add(mockProduct1);
         Integer score = 5;
-        user.qualifyProduct(mockProduct1, score);
+        user.qualifyProduct(mockProduct1, score, "comment");
 
         assertEquals(1, user.getQualifications().size());
     }
@@ -103,7 +103,7 @@ class UserTest {
     @Test
     void addToQualified_WhenUserDoesNotOwnProduct_DoesNotAddQualification() {
         Integer score = 5;
-        user.qualifyProduct(mockProduct1, score);
+        user.qualifyProduct(mockProduct1, score, "comment");
 
         assertTrue(user.getQualifications().isEmpty());
     }

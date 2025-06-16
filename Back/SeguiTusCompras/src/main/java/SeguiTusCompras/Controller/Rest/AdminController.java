@@ -59,9 +59,9 @@ public class AdminController {
     }
 
     @GetMapping(value="topSellingProducts")
-    public ResponseEntity<List<SimpleProductDto>> topSellingProducts(){
+    public ResponseEntity<List<ProductDto>> topSellingProducts(){
         List<Product> topSellingProducts = productService.getTopSellingProducts();
-        List<SimpleProductDto> topSoldProductsDto = ProductMapper.convertToListSimpleDto(topSellingProducts);
+        List<ProductDto> topSoldProductsDto = ProductMapper.convertListToDto(topSellingProducts);
         return ResponseEntity.ok().body(topSoldProductsDto);
     }
 
@@ -73,9 +73,9 @@ public class AdminController {
     }
 
     @GetMapping(value="topFavoriteProducts")
-    public ResponseEntity<List<SimpleProductDto>> topFavoriteProducts(){
+    public ResponseEntity<List<ProductDto>> topFavoriteProducts(){
         List<Product> topSellingProducts = productService.getTopFavoriteProducts();
-        List<SimpleProductDto> topSoldProductsDto = ProductMapper.convertToListSimpleDto(topSellingProducts);
+        List<ProductDto> topSoldProductsDto = ProductMapper.convertListToDto(topSellingProducts);
         return ResponseEntity.ok().body(topSoldProductsDto);
     }
 }
