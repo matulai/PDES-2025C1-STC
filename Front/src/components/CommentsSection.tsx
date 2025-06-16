@@ -46,6 +46,15 @@ const CommentsSection = ({
     }
   };
 
+  console.log(user);
+
+  const canComment =
+    user !== null &&
+    user?.purchases.some(pr =>
+      pr.purchaseProducts.some(p => p.name === productName)
+    ) &&
+    !user?.qualifications.some(q => q.productName === productName);
+
   return (
     <section className="comments-section">
       <div className="comments-section-list-container">
@@ -60,22 +69,21 @@ const CommentsSection = ({
           ))}
         </section>
       </div>
-      {user !== null &&
-        !user?.qualifications.some(q => q.productName === productName) && (
-          <section className="comments-section-qualify">
-            <StarsQualify
-              value={comment.score}
-              starsSize={20}
-              setValue={handleSetValue}
-            />
-            <InputText
-              handleSubmit={handleAddComment}
-              iconComponent={<SendIcon />}
-              placeholder="Agrega un comentario..."
-              id="comment-input"
-            />
-          </section>
-        )}
+      {canComment && (
+        <section className="comments-section-qualify">
+          <StarsQualify
+            value={comment.score}
+            starsSize={20}
+            setValue={handleSetValue}
+          />
+          <InputText
+            handleSubmit={handleAddComment}
+            iconComponent={<SendIcon />}
+            placeholder="Agrega un comentario..."
+            id="comment-input"
+          />
+        </section>
+      )}
     </section>
   );
 };
