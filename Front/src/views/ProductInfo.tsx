@@ -1,4 +1,4 @@
-import { addFavouriteProduct, purchaseProduct } from "@/service/userService";
+import { addFavouriteProduct, addToCart } from "@/service/userService";
 import { StarsQualify, CommentsSection } from "@/components";
 import { Product, Qualification } from "@/types";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,56 +10,21 @@ import "@/styles/ProductInfo.css";
 
 const ProductInfo = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [comments, setComments] = useState<Qualification[]>([]);
   const [isFavourite, setIsFavourite] = useState(false);
-  const [comments, setComments] = useState<Qualification[]>([
-    {
-      userName: "Juan",
-      productName: "Producto A",
-      comment: "Me encanta este producto, es increíble",
-      score: 5,
-    },
-    {
-      userName: "Ana",
-      productName: "Producto A",
-      comment: "No me gusta, no lo volvería a comprar",
-      score: 1,
-    },
-    {
-      userName: "Luis",
-      productName: "Producto A",
-      comment: "Es bueno, pero podría ser mejor",
-      score: 3,
-    },
-    {
-      userName: "Maria",
-      productName: "Producto A",
-      comment: "Es un producto normal, no me gusta",
-      score: 2,
-    },
-    {
-      userName: "Pedro",
-      productName: "Producto A",
-      comment: "Le gustó",
-      score: 5,
-    },
-    {
-      userName: "Lucia",
-      productName: "Producto A",
-      comment: "Es un producto normal",
-      score: 3,
-    },
-  ]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
       getProductById(id)
         .then(res => {
           res.data.price = calculateProductPrice(res.data.mlaId, res.data.name);
+          console.log(res.data);
           setProduct(res.data);
           setIsFavourite(res.data && user?.favorites.includes(res.data));
+          setComments(res.data.qualifications);
         })
         .catch(err => {
           console.error(err);
@@ -70,24 +35,32 @@ const ProductInfo = () => {
   const handleOnClickAddFavourite = () => {
     if (product) {
       if (user) {
-        addFavouriteProduct(product, user.name);
-        if (user.favorites.includes(product)) {
-          user.favorites.filter(p => p != product);
-        } else {
-          user.favorites.push(product);
-        }
-        setIsFavourite(!isFavourite);
+        addFavouriteProduct(product)
+          .then(res => {
+            user.favorites = res.data;
+            setIsFavourite(
+              res.data.some((fav: Product) => fav.name === product.name)
+            );
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
         navigate("/register");
       }
     }
   };
 
-  const handleOnClickPurchase = () => {
+  const handleOnClickAddToCart = () => {
     if (product) {
       if (user) {
-        purchaseProduct(product, user.name);
-        // CARRITO
+        addToCart(product)
+          .then((res: { data: Product[] }) => {
+            user.cart = res.data;
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
         navigate("/register");
       }
@@ -107,14 +80,17 @@ const ProductInfo = () => {
           <p className="product-info-details-description">
             {product?.description}
           </p>
-          <button className="product-info-details-button">
+          <button
+            onClick={handleOnClickAddToCart}
+            className="product-info-details-button"
+          >
             Agregar al carrito
           </button>
           <button
             onClick={handleOnClickAddFavourite}
-            className={`${isFavourite ? "product-info-details-button-active" : ""} product-info-details-button`}
+            className="product-info-details-button"
           >
-            Agregar a Favoritos
+            {`${isFavourite ? "Sacar de Favoritos" : "Agregar a Favoritos"}`}
           </button>
         </section>
       </section>
