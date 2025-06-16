@@ -15,3 +15,19 @@
   gap: 24px;
   width: 100%;
 }
+
+.qualification-content {
+  display: flex;
+  flex-wrap: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.user-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #00000040;
+}

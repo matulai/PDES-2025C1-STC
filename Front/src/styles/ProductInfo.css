@@ -62,11 +62,6 @@
   color: var(--color-white);
 }
 
-.product-info-details-button-active {
-  background-color: var(--color-black-light);
-  color: var(--color-white);
-}
-
 .product-qualify {
   display: flex;
   flex-direction: column;
