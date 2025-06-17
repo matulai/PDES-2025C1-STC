@@ -37,31 +37,38 @@ function addToCart(product: Product) {
   });
 }
 
-function addFavouriteProduct(product: Product) {
+function removeFromCart(product: Product) {
   const token = getFromLocalStorage("token");
-  const data = {
-    productDto: convertUndefinedToNull(product),
-  };
 
-  return axios.post(`${API_URL}/client/addProductToFavorites`, data, {
+  return axios.post(`${API_URL}/client/removeFromCart`, product, {
     headers: {
       Authorization: token,
     },
   });
 }
 
-function qualifyProduct(qualification: Qualification) {
+function addFavouriteProduct(product: Product) {
   const token = getFromLocalStorage("token");
 
-  return (
-    axios.post(`${API_URL}/client/addProductToFavorites`),
-    qualification,
+  return axios.post(
+    `${API_URL}/client/addProductToFavorites`,
+    convertUndefinedToNull(product),
     {
       headers: {
         Authorization: token,
       },
     }
   );
+}
+
+function qualifyProduct(qualification: Qualification) {
+  const token = getFromLocalStorage("token");
+  console.log(qualification);
+  return axios.post(`${API_URL}/client/qualifyProduct`, qualification, {
+    headers: {
+      Authorization: token,
+    },
+  });
 }
 
 function userPurchases() {
@@ -87,6 +94,7 @@ function userFavourites() {
 export {
   addFavouriteProduct,
   purchaseProducts,
+  removeFromCart,
   qualifyProduct,
   getCurrentUser,
   userFavourites,
