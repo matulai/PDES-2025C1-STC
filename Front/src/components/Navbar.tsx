@@ -7,23 +7,23 @@ import "@/styles/Navbar.css";
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
   { label: "Ingresar", pathname: "/login" },
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
+  { label: "Favoritos", pathname: "/user/favourites" },
+  { label: "Compras", pathname: "/user/purchases" },
 ];
 
 const navLinksRegistered = [
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
+  { label: "Favoritos", pathname: "/user/favourites" },
+  { label: "Compras", pathname: "/user/purchases" },
 ];
 
 const adminOptions = [
-  { label: "Usuarios", pathname: "/admin/users" },
-  { label: "Todos los favoritos", pathname: "/admin/favorites" },
-  { label: "Todas las Reseñas", pathname: "/admin/reviews" },
-  { label: "Todas las Compras", pathname: "/admin/purchases" },
-  { label: "Top vendidos", pathname: "/admin/top-sellers" },
-  { label: "Top compradores", pathname: "/admin/top-buyers" },
-  { label: "Top favoritos", pathname: "/admin/top-favorites" },
+  { label: "Usuarios", pathname: "/users" },
+  { label: "Todos los favoritos", pathname: "/users/favourites" },
+  { label: "Todas las Reseñas", pathname: "/users/qualifications" },
+  { label: "Todas las Compras", pathname: "/users/purchases" },
+  { label: "Top vendidos", pathname: "/products/topSellingProducts" },
+  { label: "Top compradores", pathname: "/users/topBuyers" },
+  { label: "Top favoritos", pathname: "/products/topFavouritesProducts" },
 ];
 
 interface NavLink {
@@ -121,7 +121,7 @@ const Navbar = () => {
       ))}
       {user?.role === "Client" ? (
         <Link
-          to="/cart"
+          to="/user/cart"
           className={`navbar-link ${location.pathname === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           <CartIcon />
