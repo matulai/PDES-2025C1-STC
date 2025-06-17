@@ -35,12 +35,12 @@ public class ProductService {
     }
 
     public List<Product> getTopSellingProducts() {
-        Pageable topFive = PageRequest.of(0, 5); 
-        return productDao.findTopPurchasesProductsOfAllUsers(topFive);
+        Pageable topFive = PageRequest.of(0, 5);
+        return productDao.findTopSellingProducts(topFive).getContent();
     }
 
     public List<Product> getTopFavoriteProducts() {
         Pageable topFive = PageRequest.of(0, 5); 
-        return productDao.findTopProductsFavoritesOfAllUsers(topFive);
+        return productDao.findTopProductsFavoritesOfAllUsers(topFive).getContent();
     }
 }

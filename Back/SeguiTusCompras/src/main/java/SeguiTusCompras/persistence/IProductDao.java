@@ -1,6 +1,7 @@
 package SeguiTusCompras.persistence;
 
 import SeguiTusCompras.model.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,8 +20,8 @@ public interface IProductDao extends JpaRepository<Product, Long> {
     List<Product> findAllFavoriteProductsOfAllUsers();
 
     @Query("SELECT p FROM User u JOIN u.favorites p GROUP BY p ORDER BY COUNT(u) DESC")
-    List<Product> findTopProductsFavoritesOfAllUsers(Pageable pageable);
+    Page<Product> findTopProductsFavoritesOfAllUsers(Pageable pageable);
 
-    @Query("SELECT pr FROM User u JOIN u.purchases pr GROUP BY pr ORDER BY COUNT(pr) DESC")
-    List<Product> findTopPurchasesProductsOfAllUsers(Pageable pageable);
+    @Query("SELECT p FROM PurchaseRecipe pr JOIN pr.purchaseProducts p GROUP BY p ORDER BY COUNT(p) DESC")
+    Page<Product> findTopSellingProducts(Pageable pageable);
 }

@@ -65,10 +65,7 @@ public class ClientController {
 
     @PostMapping(value = "qualifyProduct")
     public ResponseEntity<Void> qualifyProduct(@RequestBody QualificationDto qualificationDto){
-        System.out.println(qualificationDto);
-        System.out.println(qualificationDto.getUserName());
         User client = clientService.getUser(qualificationDto.getUserName());
-        System.out.println(qualificationDto.getProductName());
         Product product = productService.getProductByName(qualificationDto.getProductName()); 
         clientService.qualifyProduct(client, product, qualificationDto.getScore(), qualificationDto.getComment());
         return ResponseEntity.status(HttpStatus.OK).build();

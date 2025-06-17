@@ -102,11 +102,6 @@ public class UserService {
         return userDao.UsersByRole(role, pageable);
     }
 
-    public List<User> getTopBuyers() {
-        Pageable topFive = PageRequest.of(0, 5);
-        return userDao.findTopUsersWithMostPurchasesOfAllUsers(topFive);
-    }
-
     public List<Qualification> getAllUsersQualifications() {
         return qualificationDao.findAll();
     }
@@ -114,5 +109,10 @@ public class UserService {
     public List<PurchaseRecipe> getAllUsersPurchases() {
         return purchaseRecipeDao.findAll();
     }
-   
+
+    public List<User> getTopBuyers() {
+        Pageable pageable = PageRequest.of(0, 5);
+        return userDao.findTopClientsByPurchases(Role.Client, pageable).getContent();
+    }
+
 }
