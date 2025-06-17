@@ -1,4 +1,5 @@
 import type { Qualification } from "@/types";
+import { qualifyProduct } from "@/service/userService";
 import { SendIcon } from "@/icons";
 import { useState } from "react";
 import { useAuth } from "@/hooks";
@@ -37,16 +38,21 @@ const CommentsSection = ({
   const handleAddComment = (text: string) => {
     if (text && comment.score > 0) {
       comment.comment = text;
-      setComments(prev => [...prev, comment]);
-      setComment({
-        ...comment,
-        comment: "",
-        score: 0,
-      });
+      qualifyProduct(comment)
+        .then(_res => {
+          user?.qualifications.push(comment);
+          setComments(prev => [...prev, comment]);
+          setComment({
+            ...comment,
+            comment: "",
+            score: 0,
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   };
-
-  console.log(user);
 
   const canComment =
     user !== null &&
