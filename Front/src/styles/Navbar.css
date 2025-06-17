@@ -80,12 +80,11 @@
   .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 0;
-    min-width: 188px;
+    right: 0;
     z-index: 1000;
     background-color: var(--color-black-light);
     border: 1px solid var(--color-grey-light);
-    padding: 8px 0 8px 8px;
+    padding: 8px;
   }
 
   .dropdown-menu .navbar-link {
