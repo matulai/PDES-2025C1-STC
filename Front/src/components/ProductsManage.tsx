@@ -1,6 +1,6 @@
 import ProductCard from "./ProductCard";
-import { Product } from "@/types";
 import "@/styles/ProductsManage.css";
+import type { Product } from "@/types";
 
 interface ProductsManageProps {
   products: Product[];
