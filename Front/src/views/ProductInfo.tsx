@@ -1,19 +1,21 @@
+import { StarsQualify, CommentsSection, Spinner } from "@/components";
 import { addFavouriteProduct, addToCart } from "@/service/userService";
-import { StarsQualify, CommentsSection } from "@/components";
 import { Product, Qualification } from "@/types";
 import { useParams, useNavigate } from "react-router-dom";
 import { calculateProductPrice } from "@/utils/functions";
 import { useState, useEffect } from "react";
+import { useAuth, useCart } from "@/hooks";
 import { getProductById } from "@/service/productService";
-import { useAuth } from "@/hooks";
 import "@/styles/ProductInfo.css";
 
 const ProductInfo = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const { setCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [comments, setComments] = useState<Qualification[]>([]);
   const [isFavourite, setIsFavourite] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,11 +25,16 @@ const ProductInfo = () => {
           res.data.price = calculateProductPrice(res.data.mlaId, res.data.name);
           console.log(res.data);
           setProduct(res.data);
-          setIsFavourite(res.data && user?.favorites.includes(res.data));
+          setIsFavourite(
+            res.data && user?.favorites.some(p => p.name === res.data.name)
+          );
           setComments(res.data.qualifications);
         })
         .catch(err => {
           console.error(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   }, [id]);
@@ -38,9 +45,7 @@ const ProductInfo = () => {
         addFavouriteProduct(product)
           .then(res => {
             user.favorites = res.data;
-            setIsFavourite(
-              res.data.some((fav: Product) => fav.name === product.name)
-            );
+            setIsFavourite(!isFavourite);
           })
           .catch(error => {
             console.log(error);
@@ -56,7 +61,7 @@ const ProductInfo = () => {
       if (user) {
         addToCart(product)
           .then((res: { data: Product[] }) => {
-            user.cart = res.data;
+            setCart(res.data);
           })
           .catch(error => {
             console.log(error);
@@ -66,6 +71,10 @@ const ProductInfo = () => {
       }
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="product-container">
