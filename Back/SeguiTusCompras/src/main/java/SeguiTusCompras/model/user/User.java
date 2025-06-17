@@ -35,7 +35,7 @@ public class User implements UserDetails{
 
     private String password; 
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "favorite",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -57,7 +57,7 @@ public class User implements UserDetails{
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private UserReport report;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "cart",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -87,12 +87,16 @@ public class User implements UserDetails{
         this.cart.add(product);
     }
 
+    public void removeFromCart(Product product) {
+        this.cart.removeIf(p -> p.getMlaId().equals(product.getMlaId()));
+    }
+
     public void addToFavorites(Product product){
         this.favorites.add(product);
     }
 
     public void deleteFromFavorites(Product product) {
-        this.favorites.remove(product);
+        this.favorites.removeIf(p -> p.getMlaId().equals(product.getMlaId()));
     }
 
     public void qualifyProduct(Product product, Integer score, String comment){
@@ -100,8 +104,9 @@ public class User implements UserDetails{
     }
 
     public boolean ownsProduct(Product product) {
-        return purchases.stream()
-                .anyMatch(recipe -> recipe.getPurchaseProducts().contains(product));
+        return this.purchases.stream()
+                .flatMap(recipe -> recipe.getPurchaseProducts().stream())
+                .anyMatch(p -> p.getMlaId().equals(product.getMlaId()));
     }
 
     public Qualification getQualificationForProduct(Product product) {
