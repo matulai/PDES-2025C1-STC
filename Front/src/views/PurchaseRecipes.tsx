@@ -9,8 +9,8 @@ interface ProductsProps {
 }
 
 const endpointMap = {
-  allUsersPurchases: allUsersPurchases,
-  userPurchases: userPurchases,
+  "All users purchases": allUsersPurchases,
+  "User purchases": userPurchases,
 };
 
 const PurchaseRecipes = ({ type }: ProductsProps) => {
@@ -42,11 +42,9 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
       </h1>
       <div className="search-content">
         {/* <Filter setProducts={setProducts} /> */}
-        <div className="search-content-results">
-          {purchaseRecipes.map((purchaseRecipe, index) => (
-            <PurchaseRecipeCard key={index} purchaseRecipe={purchaseRecipe} />
-          ))}
-        </div>
+        {purchaseRecipes.map((purchaseRecipe, index) => (
+          <PurchaseRecipeCard key={index} purchaseRecipe={purchaseRecipe} />
+        ))}
         {/* <Pagination products={products.pagination}/> */}
       </div>
     </>

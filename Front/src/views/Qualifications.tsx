@@ -30,7 +30,7 @@ const Qualifications = () => {
   return (
     <>
       <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
-        <strong style={{ fontWeight: "600" }}>AllUsersQualifications</strong>
+        <strong style={{ fontWeight: "600" }}>All users qualifications</strong>
       </h1>
       <div className="search-content">
         {/* <Filter setProducts={setProducts} /> */}

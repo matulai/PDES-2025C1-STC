@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { allRegisteredUsers } from "@/service/adminService";
+import { allRegisteredUsers, topBuyers } from "@/service/adminService";
 import { Spinner } from "@/components";
 import "@/styles/ProductsManage.css";
 
@@ -8,12 +8,22 @@ interface SimpleUser {
   role: string;
 }
 
-const Users = () => {
+interface UsersProps {
+  type: string;
+}
+
+const endpointMap = {
+  "Top buyers": topBuyers,
+  "All users": allRegisteredUsers,
+};
+
+const Users = ({ type }: UsersProps) => {
   const [registeredUsers, setRegisteredUsers] = useState<SimpleUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    allRegisteredUsers()
+    const endpoint = endpointMap[type as keyof typeof endpointMap];
+    endpoint()
       .then(res => {
         setRegisteredUsers(res.data);
       })
@@ -32,7 +42,7 @@ const Users = () => {
   return (
     <>
       <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
-        <strong style={{ fontWeight: "600" }}>AllRegisteredUsers</strong>
+        <strong style={{ fontWeight: "600" }}>All registered users</strong>
       </h1>
       <div className="search-content">
         {/* <Filter setProducts={setProducts} /> */}

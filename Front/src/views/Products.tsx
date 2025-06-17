@@ -13,10 +13,10 @@ interface ProductsProps {
 }
 
 const endpointMap = {
-  favouritesProducts: userFavourites,
-  allFavouritesProducts: allFavoritesProducts,
-  topSellingProducts: topSellingProducts,
-  topFavouritesProducts: topFavoriteProducts,
+  "Favourites products": userFavourites,
+  "All favourites products": allFavoritesProducts,
+  "Top selling products": topSellingProducts,
+  "Top favourites products": topFavoriteProducts,
 };
 
 const Products = ({ type }: ProductsProps) => {
