@@ -54,9 +54,21 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.convertListToDto(clientUpdated.getCart()));
     }
 
+    @PostMapping(value = "removeFromCart")
+    public ResponseEntity<List<ProductDto>> removeFromCart(@RequestBody ProductDto productDto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User client = clientService.getUser(username);
+        Product product = productMapper.toEntityFromDto(productDto);
+        User clientUpdated = clientService.removeFromCart(client, product);
+        return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.convertListToDto(clientUpdated.getCart()));
+    }
+
     @PostMapping(value = "qualifyProduct")
     public ResponseEntity<Void> qualifyProduct(@RequestBody QualificationDto qualificationDto){
+        System.out.println(qualificationDto);
+        System.out.println(qualificationDto.getUserName());
         User client = clientService.getUser(qualificationDto.getUserName());
+        System.out.println(qualificationDto.getProductName());
         Product product = productService.getProductByName(qualificationDto.getProductName()); 
         clientService.qualifyProduct(client, product, qualificationDto.getScore(), qualificationDto.getComment());
         return ResponseEntity.status(HttpStatus.OK).build();
