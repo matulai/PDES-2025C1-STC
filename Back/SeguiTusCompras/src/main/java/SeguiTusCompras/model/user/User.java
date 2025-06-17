@@ -81,7 +81,7 @@ public class User implements UserDetails{
         this.purchases.add(purchaseRecipe);
     }
 
-    public void cleanCart() { this.cart.removeAll(this.cart); }
+    public void cleanCart() { this.cart.clear(); }
 
     public void addToCart(Product product) {
         this.cart.add(product);
@@ -99,23 +99,10 @@ public class User implements UserDetails{
         this.favorites.removeIf(p -> p.getMlaId().equals(product.getMlaId()));
     }
 
-    public void qualifyProduct(Product product, Integer score, String comment){
-
-    }
-
     public boolean ownsProduct(Product product) {
         return this.purchases.stream()
                 .flatMap(recipe -> recipe.getPurchaseProducts().stream())
                 .anyMatch(p -> p.getMlaId().equals(product.getMlaId()));
-    }
-
-    public Qualification getQualificationForProduct(Product product) {
-        for(Qualification qualification : qualifications){
-            if(qualification.getProduct().getName().equals(product.getName())){
-                return qualification;
-            }
-        }
-        return null;
     }
 }
 
