@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import SeguiTusCompras.model.PurchaseRecipe;
+import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IPurchaseRecipeDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,31 +25,46 @@ public class UserService {
     private final IUserDao userDao;
     private final IQualificationDAO qualificationDao;
     private final IPurchaseRecipeDao purchaseRecipeDao;
+    private final IProductDao productDao;
 
     public UserService(IUserDao userDao, IQualificationDAO qualificationDao,
-                       IPurchaseRecipeDao purchaseRecipeDao) {
+                       IPurchaseRecipeDao purchaseRecipeDao, IProductDao productDao) {
         this.userDao = userDao;
         this.qualificationDao = qualificationDao;
         this.purchaseRecipeDao = purchaseRecipeDao;
+        this.productDao = productDao;
     }
 
     public  User getUser(String userName) {
-
         return Optional.ofNullable(userDao.getByName(userName))
         .orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_FOUND.getMessage()));
     }
 
-    public  User addProductToFavorites(User client, Product product) {
-        if (client.getFavorites().contains(product)) {
-            client.deleteFromFavorites(product);
+    private Product findOrCreate(Product product) {
+        return productDao.findByMlaId(product.getMlaId())
+                .orElseGet(() -> productDao.save(product));
+    }
+
+    public User addProductToFavorites(User client, Product product) {
+        Product attachedProduct = findOrCreate(product);
+
+        if (client.getFavorites().contains(attachedProduct)) {
+            client.deleteFromFavorites(attachedProduct);
         } else {
-            client.addToFavorites(product);
+            client.addToFavorites(attachedProduct);
         }
+
         return userDao.save(client);
     }
 
     public User addToCart(User user, Product product) {
-        user.addToCart(product);
+        Product attachedProduct = findOrCreate(product);
+        user.addToCart(attachedProduct);
+        return userDao.save(user);
+    }
+
+    public User removeFromCart(User user, Product product) {
+        user.removeFromCart(product);
         return userDao.save(user);
     }
 
@@ -62,7 +78,8 @@ public class UserService {
     public void qualifyProduct(User user, Product product, Integer score, String comment) {
         checkIfScoreIsValid(score);
         if(user.ownsProduct(product)) {
-            qualificationDao.save(new Qualification(user, score, product, comment));
+            Product productFromDB = findOrCreate(product);
+            qualificationDao.save(new Qualification(user, score, productFromDB, comment));
         }
     }
 
