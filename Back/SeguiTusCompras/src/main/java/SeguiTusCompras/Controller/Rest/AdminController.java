@@ -2,17 +2,12 @@ package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.dtos.*;
 
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
 import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.Service.ProductService;
-import SeguiTusCompras.Service.utils.ProductMapper;
-import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.user.Role;
-import SeguiTusCompras.model.user.User;
 
 @RestController
 @RequestMapping("/admin")
@@ -51,23 +46,20 @@ public class AdminController {
     }
 
     @GetMapping(value="topSellingProducts")
-    public ResponseEntity<List<ProductDto>> topSellingProducts(){
-        List<Product> topSellingProducts = productService.getTopSellingProducts();
-        List<ProductDto> topSoldProductsDto = ProductMapper.convertListToDto(topSellingProducts);
-        return ResponseEntity.ok().body(topSoldProductsDto);
+    public ResponseEntity<PaginationElementDto<ProductDto>> topSellingProducts(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size){
+        PaginationElementDto<ProductDto> productPaginationElementDto = productService.getTopSellingProducts(page, size);
+        return ResponseEntity.ok().body(productPaginationElementDto);
     }
 
     @GetMapping(value="topBuyers")
-    public ResponseEntity<List<SimpleUserDto>> topBuyers(){
-        List<User> topBuyers = clientService.getTopBuyers();
-        List<SimpleUserDto> topBuyersDto = UserMapper.convertListToSimpleDto(topBuyers);
-        return ResponseEntity.status(HttpStatus.OK).body(topBuyersDto);
+    public ResponseEntity<PaginationElementDto<SimpleUserDto>> topBuyers(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size){
+        PaginationElementDto<SimpleUserDto> simpleUserDtoPaginationElementDto = clientService.getTopBuyers(page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(simpleUserDtoPaginationElementDto);
     }
 
     @GetMapping(value="topFavoriteProducts")
-    public ResponseEntity<List<ProductDto>> topFavoriteProducts(){
-        List<Product> topSellingProducts = productService.getTopFavoriteProducts();
-        List<ProductDto> topSoldProductsDto = ProductMapper.convertListToDto(topSellingProducts);
-        return ResponseEntity.ok().body(topSoldProductsDto);
+    public ResponseEntity<PaginationElementDto<ProductDto>> topFavoriteProducts(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size){
+        PaginationElementDto<ProductDto> productDtoPaginationElementDto = productService.getTopFavoriteProducts(page, size);
+        return ResponseEntity.ok().body(productDtoPaginationElementDto);
     }
 }

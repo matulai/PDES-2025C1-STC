@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.persistence.IProductDao;
-import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService {
@@ -45,13 +44,23 @@ public class ProductService {
         return new PaginationElementDto<>(productDtoList, pagination);
     }
 
-    public List<Product> getTopSellingProducts() {
-        Pageable topFive = PageRequest.of(0, 5);
-        return productDao.findTopSellingProducts(topFive).getContent();
+    public PaginationElementDto<ProductDto> getTopSellingProducts(int page, int size) {
+        Page<Product> productPage = productDao.findTopSellingProducts(PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
     }
 
-    public List<Product> getTopFavoriteProducts() {
-        Pageable topFive = PageRequest.of(0, 5); 
-        return productDao.findTopProductsFavoritesOfAllUsers(topFive).getContent();
+    public PaginationElementDto<ProductDto> getTopFavoriteProducts(int page, int size) {
+        Page<Product> productPage =  productDao.findTopProductsFavoritesOfAllUsers(PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
     }
 }

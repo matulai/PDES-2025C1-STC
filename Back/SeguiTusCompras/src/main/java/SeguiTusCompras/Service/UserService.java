@@ -13,7 +13,6 @@ import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IPurchaseRecipeDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import SeguiTusCompras.Error.ErrorMessages;
@@ -146,9 +145,15 @@ public class UserService {
         return new PaginationElementDto<>(purchaseRecipeDtoList, pagination);
     }
 
-    public List<User> getTopBuyers() {
-        Pageable pageable = PageRequest.of(0, 5);
-        return userDao.findTopClientsByPurchases(Role.Client, pageable).getContent();
+    public PaginationElementDto<SimpleUserDto> getTopBuyers(int page, int size) {
+        Page<User> userPage = userDao.findTopClientsByPurchases(Role.Client, PageRequest.of(page - 1, size));
+        List<SimpleUserDto> simpleUserDtoList = userPage.getContent()
+                .stream()
+                .map(UserMapper::convertToSimpleDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, userPage.getTotalElements());
+
+        return new PaginationElementDto<>(simpleUserDtoList, pagination);
     }
 
 }
