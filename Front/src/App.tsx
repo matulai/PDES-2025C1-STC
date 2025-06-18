@@ -47,7 +47,7 @@ function App() {
               />
               <Route
                 path="/products/topFavouritesProducts"
-                element={<Products type="Top favourites poducts" />}
+                element={<Products type="Top favourites products" />}
               />
               <Route
                 path="/users/purchases"
