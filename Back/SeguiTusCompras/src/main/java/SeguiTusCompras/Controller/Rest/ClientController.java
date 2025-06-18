@@ -1,7 +1,6 @@
 package SeguiTusCompras.Controller.Rest;
 
 import SeguiTusCompras.Controller.dtos.*;
-import SeguiTusCompras.model.PurchaseRecipe;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,19 +71,17 @@ public class ClientController {
     }
 
     @GetMapping(value = "userPurchases")
-    public ResponseEntity<List<PurchaseRecipeDto>> userPurchases(){
+    public ResponseEntity<PaginationElementDto<PurchaseRecipeDto>> userPurchases(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<PurchaseRecipe> purchasesRecipes = clientService.getPurchasesFromUser(username);
-        List<PurchaseRecipeDto> purchasesRecipesDto = ProductMapper.convertToListPurchaseRecipeDto(purchasesRecipes);
-        return ResponseEntity.ok().body(purchasesRecipesDto);
+        PaginationElementDto<PurchaseRecipeDto> purchaseRecipeDtoPaginationElementDto = clientService.getPurchasesFromUser(username, page, size);
+        return ResponseEntity.ok().body(purchaseRecipeDtoPaginationElementDto);
     }
 
     @GetMapping(value="userFavorites")
-    public ResponseEntity<List<ProductDto>> userFavorites(){
+    public ResponseEntity<PaginationElementDto<ProductDto>> userFavorites(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "25") int size){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Product> favorites = clientService.getFavorites(username);
-        List<ProductDto> favoritesDto = ProductMapper.convertListToDto(favorites);
-        return ResponseEntity.ok().body(favoritesDto);
+        PaginationElementDto<ProductDto> productDtoPaginationElementDto = clientService.getFavorites(username, page, size);
+        return ResponseEntity.ok().body(productDtoPaginationElementDto);
     }
 
 }

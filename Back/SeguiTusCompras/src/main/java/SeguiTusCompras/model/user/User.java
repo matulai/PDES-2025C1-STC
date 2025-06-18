@@ -54,9 +54,6 @@ public class User implements UserDetails{
         throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
     }
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-    private UserReport report;
-
     @ManyToMany
     @JoinTable(
             name = "cart",
@@ -70,7 +67,6 @@ public class User implements UserDetails{
         this.role = Role.valueOf(role);
         this.password = password;
     }
-    
     
     @Override
     public String getUsername() {

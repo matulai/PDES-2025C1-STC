@@ -3,7 +3,7 @@ package SeguiTusCompras.Service.utils;
 import lombok.Data;
 
 @Data
-public class Pagination<T> {
+public class Pagination {
     private int currentPage;
     private int lastVisiblePage;
     private boolean hasNextPage;

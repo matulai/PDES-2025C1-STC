@@ -3,6 +3,11 @@ package SeguiTusCompras.Service;
 import java.util.List;
 import java.util.Optional;
 
+import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
+import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
+import SeguiTusCompras.Controller.dtos.*;
+import SeguiTusCompras.Service.utils.Pagination;
+import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.PurchaseRecipe;
 import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IPurchaseRecipeDao;
@@ -89,25 +94,56 @@ public class UserService {
         }
     }
 
-    public List<PurchaseRecipe> getPurchasesFromUser(String userName) {
-        return userDao.getPurchases(userName);
+    public PaginationElementDto<PurchaseRecipeDto> getPurchasesFromUser(String userName, int page, int size) {
+        Page<PurchaseRecipe> purchaseRecipePage = userDao.getPurchasesPage(userName, PageRequest.of(page - 1, size));
+        List<PurchaseRecipeDto> purchaseRecipeDtoList = purchaseRecipePage.getContent()
+                .stream()
+                .map(ProductMapper::converToPurchaseRecipeDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, purchaseRecipePage.getTotalElements());
+
+        return new PaginationElementDto<>(purchaseRecipeDtoList, pagination);
     }
 
-    public List<Product> getFavorites(String userName) {
-        return userDao.getFavorites(userName);
+    public PaginationElementDto<ProductDto> getFavorites(String userName, int page, int size) {
+        Page<Product> productPage = userDao.getFavoritesPage(userName, PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
     }
 
-    public Page<User> getAllUserByRole(Role role, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return userDao.UsersByRole(role, pageable);
+    public PaginationElementDto<SimpleUserDto> getAllUserByRole(Role role, int page, int size) {
+        Page<User> userPage = userDao.UsersByRole(role, PageRequest.of(page - 1, size));
+        List<SimpleUserDto> simpleUserDtoList = userPage.getContent()
+                .stream()
+                .map(UserMapper::convertToSimpleDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, userPage.getTotalElements());
+
+        return new PaginationElementDto<>(simpleUserDtoList, pagination);
     }
 
-    public List<Qualification> getAllUsersQualifications() {
-        return qualificationDao.findAll();
+    public PaginationElementDto<QualificationDto> getAllUsersQualifications(int page, int size) {
+        Page<Qualification> qualificationPage = qualificationDao.findAllPage(PageRequest.of(page - 1, size));
+        List<QualificationDto> qualificationDtoList = qualificationPage.getContent()
+                .stream()
+                .map(QualificationMapper::convertToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, qualificationPage.getTotalElements());
+        return new PaginationElementDto<>(qualificationDtoList, pagination);
     }
 
-    public List<PurchaseRecipe> getAllUsersPurchases() {
-        return purchaseRecipeDao.findAll();
+    public PaginationElementDto<PurchaseRecipeDto> getAllUsersPurchases(int page, int size) {
+        Page<PurchaseRecipe> purchaseRecipePage = purchaseRecipeDao.findAllPage(PageRequest.of(page - 1, size));
+        List<PurchaseRecipeDto> purchaseRecipeDtoList = purchaseRecipePage.getContent()
+                .stream()
+                .map(ProductMapper::converToPurchaseRecipeDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, purchaseRecipePage.getTotalElements());
+        return new PaginationElementDto<>(purchaseRecipeDtoList, pagination);
     }
 
     public List<User> getTopBuyers() {

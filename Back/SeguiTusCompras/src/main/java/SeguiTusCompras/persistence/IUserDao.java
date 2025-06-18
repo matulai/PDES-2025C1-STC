@@ -26,12 +26,12 @@ public interface IUserDao extends JpaRepository<User, Long> {
     @Query("""
             SELECT pr FROM User u JOIN u.purchases pr WHERE u.name = ?1
             """)
-    List<PurchaseRecipe> getPurchases(String userName);
+    Page<PurchaseRecipe> getPurchasesPage(String userName, Pageable pageable);
 
     @Query("""
             SELECT f FROM User u JOIN u.favorites f WHERE u.name = ?1
             """)
-    List<Product> getFavorites(String userName);
+    Page<Product> getFavoritesPage(String userName, Pageable pageable);
 
     @Query("SELECT u FROM User u LEFT JOIN u.purchases p WHERE u.role = ?1 GROUP BY u ORDER BY COUNT(p) DESC")
     Page<User> findTopClientsByPurchases(Role role, Pageable pageable);

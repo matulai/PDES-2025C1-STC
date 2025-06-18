@@ -7,10 +7,10 @@ import java.util.List;
 
 @Data
 public class PaginationElementDto<T> {
-    private Pagination<T> pagination;
+    private Pagination pagination;
     private List<T> data;
 
-    public PaginationElementDto(List<T> data, Pagination<T> pagination) {
+    public PaginationElementDto(List<T> data, Pagination pagination) {
         this.pagination = pagination;
         this.data = data;
     }

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface IProductDao extends JpaRepository<Product, Long> {
@@ -17,7 +16,7 @@ public interface IProductDao extends JpaRepository<Product, Long> {
     Optional<Product> findByMlaId(String id);
 
     @Query("SELECT DISTINCT p FROM User u JOIN u.favorites p")
-    List<Product> findAllFavoriteProductsOfAllUsers();
+    Page<Product> findAllFavoriteProductsPage(Pageable pageable);
 
     @Query("SELECT p FROM User u JOIN u.favorites p GROUP BY p ORDER BY COUNT(u) DESC")
     Page<Product> findTopProductsFavoritesOfAllUsers(Pageable pageable);
