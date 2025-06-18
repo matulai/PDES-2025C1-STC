@@ -71,20 +71,28 @@ function qualifyProduct(qualification: Qualification) {
   });
 }
 
-function userPurchases() {
+function userPurchases(page = 1, size = 5) {
   const token = getFromLocalStorage("token");
 
   return axios.get(`${API_URL}/client/userPurchases`, {
+    params: {
+      page,
+      size,
+    },
     headers: {
       Authorization: token,
     },
   });
 }
 
-function userFavourites() {
+function userFavourites(page = 1, size = 25) {
   const token = getFromLocalStorage("token");
 
   return axios.get(`${API_URL}/client/userFavorites`, {
+    params: {
+      page,
+      size,
+    },
     headers: {
       Authorization: token,
     },

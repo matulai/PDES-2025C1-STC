@@ -25,7 +25,7 @@ const Users = ({ type }: UsersProps) => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
     endpoint()
       .then(res => {
-        setRegisteredUsers(res.data);
+        setRegisteredUsers(res.data.data);
       })
       .catch(error => {
         console.log(error);

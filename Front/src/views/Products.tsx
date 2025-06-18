@@ -27,7 +27,7 @@ const Products = ({ type }: ProductsProps) => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
     endpoint()
       .then(res => {
-        setProducts(res.data);
+        setProducts(res.data.data);
       })
       .catch(error => {
         console.log(error);

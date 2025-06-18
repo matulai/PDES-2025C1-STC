@@ -13,7 +13,7 @@ const Qualifications = () => {
   useEffect(() => {
     allUsersQualifications()
       .then(res => {
-        setUsersQualifications(res.data);
+        setUsersQualifications(res.data.data);
       })
       .catch(error => {
         console.log(error);

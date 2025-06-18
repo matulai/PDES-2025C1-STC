@@ -13,7 +13,7 @@ const Cart = () => {
   const onClickRemoveFromCart = (product: Product) => {
     removeFromCart(product)
       .then(res => {
-        setCart(res.data);
+        setCart(res.data.data);
       })
       .catch(error => {
         console.log(error);

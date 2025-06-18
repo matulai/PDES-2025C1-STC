@@ -21,7 +21,7 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
     endpoint()
       .then(res => {
-        setPurchaseRecipes(res.data);
+        setPurchaseRecipes(res.data.data);
       })
       .catch(error => {
         console.log(error);
