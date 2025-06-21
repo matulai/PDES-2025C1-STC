@@ -1,7 +1,6 @@
 package unitTest;
 
 import SeguiTusCompras.model.Product;
-import SeguiTusCompras.model.report.ProductReport;
 import SeguiTusCompras.model.report.UserReport;
 import SeguiTusCompras.model.user.User;
 
@@ -21,7 +20,7 @@ class UserTest {
     private User user;
 
     @Mock
-    private Product mockProduct1;
+    private Product mockProduct;
 
     @Mock
     private UserReport mockUserReport;
@@ -58,14 +57,15 @@ class UserTest {
     @Test
     void addToPurchases_AddsProductAndUpdatesReports() {
 
-        user.addToPurchase(mockProduct1);
+        user.addToPurchases(mockProduct);
 
 
-        assertTrue(user.getPurchases().contains(mockProduct1));
+        assertTrue(user.getPurchases().contains(mockProduct));
         assertEquals(1, user.getPurchases().size());
 
 
-        verify(mockProduct1, times(1)).increasePurchasesCounter();
+        verify(mockProduct, times(1)).increasePurchasesCounter();
+        verify(mockUserReport, times(1)).addPurchase();
     }
     
     @Test
@@ -73,7 +73,7 @@ class UserTest {
         user.setReport(null);
         
         assertThrows(NullPointerException.class, () -> {
-            user.addToPurchase(mockProduct1);
+            user.addToPurchases(mockProduct);
         });
 
     }
@@ -82,19 +82,19 @@ class UserTest {
     @Test
     void addToFavorites_AddsProductAndUpdatesReport() {
 
-        user.addToFavorites(mockProduct1);
+        user.addToFavorites(mockProduct);
 
-        assertTrue(user.getFavorites().contains(mockProduct1));
+        assertTrue(user.getFavorites().contains(mockProduct));
         assertEquals(1, user.getFavorites().size());
-        verify(mockProduct1, times(1)).increaseFavoritesCounter();
+        verify(mockProduct, times(1)).increaseFavoritesCounter();
     }
 
 
     @Test
     void addToQualified_WhenUserOwnsProduct_AddsQualification() {
-        user.getPurchases().add(mockProduct1);
+        user.getPurchases().add(mockProduct);
         Integer score = 5;
-        user.qualifyProduct(mockProduct1, score, "comment");
+        user.qualifyProduct(mockProduct, score);
 
         assertEquals(1, user.getQualifications().size());
     }
@@ -103,7 +103,7 @@ class UserTest {
     @Test
     void addToQualified_WhenUserDoesNotOwnProduct_DoesNotAddQualification() {
         Integer score = 5;
-        user.qualifyProduct(mockProduct1, score, "comment");
+        user.qualifyProduct(mockProduct, score);
 
         assertTrue(user.getQualifications().isEmpty());
     }
