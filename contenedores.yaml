@@ -11,12 +11,7 @@ services:
       - "5432:5432"
 
   spring:
-    image: maven:3.9.9-amazoncorretto-21-al2023
-    container_name: backend_container
-    volumes:
-      - ./Back/SeguiTusCompras:/SourceCode
-    working_dir: /SourceCode
-    command: mvn spring-boot:run
+    image: qac1978/seguituscompras_backend:latest
     environment:
       SPRING_DATASOURCE_URL: ${DB_URL_DOCKER}
       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
@@ -26,19 +21,16 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
       FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
+      PROFILE: ${PROFILE}
     depends_on:
       - postgres
     ports:
-      - "8080:8080"
+      - "8080:8080" # Es necesario para que funcione que esto se levante en el 8080
 
   frontend:
+    image: qac1978/seguituscompras_frontend:latest
     environment:
       VITE_API_URL: ${VITE_API_URL}
-    build:
-      context: ./Front
-      args:
-        # Pasa el valor de VITE_API_URL_DOCKER (de tu .env) como un build argument llamado VITE_API_URL
-        VITE_API_URL: ${VITE_API_URL}
     ports:
       - "80:80"
     depends_on:
