@@ -33,9 +33,9 @@ public class User implements UserDetails{
 
     private Role role;
 
-    private String password; 
+    private String password;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "favorite",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -54,7 +54,7 @@ public class User implements UserDetails{
         throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
     }
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "cart",
             joinColumns = @JoinColumn(name = "user_id"),
