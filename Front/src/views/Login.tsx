@@ -27,6 +27,7 @@ const Login = () => {
             role: response.data.role,
             favorites: response.data.favorites,
             purchases: response.data.purchases,
+            cart: response.data.cart,
             qualifications: response.data.qualifications,
           },
           response.headers["authorization"]
