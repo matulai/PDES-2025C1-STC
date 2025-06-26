@@ -23,7 +23,6 @@ const ProductInfo = () => {
       getProductById(id)
         .then(res => {
           res.data.price = calculateProductPrice(res.data.mlaId, res.data.name);
-          console.log(res.data);
           setProduct(res.data);
           setIsFavourite(
             res.data && user?.favorites.some(p => p.name === res.data.name)
