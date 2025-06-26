@@ -76,6 +76,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     contextLogout();
+    setShowDropdown(false);
   };
 
   return (
