@@ -1,12 +1,12 @@
 import { ChevronLeftIcon } from "@/icons";
 import { useRef } from "react";
-import "@/styles/ScrollableCarousel.css";
+import "@/styles/CarouselWrapper.css";
 
-interface ScrollableCarouselProps {
+interface CarouselWrapperProps {
   children: React.ReactNode;
 }
 
-const ScrollableCarousel = ({ children }: ScrollableCarouselProps) => {
+const CarouselWrapper = ({ children }: CarouselWrapperProps) => {
   const carouselContainerRef = useRef<HTMLDivElement>(null);
 
   const handleOnClickScroll = (direction: "left" | "right") => {
@@ -42,4 +42,4 @@ const ScrollableCarousel = ({ children }: ScrollableCarouselProps) => {
   );
 };
 
-export default ScrollableCarousel;
+export default CarouselWrapper;

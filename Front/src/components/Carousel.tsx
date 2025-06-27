@@ -1,6 +1,6 @@
 import { Product } from "@/types";
 import { Link } from "react-router-dom";
-import ScrollableCarousel from "./ScrollableCarousel";
+import CarouselWrapper from "./CarouselWrapper";
 import ProductCard from "./ProductCard";
 import "@/styles/Carousel.css";
 
@@ -19,11 +19,11 @@ const Carousel = ({ link, title, products }: CarouselProps) => {
           Ir a título
         </Link>
       </div>
-      <ScrollableCarousel>
+      <CarouselWrapper>
         {products.map(product => (
           <ProductCard key={product.mlaId} product={product} />
         ))}
-      </ScrollableCarousel>
+      </CarouselWrapper>
     </section>
   );
 };
