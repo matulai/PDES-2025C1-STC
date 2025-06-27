@@ -1,10 +1,11 @@
 import { removeFromCart, purchaseProducts } from "@/service/userService";
 import type { Product } from "@/types";
 import { ProductCard } from "@/components";
+import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@/icons";
 import { useCart } from "@/hooks";
-import { useNavigate } from "react-router-dom";
-import "@/styles/ProductsManage.css";
+import "@/styles/Items.css";
+import "@/styles/Cart.css";
 
 const Cart = () => {
   const { cart, setCart } = useCart();
@@ -32,11 +33,9 @@ const Cart = () => {
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
-        <strong style={{ fontWeight: "600" }}>My cart</strong>
-      </h1>
-      <div className="search-content">
-        <div className="search-content-results">
+      <h1 className="items-title">My cart</h1>
+      <div className="items">
+        <div className="items-content">
           {cart.map(product => (
             <div key={product.mlaId} className="cart-product-card">
               <ProductCard product={product} />

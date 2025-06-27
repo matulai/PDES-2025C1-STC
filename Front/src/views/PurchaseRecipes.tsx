@@ -3,6 +3,7 @@ import type { PurchaseRecipe } from "@/types";
 import { Spinner, Carousel } from "@/components";
 import { allUsersPurchases } from "@/service/adminService";
 import { userPurchases } from "@/service/userService";
+import "@/styles/Items.css";
 
 interface ProductsProps {
   type: string;
@@ -37,10 +38,10 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>{type}</strong>
       </h1>
-      <div className="search-content">
+      <div className="items">
         {purchaseRecipes.map((purchaseRecipe, index) => {
           const priceFormated = purchaseRecipe.purchasePrice
             .toString()

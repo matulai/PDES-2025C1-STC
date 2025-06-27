@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { allRegisteredUsers, topBuyers } from "@/service/adminService";
+import { useState, useEffect } from "react";
 import { Spinner } from "@/components";
-import "@/styles/ProductsManage.css";
+import "@/styles/Items.css";
 
 interface SimpleUser {
   name: string;
@@ -41,16 +41,15 @@ const Users = ({ type }: UsersProps) => {
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>All registered users</strong>
       </h1>
-      <div className="search-content">
-        {/* <Filter setProducts={setProducts} /> */}
-        <div className="search-content-results">
+      <div className="items">
+        <div className="items-content-wrap">
           {registeredUsers.map((registeredUser, index) => (
-            <div key={index} className="user-content">
-              {registeredUser.name}
-              {registeredUser.role}
+            <div key={index} className="items-content-item">
+              <p style={{ fontWeight: "600" }}>{registeredUser.name}</p>
+              <p>{registeredUser.role}</p>
             </div>
           ))}
         </div>

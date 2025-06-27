@@ -2,7 +2,7 @@ import { allUsersQualifications } from "@/service/adminService";
 import { useState, useEffect } from "react";
 import type { Qualification } from "@/types";
 import { Spinner } from "@/components";
-import "@/styles/ProductsManage.css";
+import "@/styles/Items.css";
 
 const Qualifications = () => {
   const [usersQualifications, setUsersQualifications] = useState<
@@ -29,20 +29,21 @@ const Qualifications = () => {
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>All users qualifications</strong>
       </h1>
-      <div className="search-content">
-        {/* <Filter setProducts={setProducts} /> */}
-        <div className="qualification-content">
+      <div className="items">
+        <div className="items-content-column">
           {usersQualifications.map((userQualifications, index) => (
-            <div key={index} className="user-content">
+            <div key={index} className="items-content-item">
               <p>
-                {userQualifications.userName}
-                {" On "}
+                <b style={{ fontWeight: "600" }}>
+                  {userQualifications.userName}
+                </b>{" "}
+                hizo un comentario en el producto:{" "}
                 {userQualifications.productName}
               </p>
-              <div>{userQualifications.comment}</div>
+              <p>comentario: "{userQualifications.comment}"</p>
               <p>score: {userQualifications.score}</p>
             </div>
           ))}

@@ -3,10 +3,11 @@ import {
   topFavoriteProducts,
   topSellingProducts,
 } from "@/service/adminService";
-import { Spinner, ProductsManage } from "@/components";
+import { Spinner, ProductCard } from "@/components";
 import { useState, useEffect } from "react";
 import { userFavourites } from "@/service/userService";
 import type { Product } from "@/types";
+import "@/styles/Items.css";
 
 interface ProductsProps {
   type: string;
@@ -43,10 +44,17 @@ const Products = ({ type }: ProductsProps) => {
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>{type}</strong>
       </h1>
-      <ProductsManage products={products} setProducts={setProducts} />
+      <div className="items">
+        <div className="items-content-wrap">
+          {products.map(product => (
+            <ProductCard key={product.mlaId} product={product} />
+          ))}
+        </div>
+        {/* <Pagination products={products.pagination}/> */}
+      </div>
     </>
   );
 };
