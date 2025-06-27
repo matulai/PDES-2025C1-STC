@@ -1,8 +1,12 @@
-import { CarouselContainer } from "@/components";
+import { ProductsCategoryContainer } from "@/components";
 const Home = () => {
   return (
     <>
-      <CarouselContainer link="/" title="Samsung" category="MLA-CELLPHONES" />
+      <ProductsCategoryContainer
+        link="/"
+        title="Samsung"
+        category="MLA-CELLPHONES"
+      />
     </>
   );
 };

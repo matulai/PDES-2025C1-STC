@@ -8,4 +8,4 @@ export { default as RegisterCard } from "./RegisterCard";
 export { default as StarsQualify } from "./StarsQualify";
 export { default as ProductsManage } from "./ProductsManage";
 export { default as CommentsSection } from "./CommentsSection";
-export { default as CarouselContainer } from "./CarouselContainer";
+export { default as ProductsCategoryContainer } from "./ProductsCategoryContainer";

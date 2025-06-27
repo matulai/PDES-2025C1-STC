@@ -1,7 +1,6 @@
 import { getProductsByKeyword } from "@/service/productService";
 import { useEffect, useState } from "react";
 import Carousel from "./Carousel";
-import "@/styles/Carousel.css";
 
 interface CarouselContainerProps {
   link: string;
@@ -9,7 +8,7 @@ interface CarouselContainerProps {
   category: string;
 }
 
-const CarouselContainer = ({
+const ProductsCategoryContainer = ({
   link,
   title,
   category,
@@ -33,4 +32,4 @@ const CarouselContainer = ({
   );
 };
 
-export default CarouselContainer;
+export default ProductsCategoryContainer;

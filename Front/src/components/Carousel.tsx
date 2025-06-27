@@ -1,7 +1,8 @@
 import { Product } from "@/types";
 import { Link } from "react-router-dom";
-import ProductCard from "./ProductCard";
 import ScrollableCarousel from "./ScrollableCarousel";
+import ProductCard from "./ProductCard";
+import "@/styles/Carousel.css";
 
 interface CarouselProps {
   link: string;
