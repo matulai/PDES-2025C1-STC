@@ -11,7 +11,7 @@ interface CarouselProps {
 
 const Carousel = ({ link, title, products }: CarouselProps) => {
   return (
-    <>
+    <section className="carousel-container">
       <div className="carousel-container-header">
         <h2 className="carousel-container-header-title">{title}</h2>
         <Link to={link} className="carousel-container-header-link">
@@ -23,7 +23,7 @@ const Carousel = ({ link, title, products }: CarouselProps) => {
           <ProductCard key={product.mlaId} product={product} />
         ))}
       </ScrollableCarousel>
-    </>
+    </section>
   );
 };
 

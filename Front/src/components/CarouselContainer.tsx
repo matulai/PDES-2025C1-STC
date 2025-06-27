@@ -27,9 +27,9 @@ const CarouselContainer = ({
   }, []);
 
   return (
-    <section className="carousel-container">
+    <>
       <Carousel link={link} title={title} products={products} />
-    </section>
+    </>
   );
 };
 

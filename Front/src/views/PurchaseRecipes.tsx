@@ -1,6 +1,6 @@
-import { Spinner, PurchaseRecipeCard } from "@/components";
 import { useState, useEffect } from "react";
 import type { PurchaseRecipe } from "@/types";
+import { Spinner, Carousel } from "@/components";
 import { allUsersPurchases } from "@/service/adminService";
 import { userPurchases } from "@/service/userService";
 
@@ -41,10 +41,20 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
         <strong style={{ fontWeight: "600" }}>{type}</strong>
       </h1>
       <div className="search-content">
-        {/* <Filter setProducts={setProducts} /> */}
-        {purchaseRecipes.map((purchaseRecipe, index) => (
-          <PurchaseRecipeCard key={index} purchaseRecipe={purchaseRecipe} />
-        ))}
+        {purchaseRecipes.map((purchaseRecipe, index) => {
+          const priceFormated = purchaseRecipe.purchasePrice
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          const title = `Date:${purchaseRecipe.purchaseDate} TotalPrice:${priceFormated}`;
+          return (
+            <Carousel
+              key={index}
+              link="#"
+              title={title}
+              products={purchaseRecipe.purchaseProducts}
+            />
+          );
+        })}
         {/* <Pagination products={products.pagination}/> */}
       </div>
     </>
