@@ -59,7 +59,7 @@ function allUsersPurchases(page = 1, size = 5) {
   });
 }
 
-function topSellingProducts(page = 1, size = 25) {
+function topSellingProducts(page = 1, size = 5) {
   const token = getFromLocalStorage("token");
 
   return axios.get(`${API_URL}/admin/topSellingProducts`, {
@@ -73,7 +73,7 @@ function topSellingProducts(page = 1, size = 25) {
   });
 }
 
-function topBuyers(page = 1, size = 25) {
+function topBuyers(page = 1, size = 5) {
   const token = getFromLocalStorage("token");
 
   return axios.get(`${API_URL}/admin/topBuyers`, {
@@ -87,7 +87,7 @@ function topBuyers(page = 1, size = 25) {
   });
 }
 
-function topFavoriteProducts(page = 1, size = 25) {
+function topFavoriteProducts(page = 1, size = 5) {
   const token = getFromLocalStorage("token");
 
   return axios.get(`${API_URL}/admin/topFavoriteProducts`, {
