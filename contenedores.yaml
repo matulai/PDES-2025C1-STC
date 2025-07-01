@@ -21,7 +21,7 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
       FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
-      PROFILE: ${PROFILE}
+      PROFILE: prod
     depends_on:
       - postgres
     ports:
@@ -36,6 +36,15 @@ services:
     depends_on:
       - spring
     container_name: segui-tus-compras
+  
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./k6:/k6 
+    # Establecemos el directorio de trabajo para que los comandos se ejecuten desde allí.
+    working_dir: /k6
+    # Mantenemos el contenedor en espera para poder ejecutar comandos en él.
+    command: ["sleep", "infinity"]
 
 
 
