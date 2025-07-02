@@ -1,7 +1,8 @@
+import type { PurchaseRecipe, PaginationElementDto } from "@/types";
+import { Spinner, Carousel, PaginationNav } from "@/components";
 import { useState, useEffect } from "react";
-import type { PurchaseRecipe } from "@/types";
-import { Spinner, Carousel } from "@/components";
 import { allUsersPurchases } from "@/service/adminService";
+import { useSearchParams } from "react-router-dom";
 import { userPurchases } from "@/service/userService";
 import "@/styles/Items.css";
 
@@ -10,19 +11,24 @@ interface ProductsProps {
 }
 
 const endpointMap = {
-  "All users purchases": allUsersPurchases,
-  "User purchases": userPurchases,
+  "Todas las Compras": allUsersPurchases,
+  "Mis compras": userPurchases,
 };
 
 const PurchaseRecipes = ({ type }: ProductsProps) => {
-  const [purchaseRecipes, setPurchaseRecipes] = useState<PurchaseRecipe[]>([]);
+  const [searchParams] = useSearchParams();
+  const [paginationPurchaseRecipes, setPaginationPurchaseRecipes] =
+    useState<PaginationElementDto<PurchaseRecipe>>();
   const [isLoading, setIsLoading] = useState(true);
+
+  // Tambien podes pasarle por query el limite
+  const page = Number(searchParams.get("page"));
 
   useEffect(() => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
-    endpoint()
+    endpoint(page)
       .then(res => {
-        setPurchaseRecipes(res.data.data);
+        setPaginationPurchaseRecipes(res);
       })
       .catch(error => {
         console.log(error);
@@ -30,7 +36,7 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [page]);
 
   if (isLoading) {
     return <Spinner />;
@@ -42,11 +48,13 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
         <strong style={{ fontWeight: "600" }}>{type}</strong>
       </h1>
       <div className="items">
-        {purchaseRecipes.map((purchaseRecipe, index) => {
+        {paginationPurchaseRecipes!.data.map((purchaseRecipe, index) => {
           const priceFormated = purchaseRecipe.purchasePrice
             .toString()
             .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-          const title = `Date:${purchaseRecipe.purchaseDate} TotalPrice:${priceFormated}`;
+          const date = new Date(purchaseRecipe.purchaseDate);
+          const fecha = date.toISOString().split("T")[0];
+          const title = `Fecha:${fecha} MontoTotal:${priceFormated}`;
           return (
             <Carousel
               key={index}
@@ -56,8 +64,8 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
             />
           );
         })}
-        {/* <Pagination products={products.pagination}/> */}
       </div>
+      <PaginationNav pagination={paginationPurchaseRecipes!.pagination} />
     </>
   );
 };
