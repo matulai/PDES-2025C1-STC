@@ -33,9 +33,11 @@ const Cart = () => {
 
   return (
     <>
-      <h1 className="items-title">My cart</h1>
+      <h1 className="items-title">
+        <strong style={{ fontWeight: "600" }}>My cart</strong>
+      </h1>
       <div className="items">
-        <div className="items-content">
+        <div className="items-content-wrap">
           {cart.map(product => (
             <div key={product.mlaId} className="cart-product-card">
               <ProductCard product={product} />
@@ -50,7 +52,11 @@ const Cart = () => {
             <>
               <p style={{ fontWeight: "600", fontSize: "20px" }}>
                 Total cost:
-                {` ${cart.map(p => p.price).reduce((acumulador, actual) => acumulador + actual, 0)}`}
+                {` $${cart
+                  .map(p => p.price)
+                  .reduce((acumulador, actual) => acumulador + actual, 0)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
               </p>
               <button
                 className="cart-product-details-buy-button"

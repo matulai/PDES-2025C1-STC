@@ -7,23 +7,26 @@ import "@/styles/Navbar.css";
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
   { label: "Ingresar", pathname: "/login" },
-  { label: "Favoritos", pathname: "/user/favourites" },
-  { label: "Compras", pathname: "/user/purchases" },
+  { label: "Favoritos", pathname: "/user/favourites?page=1" },
+  { label: "Compras", pathname: "/user/purchases?page=1" },
 ];
 
 const navLinksRegistered = [
-  { label: "Favoritos", pathname: "/user/favourites" },
-  { label: "Compras", pathname: "/user/purchases" },
+  { label: "Favoritos", pathname: "/user/favourites?page=1" },
+  { label: "Compras", pathname: "/user/purchases?page=1" },
 ];
 
 const adminOptions = [
-  { label: "Usuarios", pathname: "/users" },
-  { label: "Todos los favoritos", pathname: "/users/favourites" },
-  { label: "Todas las Reseñas", pathname: "/users/qualifications" },
-  { label: "Todas las Compras", pathname: "/users/purchases" },
-  { label: "Top vendidos", pathname: "/products/topSellingProducts" },
-  { label: "Top compradores", pathname: "/users/topBuyers" },
-  { label: "Top favoritos", pathname: "/products/topFavouritesProducts" },
+  { label: "Usuarios", pathname: "/users?page=1" },
+  { label: "Todos los favoritos", pathname: "/users/favourites?page=1" },
+  { label: "Todas las Reseñas", pathname: "/users/qualifications?page=1" },
+  { label: "Todas las Compras", pathname: "/users/purchases?page=1" },
+  { label: "Top vendidos", pathname: "/products/topSellingProducts?page=1" },
+  { label: "Top compradores", pathname: "/users/topBuyers?page=1" },
+  {
+    label: "Top favoritos",
+    pathname: "/products/topFavouritesProducts?page=1",
+  },
 ];
 
 interface NavLink {
@@ -95,7 +98,7 @@ const Navbar = () => {
                 <Link
                   key={option.label}
                   to={option.pathname}
-                  className={`navbar-link ${location.pathname === option.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+                  className={`navbar-link ${location.pathname + location.search === option.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
                 >
                   {option.label}
                 </Link>
@@ -115,7 +118,7 @@ const Navbar = () => {
         <Link
           key={link.label}
           to={link.pathname}
-          className={`navbar-link ${location.pathname === link.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+          className={`navbar-link ${location.pathname + location.search === link.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           {link.label}
         </Link>
@@ -123,7 +126,7 @@ const Navbar = () => {
       {user?.role === "Client" ? (
         <Link
           to="/user/cart"
-          className={`navbar-link ${location.pathname === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
+          className={`navbar-link ${location.pathname + location.search === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           <CartIcon />
         </Link>

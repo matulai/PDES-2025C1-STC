@@ -36,35 +36,35 @@ function App() {
                 <Route path="/user/cart" element={<Cart />} />
                 <Route
                   path="/user/purchases"
-                  element={<PurchaseRecipes type="User purchases" />}
+                  element={<PurchaseRecipes type="Mis compras" />}
                 />
                 <Route
                   path="/user/favourites"
-                  element={<Products type="Favourites products" />}
+                  element={<Products type="Favoritos" />}
                 />
               </Route>
 
               <Route element={<RoleRoute role="Admin" />}>
                 <Route
                   path="/users/favourites"
-                  element={<Products type="All favourites products" />}
+                  element={<Products type="Todos los favoritos" />}
                 />
                 <Route
                   path="/products/topSellingProducts"
-                  element={<Products type="Top selling products" />}
+                  element={<Products type="Top vendidos" />}
                 />
                 <Route
                   path="/products/topFavouritesProducts"
-                  element={<Products type="Top favourites products" />}
+                  element={<Products type="Top favoritos" />}
                 />
                 <Route
                   path="/users/purchases"
-                  element={<PurchaseRecipes type="All users purchases" />}
+                  element={<PurchaseRecipes type="Todas las Compras" />}
                 />
-                <Route path="/users" element={<Users type="All users" />} />
+                <Route path="/users" element={<Users type="Usuarios" />} />
                 <Route
                   path="/users/topBuyers"
-                  element={<Users type="Top buyers" />}
+                  element={<Users type="Top compradores" />}
                 />
                 <Route
                   path="/users/qualifications"
