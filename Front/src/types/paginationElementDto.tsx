@@ -1,7 +1,7 @@
 import { Pagination } from "./";
 
-interface PaginationElementDto {
-  data: any[];
+interface PaginationElementDto<T> {
+  data: T[];
   pagination: Pagination;
 }
 
