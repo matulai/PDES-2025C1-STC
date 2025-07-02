@@ -71,6 +71,16 @@ const ProductInfo = () => {
     }
   };
 
+  const calculateAverageScore = () => {
+    if (product) {
+      return (
+        product.qualifications!.map(q => q.score).reduce((a, b) => a + b, 0) /
+        product.qualifications!.length
+      );
+    }
+    return 0;
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -98,20 +108,33 @@ const ProductInfo = () => {
             onClick={handleOnClickAddFavourite}
             className="product-info-details-button"
           >
-            {`${isFavourite ? "Sacar de Favoritos" : "Agregar a Favoritos"}`}
+            {`${isFavourite ? "Sacar de favoritos" : "Agregar a favoritos"}`}
           </button>
         </section>
       </section>
       <section className="product-qualify">
         <h2 className="product-qualify-title">Opiniones del producto</h2>
         <div className="product-qualify-content">
-          <p className="product-qualify-content-average">1.8</p>
-          <div>
-            <StarsQualify value={4} starsSize={24} />
-            <div className="product-quealify-content-stadistics-amount">
-              45 calificaciones
-            </div>
-          </div>
+          {product?.qualifications?.length !== 0 ? (
+            <>
+              <p className="product-qualify-content-average">
+                {calculateAverageScore()}
+              </p>
+              <div>
+                <StarsQualify
+                  value={Math.round(calculateAverageScore())}
+                  starsSize={24}
+                />
+                <div className="product-quealify-content-stadistics-amount">
+                  {product?.qualifications?.length} calificaciones
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="product-quealify-content-stadistics-amount">
+              Sin comentarios
+            </p>
+          )}
         </div>
         <CommentsSection
           productName={product?.name ?? ""}
