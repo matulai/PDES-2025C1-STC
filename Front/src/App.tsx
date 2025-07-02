@@ -14,11 +14,13 @@ import {
 import { PublicOnlyRoute, RoleRoute } from "@/routes";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, CartProvider } from "@/context";
+import { Toaster } from "react-hot-toast";
 import MainLayout from "@/layout/MainLayout";
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-left" reverseOrder={false} />
       <AuthProvider>
         <CartProvider>
           <Routes>

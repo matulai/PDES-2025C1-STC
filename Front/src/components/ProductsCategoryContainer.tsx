@@ -1,5 +1,6 @@
 import { getProductsByKeyword } from "@/service/productService";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import Carousel from "./Carousel";
 
 interface CarouselContainerProps {
@@ -21,6 +22,7 @@ const ProductsCategoryContainer = ({
         setProducts(response.data);
       })
       .catch(error => {
+        toast.error("Error al obtener productos");
         console.error("Error fetching products:", error);
       });
   }, []);

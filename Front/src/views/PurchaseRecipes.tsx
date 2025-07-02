@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { allUsersPurchases } from "@/service/adminService";
 import { useSearchParams } from "react-router-dom";
 import { userPurchases } from "@/service/userService";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 
 interface ProductsProps {
@@ -32,6 +33,7 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
       })
       .catch(error => {
         console.log(error);
+        toast.error("Error al obtener compras");
       })
       .finally(() => {
         setIsLoading(false);

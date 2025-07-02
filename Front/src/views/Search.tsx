@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ProductCard } from "@/components";
 import { useParams } from "react-router-dom";
 import { Product } from "@/types";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 
 const Search = () => {
@@ -15,6 +16,7 @@ const Search = () => {
         setProducts(res.data);
       })
       .catch(err => {
+        toast.error("Error al obtener productos");
         console.error(err);
       });
   }, [text]);

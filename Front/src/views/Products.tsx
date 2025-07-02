@@ -8,6 +8,7 @@ import type { Product, PaginationElementDto } from "@/types";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { userFavourites } from "@/service/userService";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 
 interface ProductsProps {
@@ -36,6 +37,7 @@ const Products = ({ type }: ProductsProps) => {
         setPaginationProducts(res);
       })
       .catch(error => {
+        toast.error("Error al obtener productos");
         console.log(error);
       })
       .finally(() => {

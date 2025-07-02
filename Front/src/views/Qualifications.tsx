@@ -3,6 +3,7 @@ import { allUsersQualifications } from "@/service/adminService";
 import { Spinner, PaginationNav } from "@/components";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 
 const Qualifications = () => {
@@ -20,6 +21,7 @@ const Qualifications = () => {
       })
       .catch(error => {
         console.log(error);
+        toast.error("Error al obtener calificaciones");
       })
       .finally(() => {
         setIsLoading(false);

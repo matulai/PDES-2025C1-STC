@@ -3,6 +3,7 @@ import type { PaginationElementDto } from "@/types";
 import { Spinner, PaginationNav } from "@/components";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 
 interface SimpleUser {
@@ -34,6 +35,7 @@ const Users = ({ type }: UsersProps) => {
         setPaginationUsers(res);
       })
       .catch(error => {
+        toast.error("Error al obtener usuarios");
         console.log(error);
       })
       .finally(() => {

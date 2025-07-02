@@ -6,6 +6,7 @@ import { calculateProductPrice } from "@/utils/functions";
 import { useState, useEffect } from "react";
 import { useAuth, useCart } from "@/hooks";
 import { getProductById } from "@/service/productService";
+import { toast } from "react-hot-toast";
 import "@/styles/ProductInfo.css";
 
 const ProductInfo = () => {
@@ -31,6 +32,7 @@ const ProductInfo = () => {
         })
         .catch(err => {
           console.error(err);
+          toast.error("Error al obtener el producto");
         })
         .finally(() => {
           setIsLoading(false);
@@ -47,6 +49,7 @@ const ProductInfo = () => {
             setIsFavourite(!isFavourite);
           })
           .catch(error => {
+            toast.error("Error al agregar a favoritos");
             console.log(error);
           });
       } else {
@@ -63,6 +66,7 @@ const ProductInfo = () => {
             setCart(res.data);
           })
           .catch(error => {
+            toast.error("Error al agregar al carrito");
             console.log(error);
           });
       } else {
