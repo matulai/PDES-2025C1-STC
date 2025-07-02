@@ -6,5 +6,6 @@ export { default as LoginCard } from "./LoginCard";
 export { default as ProductCard } from "./ProductCard";
 export { default as RegisterCard } from "./RegisterCard";
 export { default as StarsQualify } from "./StarsQualify";
+export { default as PaginationNav } from "./PaginationNav";
 export { default as CommentsSection } from "./CommentsSection";
 export { default as ProductsCategoryContainer } from "./ProductsCategoryContainer";
