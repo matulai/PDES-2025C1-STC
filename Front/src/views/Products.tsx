@@ -3,10 +3,11 @@ import {
   topFavoriteProducts,
   topSellingProducts,
 } from "@/service/adminService";
-import { Spinner, ProductCard } from "@/components";
+import { Spinner, ProductCard, PaginationNav } from "@/components";
+import type { Product, PaginationElementDto } from "@/types";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { userFavourites } from "@/service/userService";
-import type { Product } from "@/types";
 import "@/styles/Items.css";
 
 interface ProductsProps {
@@ -14,21 +15,25 @@ interface ProductsProps {
 }
 
 const endpointMap = {
-  "Favourites products": userFavourites,
-  "All favourites products": allFavoritesProducts,
-  "Top selling products": topSellingProducts,
-  "Top favourites products": topFavoriteProducts,
+  Favoritos: userFavourites,
+  "Todos los favoritos": allFavoritesProducts,
+  "Top vendidos": topSellingProducts,
+  "Top favoritos": topFavoriteProducts,
 };
 
 const Products = ({ type }: ProductsProps) => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [searchParams] = useSearchParams();
+  const [paginationProducts, setPaginationProducts] =
+    useState<PaginationElementDto<Product>>();
   const [isLoading, setIsLoading] = useState(true);
+
+  const page = Number(searchParams.get("page"));
 
   useEffect(() => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
-    endpoint()
+    endpoint(page)
       .then(res => {
-        setProducts(res.data.data);
+        setPaginationProducts(res);
       })
       .catch(error => {
         console.log(error);
@@ -49,12 +54,12 @@ const Products = ({ type }: ProductsProps) => {
       </h1>
       <div className="items">
         <div className="items-content-wrap">
-          {products.map(product => (
+          {paginationProducts?.data.map(product => (
             <ProductCard key={product.mlaId} product={product} />
           ))}
         </div>
-        {/* <Pagination products={products.pagination}/> */}
       </div>
+      <PaginationNav pagination={paginationProducts!.pagination} />
     </>
   );
 };
