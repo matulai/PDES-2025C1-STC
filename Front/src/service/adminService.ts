@@ -1,12 +1,22 @@
+import type {
+  PaginationElementDto,
+  Product,
+  PurchaseRecipe,
+  Qualification,
+  User,
+} from "@/types";
 import { getFromLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function allRegisteredUsers(page = 1, size = 25) {
+async function allRegisteredUsers(
+  page = 1,
+  size = 25
+): Promise<PaginationElementDto<User>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/allRegisteredUsers`, {
+  const { data } = await axios.get(`${API_URL}/admin/allRegisteredUsers`, {
     params: {
       page,
       size,
@@ -15,12 +25,16 @@ function allRegisteredUsers(page = 1, size = 25) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function allUsersQualifications(page = 1, size = 10) {
+async function allUsersQualifications(
+  page = 1,
+  size = 10
+): Promise<PaginationElementDto<Qualification>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/allUsersQualifications`, {
+  const { data } = await axios.get(`${API_URL}/admin/allUsersQualifications`, {
     params: {
       page,
       size,
@@ -29,12 +43,16 @@ function allUsersQualifications(page = 1, size = 10) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function allFavoritesProducts(page = 1, size = 25) {
+async function allFavoritesProducts(
+  page = 1,
+  size = 25
+): Promise<PaginationElementDto<Product>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/allFavoritesProducts`, {
+  const { data } = await axios.get(`${API_URL}/admin/allFavoritesProducts`, {
     params: {
       page,
       size,
@@ -43,26 +61,37 @@ function allFavoritesProducts(page = 1, size = 25) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function allUsersPurchases(page = 1, size = 5) {
+async function allUsersPurchases(
+  page = 1,
+  size = 5
+): Promise<PaginationElementDto<PurchaseRecipe>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/allUsersPurchases`, {
-    params: {
-      page,
-      size,
-    },
-    headers: {
-      Authorization: token,
-    },
-  });
+  const { data } = await axios.get<PaginationElementDto<PurchaseRecipe>>(
+    `${API_URL}/admin/allUsersPurchases`,
+    {
+      params: {
+        page,
+        size,
+      },
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+  return data;
 }
 
-function topSellingProducts(page = 1, size = 5) {
+async function topSellingProducts(
+  page = 1,
+  size = 5
+): Promise<PaginationElementDto<Product>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/topSellingProducts`, {
+  const { data } = await axios.get(`${API_URL}/admin/topSellingProducts`, {
     params: {
       page,
       size,
@@ -71,12 +100,16 @@ function topSellingProducts(page = 1, size = 5) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function topBuyers(page = 1, size = 5) {
+async function topBuyers(
+  page = 1,
+  size = 5
+): Promise<PaginationElementDto<User>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/topBuyers`, {
+  const { data } = await axios.get(`${API_URL}/admin/topBuyers`, {
     params: {
       page,
       size,
@@ -85,12 +118,16 @@ function topBuyers(page = 1, size = 5) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function topFavoriteProducts(page = 1, size = 5) {
+async function topFavoriteProducts(
+  page = 1,
+  size = 5
+): Promise<PaginationElementDto<Product>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/admin/topFavoriteProducts`, {
+  const { data } = await axios.get(`${API_URL}/admin/topFavoriteProducts`, {
     params: {
       page,
       size,
@@ -99,6 +136,7 @@ function topFavoriteProducts(page = 1, size = 5) {
       Authorization: token,
     },
   });
+  return data;
 }
 
 export {
