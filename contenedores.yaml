@@ -37,7 +37,6 @@ services:
       - "80:80"
     depends_on:
       - spring
-    container_name: segui-tus-compras
   
   k6:
     image: grafana/k6
