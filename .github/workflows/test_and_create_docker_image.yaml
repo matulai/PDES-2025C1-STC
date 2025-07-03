@@ -9,7 +9,6 @@ permissions:
   contents: write
 jobs:
   test:
-    # Faltan los test de front
     runs-on: ubuntu-latest
     environment: test-and-create-image
     container: maven:3.9-eclipse-temurin-21
