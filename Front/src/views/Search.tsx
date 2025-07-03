@@ -1,8 +1,10 @@
 import { getProductsByKeyword } from "@/service/productService";
 import { useState, useEffect } from "react";
-import { ProductsManage } from "@/components";
+import { ProductCard } from "@/components";
 import { useParams } from "react-router-dom";
 import { Product } from "@/types";
+import { toast } from "react-hot-toast";
+import "@/styles/Items.css";
 
 const Search = () => {
   const text = useParams().text;
@@ -14,16 +16,25 @@ const Search = () => {
         setProducts(res.data);
       })
       .catch(err => {
+        toast.error("Error al obtener productos");
         console.error(err);
       });
   }, [text]);
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         Resultados de: <strong style={{ fontWeight: "600" }}>"{text}"</strong>
       </h1>
-      <ProductsManage products={products} setProducts={setProducts} />
+      <div className="items">
+        {/* <Filter setProducts={setProducts} /> */}
+        <div className="items-content-wrap">
+          {products.map(product => (
+            <ProductCard key={product.mlaId} product={product} />
+          ))}
+        </div>
+        {/* <Pagination products={products.pagination}/> */}
+      </div>
     </>
   );
 };

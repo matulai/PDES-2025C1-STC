@@ -1,9 +1,7 @@
 package SeguiTusCompras.Service;
 
-import SeguiTusCompras.model.report.UserReport;
 import SeguiTusCompras.model.user.User;
 import SeguiTusCompras.persistence.IUserDao;
-import SeguiTusCompras.persistence.report.IUserReportDao;
 import SeguiTusCompras.Error.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,7 +13,6 @@ import java.util.Optional;
 public class AuthService {
     @Autowired
     private IUserDao userDao;
-    @Autowired IUserReportDao reportDao;
 
     public User createUser(String name, String password, String role){
         checkUserHasValidRole(role);
@@ -31,10 +28,6 @@ public class AuthService {
         String encodedPassword = encoder.encode(password);
         User newUser = new User(name, encodedPassword, role);
         User persistedUser = userDao.save(newUser);
-        UserReport userReport = new UserReport();
-        userReport.setUser(persistedUser);
-        UserReport persistedReport = reportDao.save(userReport);
-        persistedUser.setReport(persistedReport);
         return userDao.save(persistedUser);
     }
 

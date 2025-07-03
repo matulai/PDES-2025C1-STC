@@ -1,6 +1,11 @@
 export { default as Home } from "./Home";
+export { default as Cart } from "./Cart";
 export { default as Login } from "./Login";
+export { default as Users } from "./Users";
 export { default as Search } from "./Search";
+export { default as Products } from "./Products";
 export { default as Register } from "./Register";
 export { default as NotFound } from "./NotFound";
 export { default as ProductInfo } from "./ProductInfo";
+export { default as Qualifications } from "./Qualifications";
+export { default as PurchaseRecipes } from "./PurchaseRecipes";

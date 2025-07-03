@@ -2,9 +2,11 @@ package SeguiTusCompras.Service.utils;
 
 import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
 import SeguiTusCompras.Controller.dtos.ProductDto;
+import SeguiTusCompras.Controller.dtos.PurchaseRecipeDto;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
 import SeguiTusCompras.Controller.dtos.SimpleProductDto;
 import SeguiTusCompras.model.Product;
+import SeguiTusCompras.model.PurchaseRecipe;
 import SeguiTusCompras.model.Qualification;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -53,12 +55,20 @@ public class ProductMapper {
         return product;
     }
 
+    public List<Product> toEntitiesFromDto(List<ProductDto> productDtos) {
+        List<Product> entities = new ArrayList<Product>();
+        for(ProductDto productDto: productDtos) {
+            entities.add(toEntityFromDto(productDto));
+        }
+        return entities;
+    }
+
     // Esto hay que refactorizarlo, se repite codigo
 
     public static ProductDto converToDto(Product product) {
         List<Qualification> qualifications = product.getQualifications();
         List<QualificationDto> qualificationDtos = QualificationMapper.convertListToDto(qualifications);
-        ProductDto productDto = new ProductDto(product.getName(), product.getMlaId(), product.getPrice(), 
+        ProductDto productDto = new ProductDto(product.getName(), product.getMlaId(), product.getPrice(),
                                 product.getImageURL(), product.getDomainId(), product.getDescription(), qualificationDtos);
         return productDto;
     }
@@ -81,5 +91,19 @@ public class ProductMapper {
             productDtos.add(converToSimpleDto(product));
         }
         return productDtos;
+    }
+
+    public static List<PurchaseRecipeDto> convertToListPurchaseRecipeDto(List<PurchaseRecipe> purchaseRecipes) {
+        List<PurchaseRecipeDto> purchaseRecipeDtos = new ArrayList<>();
+        for(PurchaseRecipe purchaseRecipe: purchaseRecipes) {
+            purchaseRecipeDtos.add(converToPurchaseRecipeDto(purchaseRecipe));
+        }
+        return purchaseRecipeDtos;
+    }
+
+    public static PurchaseRecipeDto converToPurchaseRecipeDto(PurchaseRecipe purchaseRecipe) {
+        return new PurchaseRecipeDto(purchaseRecipe.getPurchasePrice(),
+                purchaseRecipe.getPurchaseDate(),
+                convertListToDto(purchaseRecipe.getPurchaseProducts()));
     }
 }

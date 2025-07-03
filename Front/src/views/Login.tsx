@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { LoginCard } from "@/components";
+import { toast } from "react-hot-toast";
 import { login } from "@/service/authService";
 import { useAuth } from "@/hooks";
 
@@ -22,13 +23,20 @@ const Login = () => {
     login(username, password)
       .then(response => {
         contextLogin(
-          { name: response.data.name, role: response.data.role },
+          {
+            name: response.data.name,
+            role: response.data.role,
+            favorites: response.data.favorites,
+            purchases: response.data.purchases,
+            cart: response.data.cart,
+            qualifications: response.data.qualifications,
+          },
           response.headers["authorization"]
         );
         navigate("/");
       })
       .catch(error => {
-        // Falta mostrar un mensaje de error al usuario
+        toast.error("Error al ingresar");
         console.error("Login failed", error);
       });
   };

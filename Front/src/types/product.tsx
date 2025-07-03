@@ -1,11 +1,13 @@
+import { Qualification } from "./";
+
 interface Product {
-  id?: string;
   mlaId: string;
   name: string;
+  price: number;
   description?: string;
   imageURL: string;
-  qualify?: number;
-  domain_id?: string;
+  qualifications?: Qualification[];
+  domainId?: string;
 }
 
 export default Product;

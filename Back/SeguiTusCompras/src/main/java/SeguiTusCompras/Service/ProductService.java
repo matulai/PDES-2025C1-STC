@@ -2,31 +2,28 @@ package SeguiTusCompras.Service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import SeguiTusCompras.Controller.dtos.PaginationElementDto;
+import SeguiTusCompras.Controller.dtos.ProductDto;
+import SeguiTusCompras.Service.utils.Pagination;
+import SeguiTusCompras.Service.utils.ProductMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import SeguiTusCompras.model.Product;
-import SeguiTusCompras.model.report.ProductReport;
 import SeguiTusCompras.persistence.IProductDao;
-import SeguiTusCompras.persistence.report.IProductReport;
-import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService {
-    @Autowired
-    IProductDao productDao;
-    @Autowired
-    IProductReport productReportDao;
+    private final IProductDao productDao;
+
+    public ProductService(IProductDao productDao) {
+        this.productDao = productDao;
+    }
 
     public Product getProduct(Product product) {
         Product persistedProduct = productDao.getByName(product.getName());
         if (persistedProduct == null){
-            Product newProduct = productDao.save(product);
-            ProductReport productReport = new ProductReport();
-            productReport.setProduct(newProduct);
-            ProductReport report = productReportDao.save(productReport);
-            newProduct.setProductReport(report);
-            return productDao.save(newProduct);
+            return productDao.save(product);
         }
         return persistedProduct;    
     }
@@ -35,14 +32,35 @@ public class ProductService {
         return productDao.getByName(productName);
     }
 
-    public List<Product> getTopSellingProducts() {
-        Pageable topFive = PageRequest.of(0, 5); 
-        return productReportDao.getTopSellingProducts(topFive);
+    public Product getProductByMlaId(String id) { return productDao.findByMlaId(id).orElse(null);}
+
+    public PaginationElementDto<ProductDto> getAllFavoritesProducts(int page, int size) {
+        Page<Product> productPage = productDao.findAllFavoriteProductsPage(PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
     }
 
-    public List<Product> getTopFavoriteProducts() {
-        Pageable topFive = PageRequest.of(0, 5); 
-        return productReportDao.getTopFavoriteProducts(topFive);
+    public PaginationElementDto<ProductDto> getTopSellingProducts(int page, int size) {
+        Page<Product> productPage = productDao.findTopSellingProducts(PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
     }
 
+    public PaginationElementDto<ProductDto> getTopFavoriteProducts(int page, int size) {
+        Page<Product> productPage =  productDao.findTopProductsFavoritesOfAllUsers(PageRequest.of(page - 1, size));
+        List<ProductDto> productDtoList = productPage.getContent()
+                .stream()
+                .map(ProductMapper::converToDto)
+                .toList();
+        Pagination pagination = new Pagination(page, size, productPage.getTotalElements());
+        return new PaginationElementDto<>(productDtoList, pagination);
+    }
 }

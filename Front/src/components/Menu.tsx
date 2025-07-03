@@ -1,6 +1,6 @@
+import { ChevronLeftIcon } from "@/icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import ChevronLeftIcon from "./ChevronLeftIcon";
 import Navbar from "./Navbar";
 import "@/styles/Menu.css";
 

@@ -2,6 +2,7 @@ import { RegisterCard } from "@/components";
 import { useNavigate } from "react-router-dom";
 import { register } from "@/service/authService";
 import { useAuth } from "@/hooks";
+import { toast } from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,14 +24,11 @@ const Register = () => {
     }
     register(username, password, role)
       .then(response => {
-        contextLogin(
-          { name: response.data.name, role: response.data.role },
-          response.headers["authorization"]
-        );
+        contextLogin(response.data, response.headers["authorization"]);
         navigate("/");
       })
       .catch(error => {
-        // Falta mostrar un mensaje de error al usuario
+        toast.error("Error al registrarse");
         console.error("Registration failed", error);
       });
   };

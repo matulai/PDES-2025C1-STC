@@ -12,6 +12,7 @@ public class UserDto {
     private String name;
     private String role;
     private List<SimpleProductDto> favorites;
-    private List<SimpleProductDto> purchases;
+    private List<PurchaseRecipeDto> purchases;
     private List<QualificationDto> qualifications;
+    private List<ProductDto> cart;
 }

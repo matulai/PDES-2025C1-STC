@@ -3,7 +3,7 @@ package SeguiTusCompras.Controller.Rest;
 import SeguiTusCompras.Controller.Utils.ObjectMappers.UserMapper;
 import SeguiTusCompras.Controller.dtos.LoginDto;
 import SeguiTusCompras.Controller.dtos.RegisterDto;
-import SeguiTusCompras.Controller.dtos.SimpleUserDto;
+import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Security.JwtService;
 import SeguiTusCompras.Service.AuthService;
 import SeguiTusCompras.model.user.User;
@@ -26,10 +26,10 @@ public class AuthController {
 
     @CrossOrigin(exposedHeaders = "Authorization")
     @PostMapping(value = "login")
-    public ResponseEntity<SimpleUserDto> login(@RequestBody LoginDto login){
+    public ResponseEntity<UserDto> login(@RequestBody LoginDto login){
         User user = authService.getUser(login.getName(), login.getPassword());
         String token = generateTokenFor(user.getName());
-        SimpleUserDto userDto = UserMapper.convertToSimpleDto(user);
+        UserDto userDto = UserMapper.convertToDto(user);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);
@@ -37,10 +37,10 @@ public class AuthController {
 
     @CrossOrigin(exposedHeaders = "Authorization")
     @PostMapping(value = "register")
-    public ResponseEntity<SimpleUserDto> register(@RequestBody RegisterDto register){
+    public ResponseEntity<UserDto> register(@RequestBody RegisterDto register){
         User persistedUser = authService.createUser(register.getName(), register.getPassword(), register.getRole());
         String token = generateTokenFor(persistedUser.getName());
-        SimpleUserDto userDto = UserMapper.convertToSimpleDto(persistedUser);
+        UserDto userDto = UserMapper.convertToDto(persistedUser);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userDto);

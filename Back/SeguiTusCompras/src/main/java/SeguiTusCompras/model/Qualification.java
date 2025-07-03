@@ -12,10 +12,11 @@ import lombok.Getter;
 @NoArgsConstructor
 public class Qualification {
 
-    public Qualification(User user, Integer score, Product product) {
+    public Qualification(User user, Integer score, Product product, String comment) {
         this.user = user;
         this.product = product;
         this.score = score;
+        this.comment = comment;
     }
 
     @Id
@@ -23,17 +24,16 @@ public class Qualification {
     @Column(name = "qualification_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name= "client_id", nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(nullable = false)
     private Integer score;
 
-    @OneToOne(mappedBy = "qualification", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private Comment comment;
+    private String comment;
 }

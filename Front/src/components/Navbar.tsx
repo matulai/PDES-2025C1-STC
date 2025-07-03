@@ -1,50 +1,54 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDownIcon } from "@/icons";
+import { ChevronDownIcon, CartIcon } from "@/icons";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks";
-import NavbarItem from "./NavbarItem";
 import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
   { label: "Ingresar", pathname: "/login" },
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
+  { label: "Favoritos", pathname: "/user/favourites?page=1" },
+  { label: "Compras", pathname: "/user/purchases?page=1" },
 ];
 
-const navLinksRegisteredClient = [
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
+const navLinksRegistered = [
+  { label: "Favoritos", pathname: "/user/favourites?page=1" },
+  { label: "Compras", pathname: "/user/purchases?page=1" },
 ];
 
 const adminOptions = [
-  { label: "Usuarios", pathname: "/admin/users" },
-  { label: "Todos los favoritos", pathname: "/admin/favorites" },
-  { label: "Todas las Reseñas", pathname: "/admin/reviews" },
-  { label: "Todas las Compras", pathname: "/admin/purchases" },
-  { label: "Top vendidos", pathname: "/admin/top-sellers" },
-  { label: "Top compradores", pathname: "/admin/top-buyers" },
-  { label: "Top favoritos", pathname: "/admin/top-favorites" },
+  { label: "Usuarios", pathname: "/users?page=1" },
+  { label: "Todos los favoritos", pathname: "/users/favourites?page=1" },
+  { label: "Todas las Reseñas", pathname: "/users/qualifications?page=1" },
+  { label: "Todas las Compras", pathname: "/users/purchases?page=1" },
+  { label: "Top vendidos", pathname: "/products/topSellingProducts?page=1" },
+  { label: "Top compradores", pathname: "/users/topBuyers?page=1" },
+  {
+    label: "Top favoritos",
+    pathname: "/products/topFavouritesProducts?page=1",
+  },
 ];
 
-const extraAdminLinks = [
-  { label: "Favoritos", pathname: "/favorites" },
-  { label: "Compras", pathname: "/purchases" },
-];
-
-type NavLink = { label: string; pathname: string };
+interface NavLink {
+  label: string;
+  pathname: string;
+}
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, contextLogout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   let navLinks: NavLink[] = navLinksNoRegistered;
+  let roleOptions: NavLink[] = [];
 
   if (user) {
-    if (user.role === "Client") {
-      navLinks = navLinksRegisteredClient;
-    } else {
-      navLinks = extraAdminLinks;
+    navLinks = navLinksRegistered;
+    if (user.role === "Admin") {
+      // El admin no debe poder hacer lo que un cliente puede
+      navLinks = [];
+      roleOptions = adminOptions;
     }
   }
 
@@ -73,37 +77,60 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleLogout = () => {
+    contextLogout();
+    setShowDropdown(false);
+  };
+
   return (
     <nav className="navbar-container">
-      {user?.role === "Admin" && (
+      {user?.role !== undefined && (
         <div className="dropdown" ref={dropdownRef}>
           <button
-            className="dropdown-toggle"
+            className="navbar-link navbar-link-inactive"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            Admin <ChevronDownIcon />
+            Options <ChevronDownIcon />
           </button>
           {showDropdown && (
             <div className="dropdown-menu">
-              {adminOptions.map(option => (
-                <NavbarItem
+              {roleOptions.map(option => (
+                <Link
                   key={option.label}
-                  label={option.label}
-                  pathname={option.pathname}
-                />
+                  to={option.pathname}
+                  className={`navbar-link ${location.pathname + location.search === option.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+                >
+                  {option.label}
+                </Link>
               ))}
+              <button
+                className="navbar-link navbar-link-inactive"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>
       )}
 
       {navLinks.map(link => (
-        <NavbarItem
+        <Link
           key={link.label}
-          label={link.label}
-          pathname={link.pathname}
-        />
+          to={link.pathname}
+          className={`navbar-link ${location.pathname + location.search === link.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+        >
+          {link.label}
+        </Link>
       ))}
+      {user?.role === "Client" ? (
+        <Link
+          to="/user/cart"
+          className={`navbar-link ${location.pathname + location.search === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
+        >
+          <CartIcon />
+        </Link>
+      ) : null}
     </nav>
   );
 };

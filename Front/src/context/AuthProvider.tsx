@@ -5,6 +5,7 @@ import {
 } from "@/utils/localStorage";
 import { useState, useEffect, createContext } from "react";
 import { getCurrentUser } from "@/service/userService";
+import { toast } from "react-hot-toast";
 import { Spinner } from "@/components";
 import { User } from "@/types";
 
@@ -29,9 +30,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const currentUser: User = response.data;
           setUser(currentUser);
         })
-        .catch(() => {
+        .catch(error => {
           // Pensar si es necesario eliminar el token
-          contextLogout();
+          console.log(error);
+          toast.error("Error al iniciar sesión");
         })
         .finally(() => {
           setIsLoading(false);
@@ -52,7 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (

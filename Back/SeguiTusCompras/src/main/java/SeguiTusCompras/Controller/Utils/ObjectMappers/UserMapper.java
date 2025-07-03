@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import SeguiTusCompras.Controller.dtos.*;
+import SeguiTusCompras.model.PurchaseRecipe;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import SeguiTusCompras.Controller.dtos.QualificationDto;
-import SeguiTusCompras.Controller.dtos.SimpleProductDto;
-import SeguiTusCompras.Controller.dtos.SimpleUserDto;
-import SeguiTusCompras.Controller.dtos.UserDto;
 import SeguiTusCompras.Service.utils.ProductMapper;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
@@ -40,14 +38,16 @@ public class UserMapper {
     }
 
     public static UserDto convertToDto(User clientWithNewFavorite) {
-        Set<Product> favorites = clientWithNewFavorite.getFavorites();
-        List<Product> purchases = clientWithNewFavorite.getPurchases();
+        List<Product> favorites = clientWithNewFavorite.getFavorites();
+        List<PurchaseRecipe> purchases = clientWithNewFavorite.getPurchases();
         Set<Qualification> qualifications = clientWithNewFavorite.getQualifications();
+        List<Product> cartProducts = clientWithNewFavorite.getCart();
         List<SimpleProductDto> favDtos = ProductMapper.convertToListSimpleDto(favorites);
-        List<SimpleProductDto> purchaseDtos = ProductMapper.convertToListSimpleDto(purchases);
+        List<PurchaseRecipeDto> purchaseRecipeDtos = ProductMapper.convertToListPurchaseRecipeDto(purchases);
         List<QualificationDto> qualificationDtos = QualificationMapper.convertListToDto(qualifications);
+        List<ProductDto> cartProductDtos = ProductMapper.convertListToDto(cartProducts);
         UserDto userDto = new UserDto(clientWithNewFavorite.getName(), clientWithNewFavorite.getRole().name(), 
-                                        favDtos, purchaseDtos, qualificationDtos);
+                                        favDtos, purchaseRecipeDtos, qualificationDtos, cartProductDtos);
         return userDto;
     }
 }

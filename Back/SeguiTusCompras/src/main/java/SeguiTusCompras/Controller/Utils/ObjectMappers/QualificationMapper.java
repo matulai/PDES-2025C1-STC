@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import SeguiTusCompras.Controller.dtos.QualificationDto;
-import SeguiTusCompras.model.Comment;
 import SeguiTusCompras.model.Qualification;
 import lombok.AllArgsConstructor;
 
@@ -24,13 +23,8 @@ public class QualificationMapper {
     }
 
     public static QualificationDto convertToDto(Qualification qualification) {
-        Comment commentEntity = qualification.getComment();
-        if (commentEntity != null) {
-            return new QualificationDto(qualification.getUser().getUsername(), qualification.getProduct().getName(), 
-                                        qualification.getScore(), commentEntity.getComment());
-        }
-        return new QualificationDto(qualification.getUser().getName(), qualification.getProduct().getName(),
-                                    qualification.getScore(), null);
+        return new QualificationDto(qualification.getUser().getUsername(), qualification.getProduct().getName(),
+                qualification.getScore(), qualification.getComment());
     }
  }
 

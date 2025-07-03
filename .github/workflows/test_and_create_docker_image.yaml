@@ -9,19 +9,9 @@ permissions:
   contents: write
 jobs:
   test:
-    # Faltan los test de front
     runs-on: ubuntu-latest
     environment: test-and-create-image
     container: maven:3.9-eclipse-temurin-21
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: SeguiTusCompras  # ${{ secrets.POSTGRES_DB_TEST }}
-          POSTGRES_USER: ${{ secrets.DB_USERNAME }}
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports:
-          - "5432:5432"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,6 +28,8 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
+          PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
   tag:
       if: github.event_name == 'push'
@@ -133,6 +125,8 @@ jobs:
           push: false
           tags: ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME }}:latest
           outputs: type=docker,dest=/tmp/frontend-image.tar
+          build-args: |
+              VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
 
       - name: Push both Docker images (if both builds succeeded)
         run: |
