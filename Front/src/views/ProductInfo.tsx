@@ -1,4 +1,9 @@
-import { StarsQualify, CommentsSection, Spinner } from "@/components";
+import {
+  StarsQualify,
+  CommentsSection,
+  Spinner,
+  ButtonLoading,
+} from "@/components";
 import { addFavouriteProduct, addToCart } from "@/service/userService";
 import { Product, Qualification } from "@/types";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,7 +18,7 @@ const ProductInfo = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const { setCart } = useCart();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product>();
   const [comments, setComments] = useState<Qualification[]>([]);
   const [isFavourite, setIsFavourite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,6 +38,7 @@ const ProductInfo = () => {
         .catch(err => {
           console.error(err);
           toast.error("Error al obtener el producto");
+          navigate("/");
         })
         .finally(() => {
           setIsLoading(false);
@@ -40,39 +46,45 @@ const ProductInfo = () => {
     }
   }, [id]);
 
-  const handleOnClickAddFavourite = () => {
+  const handleOnClickAddFavourite = async () => {
     if (product) {
       if (user) {
-        addFavouriteProduct(product)
-          .then(res => {
-            user.favorites = res.data;
-            setIsFavourite(!isFavourite);
-          })
-          .catch(error => {
-            toast.error("Error al agregar a favoritos");
-            console.log(error);
-          });
+        try {
+          const res = await addFavouriteProduct(product);
+          user.favorites = res.data;
+          setIsFavourite(!isFavourite);
+          toast.success(
+            isFavourite
+              ? "Producto sacado de favoritos"
+              : "Producto agregado a favoritos"
+          );
+        } catch (error) {
+          toast.error("Error al agregar a favoritos");
+          console.log(error);
+        }
       } else {
         navigate("/register");
       }
     }
+    return Promise.resolve();
   };
 
-  const handleOnClickAddToCart = () => {
+  const handleOnClickAddToCart = async () => {
     if (product) {
       if (user) {
-        addToCart(product)
-          .then((res: { data: Product[] }) => {
-            setCart(res.data);
-          })
-          .catch(error => {
-            toast.error("Error al agregar al carrito");
-            console.log(error);
-          });
+        try {
+          const res = await addToCart(product);
+          setCart(res.data);
+          toast.success("Producto agregado al carrito");
+        } catch (error) {
+          toast.error("Error al agregar al carrito");
+          console.log(error);
+        }
       } else {
         navigate("/register");
       }
     }
+    return Promise.resolve();
   };
 
   const calculateAverageScore = () => {
@@ -86,7 +98,7 @@ const ProductInfo = () => {
   };
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (
@@ -102,18 +114,14 @@ const ProductInfo = () => {
           <p className="product-info-details-description">
             {product?.description}
           </p>
-          <button
-            onClick={handleOnClickAddToCart}
-            className="product-info-details-button"
-          >
-            Agregar al carrito
-          </button>
-          <button
-            onClick={handleOnClickAddFavourite}
-            className="product-info-details-button"
-          >
-            {`${isFavourite ? "Sacar de favoritos" : "Agregar a favoritos"}`}
-          </button>
+          <ButtonLoading
+            handleFunction={handleOnClickAddToCart}
+            text="Agregar al carrito"
+          />
+          <ButtonLoading
+            handleFunction={handleOnClickAddFavourite}
+            text={isFavourite ? "Sacar de favoritos" : "Agregar a favoritos"}
+          />
         </section>
       </section>
       <section className="product-qualify">
