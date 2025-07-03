@@ -1,52 +1,73 @@
-import { Spinner, PurchaseRecipeCard } from "@/components";
+import type { PurchaseRecipe, PaginationElementDto } from "@/types";
+import { Spinner, Carousel, PaginationNav } from "@/components";
 import { useState, useEffect } from "react";
-import type { PurchaseRecipe } from "@/types";
 import { allUsersPurchases } from "@/service/adminService";
+import { useSearchParams } from "react-router-dom";
 import { userPurchases } from "@/service/userService";
+import { toast } from "react-hot-toast";
+import "@/styles/Items.css";
 
 interface ProductsProps {
   type: string;
 }
 
 const endpointMap = {
-  "All users purchases": allUsersPurchases,
-  "User purchases": userPurchases,
+  "Todas las Compras": allUsersPurchases,
+  "Mis compras": userPurchases,
 };
 
 const PurchaseRecipes = ({ type }: ProductsProps) => {
-  const [purchaseRecipes, setPurchaseRecipes] = useState<PurchaseRecipe[]>([]);
+  const [searchParams] = useSearchParams();
+  const [paginationPurchaseRecipes, setPaginationPurchaseRecipes] =
+    useState<PaginationElementDto<PurchaseRecipe>>();
   const [isLoading, setIsLoading] = useState(true);
+
+  // Tambien podes pasarle por query el limite
+  const page = Number(searchParams.get("page"));
 
   useEffect(() => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
-    endpoint()
+    endpoint(page)
       .then(res => {
-        setPurchaseRecipes(res.data.data);
+        setPaginationPurchaseRecipes(res);
       })
       .catch(error => {
         console.log(error);
+        toast.error("Error al obtener compras");
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [page]);
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>{type}</strong>
       </h1>
-      <div className="search-content">
-        {/* <Filter setProducts={setProducts} /> */}
-        {purchaseRecipes.map((purchaseRecipe, index) => (
-          <PurchaseRecipeCard key={index} purchaseRecipe={purchaseRecipe} />
-        ))}
-        {/* <Pagination products={products.pagination}/> */}
+      <div className="items">
+        {paginationPurchaseRecipes!.data.map((purchaseRecipe, index) => {
+          const priceFormated = purchaseRecipe.purchasePrice
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          const date = new Date(purchaseRecipe.purchaseDate);
+          const fecha = date.toISOString().split("T")[0];
+          const title = `Fecha:${fecha} MontoTotal:${priceFormated}`;
+          return (
+            <Carousel
+              key={index}
+              link="#"
+              title={title}
+              products={purchaseRecipe.purchaseProducts}
+            />
+          );
+        })}
       </div>
+      <PaginationNav pagination={paginationPurchaseRecipes!.pagination} />
     </>
   );
 };

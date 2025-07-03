@@ -1,9 +1,13 @@
 import "@/styles/Spinner.css";
 
-const Spinner = () => {
+interface SpinnerProps {
+  classType: string;
+}
+
+const Spinner = ({ classType }: SpinnerProps) => {
   return (
     <div className="spinner-container">
-      <div className="spinner" />
+      <div className={`spinner ${classType}`} />
     </div>
   );
 };

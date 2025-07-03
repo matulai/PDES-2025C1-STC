@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { LoginCard } from "@/components";
+import { toast } from "react-hot-toast";
 import { login } from "@/service/authService";
 import { useAuth } from "@/hooks";
 
@@ -35,7 +36,7 @@ const Login = () => {
         navigate("/");
       })
       .catch(error => {
-        // Falta mostrar un mensaje de error al usuario
+        toast.error("Error al ingresar");
         console.error("Login failed", error);
       });
   };

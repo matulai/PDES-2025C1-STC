@@ -1,5 +1,10 @@
+import {
+  PaginationElementDto,
+  PurchaseRecipe,
+  Product,
+  Qualification,
+} from "@/types";
 import { convertUndefinedToNull } from "@/utils/functions";
-import { Product, Qualification } from "@/types";
 import { getFromLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
@@ -71,10 +76,13 @@ function qualifyProduct(qualification: Qualification) {
   });
 }
 
-function userPurchases(page = 1, size = 5) {
+async function userPurchases(
+  page = 1,
+  size = 5
+): Promise<PaginationElementDto<PurchaseRecipe>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/client/userPurchases`, {
+  const { data } = await axios.get(`${API_URL}/client/userPurchases`, {
     params: {
       page,
       size,
@@ -83,12 +91,16 @@ function userPurchases(page = 1, size = 5) {
       Authorization: token,
     },
   });
+  return data;
 }
 
-function userFavourites(page = 1, size = 25) {
+async function userFavourites(
+  page = 1,
+  size = 25
+): Promise<PaginationElementDto<Product>> {
   const token = getFromLocalStorage("token");
 
-  return axios.get(`${API_URL}/client/userFavorites`, {
+  const { data } = await axios.get(`${API_URL}/client/userFavorites`, {
     params: {
       page,
       size,
@@ -97,6 +109,7 @@ function userFavourites(page = 1, size = 25) {
       Authorization: token,
     },
   });
+  return data;
 }
 
 export {

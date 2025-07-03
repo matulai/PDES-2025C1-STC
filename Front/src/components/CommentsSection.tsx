@@ -3,6 +3,7 @@ import { qualifyProduct } from "@/service/userService";
 import { SendIcon } from "@/icons";
 import { useState } from "react";
 import { useAuth } from "@/hooks";
+import { toast } from "react-hot-toast";
 import StarsQualify from "./StarsQualify";
 import CommentItem from "./CommentItem";
 import InputText from "./InputText";
@@ -50,6 +51,7 @@ const CommentsSection = ({
         })
         .catch(error => {
           console.log(error);
+          toast.error("Error al agregar comentario");
         });
     }
   };

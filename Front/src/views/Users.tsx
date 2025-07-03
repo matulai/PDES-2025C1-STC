@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
 import { allRegisteredUsers, topBuyers } from "@/service/adminService";
-import { Spinner } from "@/components";
-import "@/styles/ProductsManage.css";
+import type { PaginationElementDto } from "@/types";
+import { Spinner, PaginationNav } from "@/components";
+import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import "@/styles/Items.css";
 
 interface SimpleUser {
   name: string;
@@ -13,21 +16,26 @@ interface UsersProps {
 }
 
 const endpointMap = {
-  "Top buyers": topBuyers,
-  "All users": allRegisteredUsers,
+  "Top compradores": topBuyers,
+  Usuarios: allRegisteredUsers,
 };
 
 const Users = ({ type }: UsersProps) => {
-  const [registeredUsers, setRegisteredUsers] = useState<SimpleUser[]>([]);
+  const [searchParams] = useSearchParams();
+  const [paginationUsers, setPaginationUsers] =
+    useState<PaginationElementDto<SimpleUser>>();
   const [isLoading, setIsLoading] = useState(true);
+
+  const page = Number(searchParams.get("page"));
 
   useEffect(() => {
     const endpoint = endpointMap[type as keyof typeof endpointMap];
-    endpoint()
+    endpoint(page)
       .then(res => {
-        setRegisteredUsers(res.data.data);
+        setPaginationUsers(res);
       })
       .catch(error => {
+        toast.error("Error al obtener usuarios");
         console.log(error);
       })
       .finally(() => {
@@ -36,26 +44,25 @@ const Users = ({ type }: UsersProps) => {
   }, []);
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (
     <>
-      <h1 style={{ width: "100%", fontSize: "32px", textAlign: "left" }}>
+      <h1 className="items-title">
         <strong style={{ fontWeight: "600" }}>All registered users</strong>
       </h1>
-      <div className="search-content">
-        {/* <Filter setProducts={setProducts} /> */}
-        <div className="search-content-results">
-          {registeredUsers.map((registeredUser, index) => (
-            <div key={index} className="user-content">
-              {registeredUser.name}
-              {registeredUser.role}
+      <div className="items">
+        <div className="items-content-wrap">
+          {paginationUsers?.data.map((registeredUser, index) => (
+            <div key={index} className="items-content-item">
+              <p style={{ fontWeight: "600" }}>{registeredUser.name}</p>
+              <p>{registeredUser.role}</p>
             </div>
           ))}
         </div>
-        {/* <Pagination products={products.pagination}/> */}
       </div>
+      <PaginationNav pagination={paginationUsers!.pagination} />
     </>
   );
 };

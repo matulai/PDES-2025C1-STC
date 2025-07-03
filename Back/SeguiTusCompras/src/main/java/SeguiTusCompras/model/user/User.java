@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.Qualification;
-import SeguiTusCompras.model.report.UserReport;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
