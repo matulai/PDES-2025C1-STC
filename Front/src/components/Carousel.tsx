@@ -20,8 +20,8 @@ const Carousel = ({ link, title, products }: CarouselProps) => {
         </Link>
       </div>
       <CarouselWrapper>
-        {products.map(product => (
-          <ProductCard key={product.mlaId} product={product} />
+        {products.map((product, index) => (
+          <ProductCard key={index} product={product} />
         ))}
       </CarouselWrapper>
     </section>
