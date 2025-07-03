@@ -44,7 +44,7 @@ const Users = ({ type }: UsersProps) => {
   }, []);
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (

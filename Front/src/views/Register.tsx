@@ -28,7 +28,7 @@ const Register = () => {
         navigate("/");
       })
       .catch(error => {
-        toast.error("Registration failed");
+        toast.error("Error al registrarse");
         console.error("Registration failed", error);
       });
   };

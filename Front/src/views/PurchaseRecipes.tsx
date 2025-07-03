@@ -41,7 +41,7 @@ const PurchaseRecipes = ({ type }: ProductsProps) => {
   }, [page]);
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner classType="spinner-fullscreen" />;
   }
 
   return (

@@ -36,7 +36,7 @@ const Login = () => {
         navigate("/");
       })
       .catch(error => {
-        toast.error("Error on login");
+        toast.error("Error al ingresar");
         console.error("Login failed", error);
       });
   };

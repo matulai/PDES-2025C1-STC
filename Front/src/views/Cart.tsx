@@ -4,6 +4,7 @@ import { ProductCard } from "@/components";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@/icons";
 import { useCart } from "@/hooks";
+import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 import "@/styles/Cart.css";
 
@@ -14,10 +15,12 @@ const Cart = () => {
   const onClickRemoveFromCart = (product: Product) => {
     removeFromCart(product)
       .then(res => {
-        setCart(res.data.data);
+        setCart(res.data);
+        toast.success("Producto removido con exito");
       })
       .catch(error => {
         console.log(error);
+        toast.error("Error al remover producto");
       });
   };
 
@@ -25,8 +28,10 @@ const Cart = () => {
     purchaseProducts()
       .then(_res => {
         setCart([]);
+        toast.success("Productos comprados con exito");
       })
       .catch(error => {
+        toast.error("Error al comprar productos");
         console.log(error);
       });
   };
@@ -38,8 +43,8 @@ const Cart = () => {
       </h1>
       <div className="items">
         <div className="items-content-wrap">
-          {cart.map(product => (
-            <div key={product.mlaId} className="cart-product-card">
+          {cart.map((product, index) => (
+            <div key={index} className="cart-product-card">
               <ProductCard product={product} />
               <button onClick={() => onClickRemoveFromCart(product)}>
                 <TrashIcon />
