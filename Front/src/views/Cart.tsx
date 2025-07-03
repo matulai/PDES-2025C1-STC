@@ -1,6 +1,6 @@
 import { removeFromCart, purchaseProducts } from "@/service/userService";
+import { ProductCard, ButtonLoading } from "@/components";
 import type { Product } from "@/types";
-import { ProductCard } from "@/components";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@/icons";
 import { useCart } from "@/hooks";
@@ -24,16 +24,15 @@ const Cart = () => {
       });
   };
 
-  const onClickBuyCartProducts = () => {
-    purchaseProducts()
-      .then(_res => {
-        setCart([]);
-        toast.success("Productos comprados con exito");
-      })
-      .catch(error => {
-        toast.error("Error al comprar productos");
-        console.log(error);
-      });
+  const onClickBuyCartProducts = async () => {
+    try {
+      await purchaseProducts();
+      setCart([]);
+      toast.success("Productos comprados con exito");
+    } catch (error) {
+      toast.error("Error al comprar productos");
+      console.log(error);
+    }
   };
 
   return (
@@ -63,12 +62,10 @@ const Cart = () => {
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`}
               </p>
-              <button
-                className="cart-product-details-buy-button"
-                onClick={onClickBuyCartProducts}
-              >
-                Buy products
-              </button>
+              <ButtonLoading
+                handleFunction={onClickBuyCartProducts}
+                text="Buy products"
+              />
             </>
           ) : (
             <button
