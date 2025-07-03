@@ -4,12 +4,14 @@ import type { Product } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@/icons";
 import { useCart } from "@/hooks";
+import { useAuth } from "@/hooks";
 import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 import "@/styles/Cart.css";
 
 const Cart = () => {
   const { cart, setCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const onClickRemoveFromCart = (product: Product) => {
@@ -26,8 +28,12 @@ const Cart = () => {
 
   const onClickBuyCartProducts = async () => {
     try {
-      await purchaseProducts();
+      const res = await purchaseProducts();
       setCart([]);
+      if (user) {
+        user.purchases = res.data;
+      }
+
       toast.success("Productos comprados con exito");
     } catch (error) {
       toast.error("Error al comprar productos");
