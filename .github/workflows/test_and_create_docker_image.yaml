@@ -1,7 +1,7 @@
 name: Test
 on:
   push:
-    branches: ["feature/fixCheckpoint2"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
