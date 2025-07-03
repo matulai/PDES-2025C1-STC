@@ -2,7 +2,7 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: postgres_container
+    container_name: postgres_container_grupo2
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -12,6 +12,7 @@ services:
 
   spring:
     image: qac1978/seguituscompras_backend:latest
+    container_name: backend_container_grupo2
     environment:
       SPRING_DATASOURCE_URL: ${DB_URL_DOCKER}
       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
@@ -29,6 +30,7 @@ services:
 
   frontend:
     image: qac1978/seguituscompras_frontend:latest
+    container_name: frontend_container_grupo2
     environment:
       VITE_API_URL: ${VITE_API_URL}
     ports:
@@ -39,6 +41,7 @@ services:
   
   k6:
     image: grafana/k6
+    container_name: k6_grupo2
     volumes:
       - ./k6:/k6 
     # Establecemos el directorio de trabajo para que los comandos se ejecuten desde allí.
