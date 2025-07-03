@@ -31,9 +31,4 @@ public class UserController {
         UserDto userDto = UserMapper.convertToDto(user);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
-
-    @GetMapping(value = "favs")
-    public String getFavs(){
-        return "asd";
-    }
 }

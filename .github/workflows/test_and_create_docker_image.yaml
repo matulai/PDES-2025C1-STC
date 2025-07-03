@@ -1,7 +1,7 @@
 name: Test
 on:
   push:
-    branches: ["main"]
+    branches: ["feature/fixCheckpoint2"]
   pull_request:
     branches: ["main"]
 
@@ -38,6 +38,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
         run: mvn -B test
   tag:
       if: github.event_name == 'push'
@@ -133,6 +134,8 @@ jobs:
           push: false
           tags: ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME }}:latest
           outputs: type=docker,dest=/tmp/frontend-image.tar
+          build-args: |
+              VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
 
       - name: Push both Docker images (if both builds succeeded)
         run: |
