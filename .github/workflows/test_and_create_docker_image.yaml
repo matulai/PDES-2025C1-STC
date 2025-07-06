@@ -1,9 +1,9 @@
 name: Test
 on:
   push:
-    branches: ["main"]
+    branches: ["QA"]
   pull_request:
-    branches: ["main"]
+    branches: ["QA"]
 
 permissions:
   contents: write
