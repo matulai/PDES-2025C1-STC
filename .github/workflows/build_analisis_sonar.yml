@@ -11,9 +11,10 @@ jobs:
   backend:
     name: Backend - Build and Analyze
     runs-on: ubuntu-latest
+    environment: test-and-create-image
     defaults:
       run:
-        working-directory: ./Back  # Ajustá si tu carpeta se llama distinto
+        working-directory: ./Back/SeguiTusCompras  # Ajustá si tu carpeta se llama distinto
 
     steps:
       - uses: actions/checkout@v4
@@ -49,6 +50,7 @@ jobs:
   frontend:
     name: Frontend - Analyze
     runs-on: ubuntu-latest
+    environment: test-and-create-image
     defaults:
       run:
         working-directory: ./Front  # Ajustá si tu carpeta se llama distinto
