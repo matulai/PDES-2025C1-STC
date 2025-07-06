@@ -16,16 +16,15 @@ jobs:
       image: maven:3.9-eclipse-temurin-21
     defaults:
       run:
-        working-directory: ./Back/SeguiTusCompras  # Ajustá si tu carpeta se llama distinto
+        working-directory: ./Back/SeguiTusCompras
 
-      steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Run tests with Maven
-        working-directory: ./Back/SeguiTusCompras
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
@@ -36,11 +35,12 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
           PROFILE: ${{ secrets.PROFILE }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=Back_PDES-2025C1-STC
-          -Dsonar.organization=MatiasOrganization \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN_BACK }} \
+        run: |
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=Back_PDES-2025C1-STC \
+            -Dsonar.organization=MatiasOrganization \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN_BACK }}
 
   frontend:
     name: Frontend - Analyze
@@ -48,14 +48,14 @@ jobs:
     environment: test-and-create-image
     defaults:
       run:
-        working-directory: ./Front  # Ajustá si tu carpeta se llama distinto
+        working-directory: ./Front
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Build and scan with sonar
+      - name: Build and scan with Sonar
         run: |
           npm install
           npm run build
@@ -63,6 +63,5 @@ jobs:
             -Dsonar.projectKey=Front_PDES-2025C1-STC \
             -Dsonar.organization=MatiasOrganization \
             -Dsonar.sources=src \
+            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${{ secrets.SONAR_TOKEN_FRONT }}
-
-          
