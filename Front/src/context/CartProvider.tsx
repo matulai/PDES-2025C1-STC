@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useMemo } from "react";
 import { Product } from "@/types";
 import { useAuth } from "@/hooks";
 
@@ -13,11 +13,9 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
   const [cart, setCart] = useState<Product[]>(user?.cart ?? []);
 
-  return (
-    <CartContext.Provider value={{ cart, setCart }}>
-      {children}
-    </CartContext.Provider>
-  );
+  const value = useMemo(() => ({ cart, setCart }), [cart]);
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export { CartProvider, CartContext };

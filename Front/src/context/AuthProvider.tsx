@@ -3,7 +3,7 @@ import {
   getFromLocalStorage,
   removeItemFromLocalStorage,
 } from "@/utils/localStorage";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useMemo } from "react";
 import { getCurrentUser } from "@/service/userService";
 import { toast } from "react-hot-toast";
 import { Spinner } from "@/components";
@@ -53,15 +53,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     removeItemFromLocalStorage("token");
   };
 
+  const value = useMemo(() => ({ user, contextLogin, contextLogout }), [user]);
+
   if (isLoading) {
     return <Spinner classType="spinner-fullscreen" />;
   }
 
-  return (
-    <AuthContext.Provider value={{ user, contextLogin, contextLogout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export { AuthProvider, AuthContext };

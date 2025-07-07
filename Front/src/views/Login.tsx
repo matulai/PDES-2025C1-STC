@@ -41,11 +41,7 @@ const Login = () => {
       });
   };
 
-  return (
-    <>
-      <LoginCard onSubmit={handleLogin} />
-    </>
-  );
+  return <LoginCard onSubmit={handleLogin} />;
 };
 
 export default Login;

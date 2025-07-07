@@ -33,11 +33,7 @@ const Register = () => {
       });
   };
 
-  return (
-    <>
-      <RegisterCard onSubmit={handleRegister} />
-    </>
-  );
+  return <RegisterCard onSubmit={handleRegister} />;
 };
 
 export default Register;
