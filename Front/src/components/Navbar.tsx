@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, CartIcon } from "@/icons";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks";
+import { useAuth, useCart } from "@/hooks";
 import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
@@ -36,6 +36,7 @@ interface NavLink {
 
 const Navbar = () => {
   const { user, contextLogout } = useAuth();
+  const { cart } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -129,6 +130,7 @@ const Navbar = () => {
           className={`navbar-link ${location.pathname + location.search === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           <CartIcon />
+          <span className="navbar-link-absolute-element">{cart.length}</span>
         </Link>
       ) : null}
     </nav>
