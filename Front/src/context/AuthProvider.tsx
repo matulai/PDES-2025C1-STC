@@ -11,6 +11,7 @@ import { User } from "@/types";
 
 interface AuthContextType {
   user: User | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   contextLogin: (user: User, token: string) => void;
   contextLogout: () => void;
 }
@@ -53,7 +54,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     removeItemFromLocalStorage("token");
   };
 
-  const value = useMemo(() => ({ user, contextLogin, contextLogout }), [user]);
+  const value = useMemo(
+    () => ({ user, setIsLoading, contextLogin, contextLogout }),
+    [user]
+  );
 
   if (isLoading) {
     return <Spinner classType="spinner-fullscreen" />;

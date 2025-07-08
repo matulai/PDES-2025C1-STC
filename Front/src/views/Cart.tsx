@@ -29,9 +29,7 @@ const Cart = () => {
     try {
       const res = await purchaseProducts();
       setCart([]);
-      if (user) {
-        user.purchases = res.data;
-      }
+      user!.purchases = res.data;
 
       toast.success("Productos comprados con exito");
     } catch (error) {

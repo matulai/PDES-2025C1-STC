@@ -1,12 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { LoginCard } from "@/components";
 import { toast } from "react-hot-toast";
 import { login } from "@/service/authService";
 import { useAuth } from "@/hooks";
 
 const Login = () => {
-  const { contextLogin } = useAuth();
-  const navigate = useNavigate();
+  const { contextLogin, setIsLoading } = useAuth();
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,6 +18,7 @@ const Login = () => {
       alert("Por favor completá todos los campos.");
       return;
     }
+    setIsLoading(true);
     login(username, password)
       .then(response => {
         contextLogin(
@@ -33,11 +32,13 @@ const Login = () => {
           },
           response.headers["authorization"]
         );
-        navigate("/");
       })
       .catch(error => {
         toast.error("Error al ingresar");
         console.error("Login failed", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
