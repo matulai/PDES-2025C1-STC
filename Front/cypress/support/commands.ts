@@ -25,13 +25,37 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(userName: string, password: string): Chainable<void>;
+      register(
+        userName: string,
+        password: string,
+        rol: string
+      ): Chainable<void>;
+      // Add other custom commands here if needed
+      // drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      // dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
+      // visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
+    }
+  }
+}
+
+Cypress.Commands.add("login", (userName: string, password: string) => {
+  cy.visit("/login");
+  cy.get("#username").type(userName);
+  cy.get("#password").type(password);
+  cy.get("button[type=submit].auth-card-container-form-button").click();
+});
+
+Cypress.Commands.add(
+  "register",
+  (userName: string, password: string, rol: string) => {
+    cy.visit("/register");
+    cy.get("#username").type(userName);
+    cy.get("#password").type(password);
+    cy.get("#rolesOptions").select(rol);
+    cy.get("button[type=submit].auth-card-container-form-button").click();
+  }
+);
