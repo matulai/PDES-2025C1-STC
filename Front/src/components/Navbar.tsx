@@ -40,12 +40,12 @@ const adminOptions = [
     pageQuery: "?page=1",
   },
   {
-    label: "Todas las Reseñas",
+    label: "Todas las reseñas",
     pathname: "/users/qualifications",
     pageQuery: "?page=1",
   },
   {
-    label: "Todas las Compras",
+    label: "Todas las compras",
     pathname: "/users/purchases",
     pageQuery: "?page=1",
   },
