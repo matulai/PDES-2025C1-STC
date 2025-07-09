@@ -22,7 +22,7 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
       FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
-      PROFILE: prod
+      PROFILE: stg
     depends_on:
       - postgres
     ports:
