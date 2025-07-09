@@ -23,6 +23,10 @@ Segui tus compras es una aplicación web que permitira a los clientes realizar e
 - Agregar reseña a los productos
 
 ## Contenedores 
+ Requisitos  
+   - Python 3.12.3 o superior
+   - Docker
+     
   #### Base de datos
   - nombre de servicio: postgres
   - nombre de contenedor: postgres_container_grupo2 
@@ -40,10 +44,9 @@ Segui tus compras es una aplicación web que permitira a los clientes realizar e
 
   #### Swagger 
     http://localhost:8080/swagger-ui/index.html
-
+  
   Se levanta en el directorio principal del repositorio con el comando:   
   
-  *docker-compose up -f ./contenedores.yaml up -d*
+  *python .\script-contenedores.py*
 
-
-  **Se tienen que setear los secrets en el entorno**
+  **Por ahora ejecutar docker en la branch grafana, se tiene que setear el DOPPLER_TOKEN en las variables de entorno del sistema**
