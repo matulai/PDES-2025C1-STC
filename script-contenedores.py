@@ -14,7 +14,7 @@ DOPPLER_API_URL = "https://api.doppler.com/v3/configs/config/secrets/download?fo
 
 def get_doppler_token():
   
-    token = os.getenv('DOPPLER')
+    token = os.getenv('DOPPLER_TOKEN')
     if token:
         print("Token de Doppler encontrado en la variable de entorno del sistema.")
         return token
