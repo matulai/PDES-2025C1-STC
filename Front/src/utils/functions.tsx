@@ -1,4 +1,4 @@
-function calculateProductPrice(mlaId: String, name: String) {
+function calculateProductPrice(mlaId: string, name: string) {
   const initialPrice = Number(mlaId.slice(3));
   return Math.floor(initialPrice / name.length);
 }

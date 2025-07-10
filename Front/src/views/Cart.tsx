@@ -3,8 +3,7 @@ import { ProductCard, ButtonLoading } from "@/components";
 import type { Product } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { TrashIcon } from "@/icons";
-import { useCart } from "@/hooks";
-import { useAuth } from "@/hooks";
+import { useCart, useAuth } from "@/hooks";
 import { toast } from "react-hot-toast";
 import "@/styles/Items.css";
 import "@/styles/Cart.css";
@@ -30,9 +29,7 @@ const Cart = () => {
     try {
       const res = await purchaseProducts();
       setCart([]);
-      if (user) {
-        user.purchases = res.data;
-      }
+      user!.purchases = res.data;
 
       toast.success("Productos comprados con exito");
     } catch (error) {

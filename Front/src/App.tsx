@@ -61,7 +61,7 @@ function App() {
                 />
                 <Route
                   path="/users/purchases"
-                  element={<PurchaseRecipes type="Todas las Compras" />}
+                  element={<PurchaseRecipes type="Todas las compras" />}
                 />
                 <Route path="/users" element={<Users type="Usuarios" />} />
                 <Route

@@ -27,11 +27,7 @@ const ProductsCategoryContainer = ({
       });
   }, []);
 
-  return (
-    <>
-      <Carousel link={link} title={title} products={products} />
-    </>
-  );
+  return <Carousel link={link} title={title} products={products} />;
 };
 
 export default ProductsCategoryContainer;
