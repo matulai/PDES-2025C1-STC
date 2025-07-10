@@ -1,5 +1,7 @@
 package SeguiTusCompras.Service.utils;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Service;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -7,14 +9,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 public class GeoIPService {
+    
+    private final MeterRegistry meterRegistry;
 
-    private final Map<String, AtomicInteger> countryRequestCounts = new ConcurrentHashMap<>();
+    public GeoIPService(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
 
     public String getCountryForIp(String ip) {
         try {
@@ -33,12 +37,15 @@ public class GeoIPService {
     }
 
     public void incrementRequestCount(String country) {
-        countryRequestCounts.computeIfAbsent(country, k -> new AtomicInteger(0)).incrementAndGet();
+        meterRegistry.counter("requests.by.country", "country", country).increment();
     }
 
     public Map<String, Integer> getRequestCounts() {
-        return countryRequestCounts.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()));
+        return meterRegistry.find("requests.by.country").counters().stream()
+                .collect(Collectors.toMap(
+                        c -> c.getId().getTag("country"),
+                        c -> (int) c.count()
+                ));
     }
 }
 
