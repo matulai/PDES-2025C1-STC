@@ -69,26 +69,15 @@ public class AdminControllerTest {
 
     @AfterEach
     void tearDown() {
-        // Este método se ejecuta DESPUÉS de cada test para limpiar los datos creados.
-        // El orden es importante para evitar errores de Foreign Key.
-        // No borramos los usuarios porque son creados por el DataSeeder y los necesitamos.
         jdbcTemplate.execute("DELETE FROM favorite");
         jdbcTemplate.execute("DELETE FROM cart");
-        // La tabla purchase_recipe_products se limpia al borrar PurchaseRecipe por el Cascade.
 
-        // Segundo, borramos las entidades "hijas".
         purchaseRecipeDao.deleteAll();
         qualificationDao.deleteAll();
 
-        // Finalmente, ahora que no hay dependencias, es seguro borrar los productos.
         productDao.deleteAll();
     }
 
-    /**
-     * Helper para registrar y loguear un cliente nuevo para cada test.
-     * Esto asegura que los tests son independientes.
-     * @return HttpHeaders con el token del cliente.
-     */
     private HttpHeaders loginClient(String username, String password) {
         LoginDto clientDto = new LoginDto();
         clientDto.setName(username);
