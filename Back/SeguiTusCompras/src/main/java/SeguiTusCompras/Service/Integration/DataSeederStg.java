@@ -32,7 +32,6 @@ public class DataSeederStg implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        /*
         authService.createUser("Yamila", password, "Admin");
         authService.createUser("Lucia", password, "Client");
         authService.createUser("Magali", password, "Client");
@@ -137,6 +136,5 @@ public class DataSeederStg implements CommandLineRunner {
 
         userService.qualifyProduct(lucia, zflip, 5, "¡Increíble rendimiento para juegos! La mejor compra que he hecho.");
         userService.qualifyProduct(lucia, galaxyS7, 4, "Muy bueno y cómodo para escribir, aunque un poco ruidoso.");
-    **/
     }
 }
