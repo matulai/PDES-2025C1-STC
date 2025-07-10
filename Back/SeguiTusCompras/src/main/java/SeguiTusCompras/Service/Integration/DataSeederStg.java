@@ -21,7 +21,6 @@ public class DataSeederStg implements CommandLineRunner {
     private final UserService userService;
     private final ProductService productService;
 
-    // Inyectamos todos los servicios necesarios a través del constructor
     public DataSeederStg(AuthService authService, UserService userService, ProductService productService) {
         this.authService = authService;
         this.userService = userService;
@@ -33,7 +32,7 @@ public class DataSeederStg implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-
+        /*
         authService.createUser("Yamila", password, "Admin");
         authService.createUser("Lucia", password, "Client");
         authService.createUser("Magali", password, "Client");
@@ -138,6 +137,6 @@ public class DataSeederStg implements CommandLineRunner {
 
         userService.qualifyProduct(lucia, zflip, 5, "¡Increíble rendimiento para juegos! La mejor compra que he hecho.");
         userService.qualifyProduct(lucia, galaxyS7, 4, "Muy bueno y cómodo para escribir, aunque un poco ruidoso.");
-
+    **/
     }
 }
