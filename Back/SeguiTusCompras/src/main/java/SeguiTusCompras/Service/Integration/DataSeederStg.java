@@ -5,6 +5,7 @@ import SeguiTusCompras.Service.ProductService;
 import SeguiTusCompras.Service.UserService;
 import SeguiTusCompras.model.Product;
 import SeguiTusCompras.model.user.User;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Component
-@Profile("sgt")
+@Profile("stg")
 public class DataSeederStg implements CommandLineRunner {
 
     private final AuthService authService;
@@ -30,6 +31,7 @@ public class DataSeederStg implements CommandLineRunner {
     private final String password = "Password123!";
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
 
         authService.createUser("Yamila", password, "Admin");
