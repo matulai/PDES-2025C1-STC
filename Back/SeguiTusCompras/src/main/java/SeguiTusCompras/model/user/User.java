@@ -34,7 +34,7 @@ public class User implements UserDetails{
 
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "favorite",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -42,10 +42,10 @@ public class User implements UserDetails{
     )
     private List<Product> favorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<PurchaseRecipe> purchases = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Qualification> qualifications = new HashSet<>();
 
     @Override
@@ -53,7 +53,7 @@ public class User implements UserDetails{
         throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "cart",
             joinColumns = @JoinColumn(name = "user_id"),

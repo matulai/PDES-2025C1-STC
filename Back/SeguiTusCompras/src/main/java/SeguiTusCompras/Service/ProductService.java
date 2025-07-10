@@ -1,7 +1,6 @@
 package SeguiTusCompras.Service;
 
 import java.util.List;
-
 import SeguiTusCompras.Controller.dtos.PaginationElementDto;
 import SeguiTusCompras.Controller.dtos.ProductDto;
 import SeguiTusCompras.Service.utils.Pagination;

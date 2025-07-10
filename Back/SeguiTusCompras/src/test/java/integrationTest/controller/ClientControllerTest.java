@@ -4,6 +4,7 @@ import SeguiTusCompras.Controller.dtos.*;
 import SeguiTusCompras.SeguiTusComprasApplication;
 import SeguiTusCompras.persistence.IProductDao;
 import SeguiTusCompras.persistence.IPurchaseRecipeDao;
+import SeguiTusCompras.persistence.IQualificationDAO;
 import SeguiTusCompras.persistence.IUserDao;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
@@ -23,11 +25,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SeguiTusComprasApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ClientControllerTest {
 
     private static String token;
+
     private static HttpHeaders headers;
+    private String baseUrl;
 
     @LocalServerPort
     private int port;
@@ -43,18 +46,20 @@ public class ClientControllerTest {
     private IProductDao productDao;
 
     @Autowired
-    private IUserDao userDao;
+    private IQualificationDAO qualificationDao;
 
     @Autowired
     private EntityManager em;
 
-    @BeforeAll
-    static void setUp(@Autowired TestRestTemplate restTemplate, @LocalServerPort int port) {
-        String baseUrl = "http://localhost:" + port;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        RegisterDto loginUser = new RegisterDto();
-        loginUser.setName("Lucia");
-        loginUser.setPassword("Password123!");
+    @BeforeEach
+    void setUp() {
+        baseUrl = "http://localhost:" + port;
+
+        // Usamos LoginDto para el endpoint de login.
+        LoginDto loginUser = new LoginDto("Lucia", "Password123!");
 
         ResponseEntity<Void> loginResponse = restTemplate.postForEntity(
                 baseUrl + "/auth/login",
@@ -62,17 +67,31 @@ public class ClientControllerTest {
                 Void.class
         );
 
-        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
-        token = loginResponse.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        String token = loginResponse.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
         headers = new HttpHeaders();
         headers.setBearerAuth(token.replace("Bearer ", ""));
     }
 
+    @AfterEach
+    void tearDown() {
+        // Este método se ejecuta DESPUÉS de cada test para limpiar los datos creados.
+        // El orden es importante para evitar errores de Foreign Key.
+        // No borramos los usuarios porque son creados por el DataSeeder y los necesitamos.
+        jdbcTemplate.execute("DELETE FROM favorite");
+        jdbcTemplate.execute("DELETE FROM cart");
+        // La tabla purchase_recipe_products se limpia al borrar PurchaseRecipe por el Cascade.
+
+        // Segundo, borramos las entidades "hijas".
+        purchaseRecipeDao.deleteAll();
+        qualificationDao.deleteAll();
+
+        // Finalmente, ahora que no hay dependencias, es seguro borrar los productos.
+        productDao.deleteAll();
+    }
+
 
     @Test
-    @Transactional
-    @Rollback(true)
     void addProductToFavoritesReturnsFavoriteListWithAddedProduct() {
         ProductDto productDto = new ProductDto("name", "mlID", new BigDecimal("15.00"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -89,8 +108,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     void addToCartReturnsClientCartWithNewProduct(){
         ProductDto productDto = new ProductDto("name", "mlID", new BigDecimal("15.00"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -107,8 +124,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     void purchaseProductReturnsRecipeForPurchase(){
         ProductDto productDto = new ProductDto("producto para comprar", "mlID-compra", new BigDecimal("15.00"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -126,8 +141,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     void removeFromCartRemovesProductAndReturnsEmptyCart() {
         ProductDto productDto = new ProductDto("producto a eliminar", "mlID-eliminar", new BigDecimal("10.00"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -144,8 +157,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback(true)
     void qualifyProductReturnsOkStatus() {
         ProductDto productToQualify = new ProductDto("producto para calificar", "mlID-calificar", new BigDecimal("99.99"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -162,8 +173,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Disabled
     void userPurchasesReturnsPaginatedListOfPurchases() {
         ProductDto productDto = new ProductDto("producto comprado", "mlID-compra", new BigDecimal("25.50"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -183,8 +192,6 @@ public class ClientControllerTest {
     }
 
     @Test
-    @Transactional
-    @Disabled
     void userFavoritesReturnsPaginatedListOfFavorites() {
         ProductDto productDto = new ProductDto("mi favorito", "mlID-favorito", new BigDecimal("123.45"),
                 "url", "domanId", "description", new ArrayList<>());
@@ -201,10 +208,4 @@ public class ClientControllerTest {
         assertEquals(1, response.getBody().getPagination().getTotalElements());
         assertEquals("mi favorito", response.getBody().getData().getFirst().getName());
     }
-
-    @AfterEach
-    void cleanUp() {
-        userDao.deleteAll();
-    }
-
 }

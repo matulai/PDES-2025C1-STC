@@ -2,6 +2,9 @@ package integrationTest.controller;
 
 import SeguiTusCompras.Controller.dtos.*;
 import SeguiTusCompras.SeguiTusComprasApplication;
+import SeguiTusCompras.persistence.IProductDao;
+import SeguiTusCompras.persistence.IPurchaseRecipeDao;
+import SeguiTusCompras.persistence.IQualificationDAO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
@@ -18,7 +22,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = SeguiTusComprasApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // Usamos PER_CLASS para que @BeforeAll no sea estático y pueda usar @Autowired
 public class AdminControllerTest {
 
     @LocalServerPort
@@ -27,21 +30,30 @@ public class AdminControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private IPurchaseRecipeDao purchaseRecipeDao;
+
+    @Autowired
+    private IProductDao productDao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private IQualificationDAO qualificationDao;
+
     private String adminToken;
     private HttpHeaders adminHeaders;
     private String baseUrl;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         baseUrl = "http://localhost:" + port;
 
-        // 1. Iniciar sesión como administrador para obtener el token
         RegisterDto adminLogin = new RegisterDto();
         adminLogin.setName("Yamila");
         adminLogin.setPassword("Password123!"); // Contraseña de admin asumida
 
-        // Asumimos que el endpoint /auth/register ya fue llamado o el usuario admin ya existe en la BD
-        // Para un entorno de test real, se registraría aquí o se usaría un script SQL.
         restTemplate.postForEntity(baseUrl + "/auth/register", adminLogin, Void.class);
 
         ResponseEntity<Void> loginResponse = restTemplate.postForEntity(
@@ -53,6 +65,23 @@ public class AdminControllerTest {
 
         adminHeaders = new HttpHeaders();
         adminHeaders.setBearerAuth(adminToken.replace("Bearer ", ""));
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Este método se ejecuta DESPUÉS de cada test para limpiar los datos creados.
+        // El orden es importante para evitar errores de Foreign Key.
+        // No borramos los usuarios porque son creados por el DataSeeder y los necesitamos.
+        jdbcTemplate.execute("DELETE FROM favorite");
+        jdbcTemplate.execute("DELETE FROM cart");
+        // La tabla purchase_recipe_products se limpia al borrar PurchaseRecipe por el Cascade.
+
+        // Segundo, borramos las entidades "hijas".
+        purchaseRecipeDao.deleteAll();
+        qualificationDao.deleteAll();
+
+        // Finalmente, ahora que no hay dependencias, es seguro borrar los productos.
+        productDao.deleteAll();
     }
 
     /**
@@ -76,8 +105,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
     void allRegisteredUsers_ShouldReturnPaginatedClients() {
         HttpEntity<Void> requestEntity = new HttpEntity<>(adminHeaders);
         String url = baseUrl + "/admin/allRegisteredUsers?page=1&size=5";
@@ -91,8 +118,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
     void allUsersQualifications_ShouldReturnAllQualifications() {
         HttpHeaders clientHeaders = loginClient("Lucia", "Password123!");
         ProductDto product = new ProductDto("ProductoCalificado", "ml-calif", new BigDecimal("100"), "url", "domain", "desc", new ArrayList<>());
@@ -116,9 +141,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
-    @Disabled
+    // @Disabled
     void allFavoritesProducts_ShouldReturnAllFavorites() {
         HttpHeaders clientHeaders = loginClient("Lucia", "Password123!");
         ProductDto product = new ProductDto("ProductoFavorito", "ml-fav", new BigDecimal("99.99"), "url", "domain", "desc", new ArrayList<>());
@@ -138,9 +161,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
-    @Disabled
     void allUsersPurchases_ShouldReturnAllPurchases() {
         HttpHeaders clientHeaders = loginClient("Lucia", "Password123!");
         ProductDto product = new ProductDto("ProductoComprado", "ml-buy", new BigDecimal("50.00"), "url", "domain", "desc", new ArrayList<>());
@@ -161,9 +181,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    @Transactional
-    @Rollback
-    @Disabled
     void topSellingProducts_ShouldReturnProductsOrderedBySales() {
         HttpHeaders client1Headers = loginClient("Lucia", "Password123!");
         ProductDto topProduct = new ProductDto("MasVendido", "ml-top", new BigDecimal("10"), "url", "domain", "desc", new ArrayList<>());
