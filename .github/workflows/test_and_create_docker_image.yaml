@@ -86,6 +86,7 @@ jobs:
           browser: chrome
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
+          
   tag:
       if: github.event_name == 'push'
       needs: [backend-test, frontend-test]
