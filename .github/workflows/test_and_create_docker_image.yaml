@@ -65,6 +65,7 @@ jobs:
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
+          config-file: cypress.config.js
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
