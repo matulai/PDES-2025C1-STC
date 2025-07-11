@@ -79,7 +79,7 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
       if: github.event_name == 'push'
-      needs: test
+      needs: [backend-test, frontend-test]
       runs-on: ubuntu-latest
       permissions:
         contents: write
@@ -117,7 +117,7 @@ jobs:
 
   create-images:
       if: github.event_name == 'push'
-      needs:  [test, tag]
+      needs:  [backend-test, frontend-test, tag]
       runs-on: ubuntu-latest
       permissions:
         contents: read
