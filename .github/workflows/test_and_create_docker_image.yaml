@@ -36,27 +36,27 @@ jobs:
     environment: test-and-create-image
     container:
       image: cypress/browsers:node-22.14.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
-    steps:
-      - uses: actions/checkout@v4
-      - name: Instalar dependencias
-        working-directory: ./Front
-        run: npm ci
-
-      - name: Levantar backend temporal
-        working-directory: ./Back/SeguiTusCompras
-        env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    services:
+      backend:
+        image: qac1978/seguituscompras_backend:latest
+        container_name: backend_container_grupo2
+        environment:
+          SPRING_DATASOURCE_URL:  ${{ secrets.DB_URL }}
+          SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_KEY: ${{ secrets.JWT_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
           PROFILE: ${{ secrets.PROFILE }}
-        run: |
-          nohup mvn spring-boot:run &
-          sleep 30
+        ports:
+          - "8080:8080"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        working-directory: ./Front
+        run: npm ci
 
       - name: Correr Cypress tests
         uses: cypress-io/github-action@v6
