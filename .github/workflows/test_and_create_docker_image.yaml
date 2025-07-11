@@ -49,8 +49,6 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
           PROFILE: ${{ secrets.PROFILE }}
-        ports:
-          - "8080:8080"
     steps:
       - uses: actions/checkout@v4
       - name: Instalar dependencias
@@ -61,20 +59,18 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./Front
-          start: npm run dev
+          start: VITE_API_URL=http://backend:8080 npm run dev -- --host
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
         env:
-          VITE_API_URL: http://localhost:${{ job.services.backend.ports[8080] }}
+          VITE_API_URL: http://backend:8080
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
           path: ./Front/cypress/screenshots
-      - name: Verificar puerto backend
-        run: echo "Puerto asignado al backend: ${{ job.services.backend.ports[8080] }}"
 
   tag:
       if: github.event_name == 'push'
