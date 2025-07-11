@@ -68,6 +68,8 @@ jobs:
           start: npm run dev
           wait-on: http://localhost:5173
           wait-on-timeout: 60
+          headed: false
+          browser: chrome
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
