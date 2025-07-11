@@ -65,8 +65,8 @@ jobs:
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
-          command: npx cypress run --config-file cypress.config.js
         env:
+          NODE_OPTIONS: "--no-experimental-require-module --no-experimental-detect-module"
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
       if: github.event_name == 'push'
