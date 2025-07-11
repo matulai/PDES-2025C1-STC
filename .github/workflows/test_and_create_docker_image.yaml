@@ -47,23 +47,23 @@ jobs:
           ports:
             - "5432:5432"
 
-        spring:
-          image: qac1978/seguituscompras_backend:latest
-          container_name: backend_container_grupo2
-          environment:
-            SPRING_DATASOURCE_URL: ${DB_URL_DOCKER}
-            SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-            SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
-            JWT_KEY: ${JWT_KEY}
-            CLIENT_ID: ${CLIENT_ID}
-            CLIENT_SECRET: ${CLIENT_SECRET}
-            REFRESH_TOKEN: ${REFRESH_TOKEN}
-            FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
-            PROFILE: stg
-          depends_on:
-            - postgres
-          ports:
-            - "8080:8080"
+      spring:
+        image: qac1978/seguituscompras_backend:latest
+        container_name: backend_container_grupo2
+        environment:
+          SPRING_DATASOURCE_URL: ${DB_URL_DOCKER}
+          SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+          SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+          JWT_KEY: ${JWT_KEY}
+          CLIENT_ID: ${CLIENT_ID}
+          CLIENT_SECRET: ${CLIENT_SECRET}
+          REFRESH_TOKEN: ${REFRESH_TOKEN}
+          FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
+          PROFILE: stg
+        depends_on:
+          - postgres
+        ports:
+          - "8080:8080"
     steps:
       - uses: actions/checkout@v4
       - name: Instalar dependencias
