@@ -18,7 +18,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run tests with Maven
+      # 🧪 Tests de backend con Maven
+      - name: Run backend tests with Maven
         working-directory: ./Back/SeguiTusCompras
         env:
           DB_URL: ${{ secrets.DB_URL }}
@@ -31,6 +32,44 @@ jobs:
           FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
           PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
+
+      # 🏗️ Frontend: instalar dependencias
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: ./Front
+        run: npm ci
+
+      # 🚀 Levantar backend temporalmente (con H2)
+      - name: Start backend in background
+        working-directory: ./Back/SeguiTusCompras
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
+          PROFILE: ${{ secrets.PROFILE }}
+        run: |
+          nohup mvn spring-boot:run &
+          sleep 30 # esperar que arranque
+
+      # 🧪 Cypress Tests
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./Front
+          start: npm run dev
+          wait-on: http://localhost:5173
+          wait-on-timeout: 60
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
       if: github.event_name == 'push'
       needs: test
