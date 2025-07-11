@@ -65,8 +65,7 @@ jobs:
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
-        env:
-          VITE_API_URL: http://backend:8080
+          env: VITE_API_URL=http://backend:8080
   tag:
       if: github.event_name == 'push'
       needs: [backend-test, frontend-test]
