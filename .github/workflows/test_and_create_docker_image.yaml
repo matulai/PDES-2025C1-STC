@@ -66,13 +66,15 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
         env:
-          VITE_API_URL: http://backend:8080
+          VITE_API_URL: http://localhost:${{ job.services.backend.ports[8080] }}
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
           path: ./Front/cypress/screenshots
+      - name: Verificar puerto backend
+        run: echo "Puerto asignado al backend: ${{ job.services.backend.ports[8080] }}"
 
   tag:
       if: github.event_name == 'push'
