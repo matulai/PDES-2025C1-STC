@@ -9,16 +9,13 @@ permissions:
   contents: write
 jobs:
   backend-test:
-    name: Backend - Test
+    name: Backend Tests
     runs-on: ubuntu-latest
+    environment: test-and-create-image
     container:
       image: maven:3.9-eclipse-temurin-21
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
+      - uses: actions/checkout@v4
       - name: Run backend tests
         working-directory: ./Back/SeguiTusCompras
         env:
@@ -33,24 +30,19 @@ jobs:
           PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
 
-      # Podés agregar Sonar o más pasos aquí si querés
-
   frontend-test:
-    name: Frontend - Cypress Tests
+    name: Cypress Tests
     runs-on: ubuntu-latest
+    environment: test-and-create-image
     container:
-      image: cypress/browsers:node-22.0.0-chrome-138.0.7204.92-1-ff-140.0.2-edge-138.0.3351.65-1
+      image: cypress/browsers:node-20.11.1-chrome-124.0.6367.91-1.5.0
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install frontend dependencies
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
         working-directory: ./Front
         run: npm ci
 
-      - name: Start backend in background
+      - name: Levantar backend temporal
         working-directory: ./Back/SeguiTusCompras
         env:
           DB_URL: ${{ secrets.DB_URL }}
@@ -66,14 +58,13 @@ jobs:
           nohup mvn spring-boot:run &
           sleep 30
 
-      - name: Run Cypress tests
+      - name: Correr Cypress tests
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./Front
           start: npm run dev
           wait-on: http://localhost:5173
           wait-on-timeout: 60
-          headed: false
           browser: chrome
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
