@@ -39,7 +39,7 @@ jobs:
     name: Frontend - Cypress Tests
     runs-on: ubuntu-latest
     container:
-      image: cypress/browsers:node-22.0.0-chrome-latest
+      image: cypress/browsers:node-22.0.0-chrome-138.0.7204.92-1-ff-140.0.2-edge-138.0.3351.65-1
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
