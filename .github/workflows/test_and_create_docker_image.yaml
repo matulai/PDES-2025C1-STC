@@ -8,18 +8,18 @@ on:
 permissions:
   contents: write
 jobs:
-  test:
+  backend-test:
+    name: Backend - Test
     runs-on: ubuntu-latest
-    environment: test-and-create-image
-    container: maven:3.9-eclipse-temurin-21
+    container:
+      image: maven:3.9-eclipse-temurin-21
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 🧪 Tests de backend con Maven
-      - name: Run backend tests with Maven
+      - name: Run backend tests
         working-directory: ./Back/SeguiTusCompras
         env:
           DB_URL: ${{ secrets.DB_URL }}
@@ -33,17 +33,23 @@ jobs:
           PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
 
-      # 🏗️ Frontend: instalar dependencias
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Podés agregar Sonar o más pasos aquí si querés
+
+  frontend-test:
+    name: Frontend - Cypress Tests
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:node-22.0.0-chrome-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          node-version: 22
+          fetch-depth: 0
 
       - name: Install frontend dependencies
         working-directory: ./Front
         run: npm ci
 
-      # 🚀 Levantar backend temporalmente (con H2)
       - name: Start backend in background
         working-directory: ./Back/SeguiTusCompras
         env:
@@ -58,9 +64,8 @@ jobs:
           PROFILE: ${{ secrets.PROFILE }}
         run: |
           nohup mvn spring-boot:run &
-          sleep 30 # esperar que arranque
+          sleep 30
 
-      # 🧪 Cypress Tests
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
