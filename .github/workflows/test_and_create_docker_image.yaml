@@ -66,7 +66,6 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
         env:
-          NODE_OPTIONS: "--no-experimental-require-module --no-experimental-detect-module"
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
       if: github.event_name == 'push'
