@@ -57,9 +57,15 @@ jobs:
         working-directory: ./Front
         run: npm ci
 
-      - name: Correr Cypress tests manualmente
-        working-directory: ./Front
-        run: npx cypress run --config-file cypress.config.js
+      - name: Correr Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./Front
+          start: npm run dev
+          wait-on: http://localhost:5173
+          wait-on-timeout: 60
+          browser: chrome
+          command: npx cypress run --config-file cypress.config.js
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
