@@ -65,7 +65,15 @@ jobs:
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
-          env: VITE_API_URL=http://backend:8080
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
+      - name: Subir screenshots de Cypress (si fallan)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: ./Front/cypress/screenshots
+
   tag:
       if: github.event_name == 'push'
       needs: [backend-test, frontend-test]
