@@ -61,11 +61,11 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./Front
-          start: npm run dev
+          start: npm run dev -- --host
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
-          config-file: cypress.config.js
+          config: viewportWidth=1280,viewportHeight=720
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
   tag:
