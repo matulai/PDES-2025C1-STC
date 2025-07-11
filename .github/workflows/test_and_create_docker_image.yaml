@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test-and-create-image
     container:
-      image: cypress/browsers:node-20.11.1-chrome-124.0.6367.91-1.5.0
+      image: cypress/browsers:node-22.14.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
     steps:
       - uses: actions/checkout@v4
       - name: Instalar dependencias
