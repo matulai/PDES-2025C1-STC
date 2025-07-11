@@ -49,6 +49,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
           PROFILE: ${{ secrets.PROFILE }}
+        ports: 8080:8080
     steps:
       - uses: actions/checkout@v4
       - name: Instalar dependencias
