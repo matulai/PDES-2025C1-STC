@@ -66,7 +66,7 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL_LOCAL }}
+          VITE_API_URL: http://backend:8080
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()
         uses: actions/upload-artifact@v4
