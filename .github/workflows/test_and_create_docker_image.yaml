@@ -126,8 +126,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Definir variable FRONTEND_IMAGE_NAME
-        run: echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend" >> $GITHUB_ENV
+      - name: Definir variable para front local FRONTEND_IMAGE_NAME
+        run: echo "FRONTEND_IMAGE_NAME_LOCAL=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend_local" >> $GITHUB_ENV
+
+      - name: Definir variable para front prod FRONTEND_IMAGE_NAME
+        run: echo "FRONTEND_IMAGE_NAME_PROD=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend_prod" >> $GITHUB_ENV
 
       - name: Definir variable BACKEND_IMAGE_NAME
         run: echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_backend" >> $GITHUB_ENV
@@ -140,6 +143,9 @@ jobs:
 
       - name: Debug - Verificar tag generado 2
         run: echo "El tag generado es ${{ env.TAG_IMAGE_NAME}}" 
+
+      - name: Debug - Verificar tag generado 3
+        run: echo "El tag generado es ${{ env.FRONTEND_IMAGE_NAME_PROD}}" 
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -160,24 +166,40 @@ jobs:
           outputs: type=docker,dest=/tmp/backend-image.tar
 
 
-      - name: Build Frontend Docker image
+      - name: Build Local Frontend Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./Front 
           file: ./Front/Dockerfile 
           push: false
-          tags: ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME }}:latest
-          outputs: type=docker,dest=/tmp/frontend-image.tar
+          tags: ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest
+          outputs: type=docker, dest=/tmp/frontend-local.tar
           build-args: |
               VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
+
+      
+      - name: Build Prod Frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Front 
+          file: ./Front/Dockerfile 
+          push: false
+          tags: ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest
+          outputs: type=docker, dest=/tmp/frontend-prod.tar
+          build-args: |
+              VITE_API_URL=${{ secrets.VITE_API_URL_PROD }}
 
       - name: Push both Docker images (if both builds succeeded)
         run: |
           docker load -i /tmp/backend-image.tar
-          docker load -i /tmp/frontend-image.tar
+          docker load -i /tmp/frontend-local.tar
+          docker load -i /tmp/frontend-prod.tar
 
           docker push ${{ env.BACKEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }}
           docker push ${{ env.BACKEND_IMAGE_NAME }}:latest
 
-          docker push ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }}
-          docker push ${{ env.FRONTEND_IMAGE_NAME }}:latest  
+          docker push ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:${{ env.TAG_IMAGE_NAME }}
+          docker push ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest  
+
+          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }}
+          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest  
