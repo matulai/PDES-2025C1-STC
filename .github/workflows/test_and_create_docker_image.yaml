@@ -1,4 +1,5 @@
 name: Test
+
 on:
   push:
     branches: ["develop"]
@@ -7,6 +8,7 @@ on:
 
 permissions:
   contents: write
+
 jobs:
   backend-test:
     name: Backend Tests
@@ -26,7 +28,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
+          FRONT_ORIGIN: ${{ secrets.FRONT_ORIGIN }}
           PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
 
@@ -40,33 +42,47 @@ jobs:
       backend:
         image: qac1978/seguituscompras_backend:latest
         env:
-          SPRING_DATASOURCE_URL:  ${{ secrets.DB_URL }}
+          SPRING_DATASOURCE_URL: ${{ secrets.DB_URL }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_KEY: ${{ secrets.JWT_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
+          FRONT_ORIGIN: ${{ secrets.FRONT_ORIGIN }}
           PROFILE: ${{ secrets.PROFILE }}
-        ports: 
+        ports:
           - 8080:8080
     steps:
       - uses: actions/checkout@v4
-      - name: Instalar dependencias
+
+      - name: Instalar dependencias Frontend
         working-directory: ./Front
         run: npm ci
 
-      - name: Correr Cypress tests
+      - name: Levantar Frontend (background)
+        working-directory: ./Front
+        run: npm run dev &
+        env:
+          VITE_API_URL: http://backend:8080
+
+      - name: Esperar que el frontend esté disponible
+        uses: jakejarvis/wait-action@v1
+        with:
+          url: http://localhost:5173
+          timeout: 60
+
+      - name: Ejecutar tests de Cypress
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./Front
-          start: npm run dev
+          start: ''
           wait-on: http://localhost:5173
           wait-on-timeout: 60
           browser: chrome
         env:
           VITE_API_URL: http://backend:8080
+
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()
         uses: actions/upload-artifact@v4
@@ -75,16 +91,16 @@ jobs:
           path: ./Front/cypress/screenshots
 
   tag:
-      if: github.event_name == 'push'
-      needs: [backend-test, frontend-test]
-      runs-on: ubuntu-latest
-      permissions:
-        contents: write
+    if: github.event_name == 'push'
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-      outputs:
-       new_tag: ${{ steps.tag.outputs.new_tag_value }}
+    outputs:
+      new_tag: ${{ steps.tag.outputs.new_tag_value }}
 
-      steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -113,14 +129,14 @@ jobs:
           echo "DEBUG - El output generado es: $GITHUB_OUTPUT"
 
   create-images:
-      if: github.event_name == 'push'
-      needs:  [backend-test, frontend-test, tag]
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-      environment: test-and-create-image
+    if: github.event_name == 'push'
+    needs: [backend-test, frontend-test, tag]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: test-and-create-image
 
-      steps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -154,7 +170,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build  Backend Docker image
         uses: docker/build-push-action@v5
@@ -165,7 +181,6 @@ jobs:
           tags: ${{ env.BACKEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.BACKEND_IMAGE_NAME }}:latest
           outputs: type=docker,dest=/tmp/backend-image.tar
 
-
       - name: Build Local Frontend Docker image
         uses: docker/build-push-action@v5
         with:
@@ -175,9 +190,8 @@ jobs:
           tags: ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest
           outputs: type=docker, dest=/tmp/frontend-local.tar
           build-args: |
-              VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
+            VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
 
-      
       - name: Build Prod Frontend Docker image
         uses: docker/build-push-action@v5
         with:
@@ -187,7 +201,7 @@ jobs:
           tags: ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest
           outputs: type=docker, dest=/tmp/frontend-prod.tar
           build-args: |
-              VITE_API_URL=${{ secrets.VITE_API_URL_PROD }}
+            VITE_API_URL=${{ secrets.VITE_API_URL_PROD }}
 
       - name: Push both Docker images (if both builds succeeded)
         run: |
@@ -202,4 +216,6 @@ jobs:
           docker push ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest  
 
           docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }}
-          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest  
+          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest
+
+
