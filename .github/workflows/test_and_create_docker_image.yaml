@@ -66,12 +66,6 @@ jobs:
         env:
           VITE_API_URL: http://backend:8080
 
-      - name: Esperar que el frontend esté disponible
-        uses: jakejarvis/wait-action@v1
-        with:
-          url: http://localhost:5173
-          timeout: 60
-
       - name: Ejecutar tests de Cypress
         uses: cypress-io/github-action@v6
         with:
