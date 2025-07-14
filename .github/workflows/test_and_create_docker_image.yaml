@@ -62,28 +62,16 @@ jobs:
         working-directory: ./Front
         run: npm ci
 
-      - name: Levantar Frontend (background)
-        working-directory: ./Front
-        run: npm run dev &
-        env:
-          VITE_API_URL: http://backend:8080
-
-      - name: Esperar que el frontend esté disponible
-        uses: jakejarvis/wait-action@v0.1.1
-        with:
-          url: http://localhost:5173
-          timeout: 60
-
       - name: Ejecutar tests de Cypress
         uses: cypress-io/github-action@v6
         with:
           working-directory: ./Front
-          start: ''
+          start: npm run dev -- --host
           wait-on: http://localhost:5173
-          wait-on-timeout: 60
+          wait-on-timeout: 120
           browser: chrome
         env:
-          VITE_API_URL: http://backend:8080
+          VITE_API_URL: backend:8080
 
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()
