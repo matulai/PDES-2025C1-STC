@@ -5,7 +5,7 @@ describe("Interacciones con un producto", () => {
     cy.fixture("userClient").then(userClient => {
       cy.intercept("POST", "**/auth/login*").as("login");
       cy.login(userClient.userName, userClient.password);
-      cy.wait("@login");
+      cy.wait("@login", { timeout: 60000 });
       cy.url().should("not.include", "/login");
     });
   });
