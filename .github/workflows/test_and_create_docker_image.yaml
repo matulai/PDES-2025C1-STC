@@ -49,7 +49,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: localhost:5173
+          FRONT_ORIGIN: http://localhost:5173
           PROFILE: ${{ secrets.PROFILE }}
         ports:
           - 8080:8080
@@ -93,7 +93,7 @@ jobs:
           wait-on-timeout: 120
           browser: chrome
         env:
-          VITE_API_URL: backend:8080
+          VITE_API_URL: http://backend:8080
 
       - name: Subir screenshots de Cypress (si fallan)
         if: failure()

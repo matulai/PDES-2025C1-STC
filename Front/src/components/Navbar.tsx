@@ -129,7 +129,7 @@ const Navbar = () => {
             className="navbar-link navbar-link-inactive"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            Options <ChevronDownIcon />
+            Opciones <ChevronDownIcon />
           </button>
           {showDropdown && (
             <div className="dropdown-menu">
@@ -146,7 +146,7 @@ const Navbar = () => {
                 className="navbar-link navbar-link-inactive"
                 onClick={handleLogout}
               >
-                Logout
+                Salir
               </button>
             </div>
           )}

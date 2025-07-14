@@ -41,7 +41,7 @@ const Cart = () => {
   return (
     <>
       <h1 className="items-title">
-        <strong style={{ fontWeight: "600" }}>My cart</strong>
+        <strong style={{ fontWeight: "600" }}>Mi carrito</strong>
       </h1>
       <div className="items">
         <div className="items-content-wrap">
@@ -58,7 +58,7 @@ const Cart = () => {
           {cart.length !== 0 ? (
             <>
               <p style={{ fontWeight: "600", fontSize: "20px" }}>
-                Total cost:
+                Costo total:
                 {` $${cart
                   .map(p => p.price)
                   .reduce((acumulador, actual) => acumulador + actual, 0)
@@ -67,7 +67,7 @@ const Cart = () => {
               </p>
               <ButtonLoading
                 handleFunction={onClickBuyCartProducts}
-                text="Buy products"
+                text="Comprar productos"
               />
             </>
           ) : (
@@ -75,7 +75,7 @@ const Cart = () => {
               onClick={() => navigate("/")}
               className="cart-product-details-buy-button"
             >
-              Start Buying
+              Comenzar a comprar
             </button>
           )}
         </div>
