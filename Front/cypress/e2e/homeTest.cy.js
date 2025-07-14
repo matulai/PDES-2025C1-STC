@@ -55,7 +55,7 @@ describe("Home products", () => {
     cy.visit("/");
 
     // Esperar a que se complete la llamada a la API
-    cy.wait("@getProducts", { timeout: 60000 });
+    cy.wait("@getProducts");
 
     // Asegura que haya al menos un producto
     cy.get(".product-card-container").should("have.length.at.least", 1);
