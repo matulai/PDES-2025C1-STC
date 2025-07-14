@@ -49,7 +49,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: ${{ secrets.FRONT_ORIGIN }}
+          FRONT_ORIGIN: http://localhost:5173
           PROFILE: ${{ secrets.PROFILE }}
         ports:
           - 8080:8080
@@ -62,7 +62,7 @@ jobs:
 
       - name: Levantar Frontend (background)
         working-directory: ./Front
-        run: npm run dev &
+        run: npm run dev -- --host &
         env:
           VITE_API_URL: http://backend:8080
 
