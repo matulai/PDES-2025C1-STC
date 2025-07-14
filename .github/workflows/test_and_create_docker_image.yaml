@@ -21,7 +21,6 @@ jobs:
       - name: Run backend tests
         working-directory: ./Back/SeguiTusCompras
         env:
-          DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_KEY: ${{ secrets.JWT_KEY }}
@@ -61,6 +60,11 @@ jobs:
       - name: Instalar dependencias Frontend
         working-directory: ./Front
         run: npm ci
+
+      - name: Instalar curl en el contenedor de Cypress
+        run: |
+              apt-get update && apt-get install -y curl
+              # This step should run before "Verificar la conexión al Backend"
 
       - name: Verificar la conexión al Backend
         run: |
