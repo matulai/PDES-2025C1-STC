@@ -33,15 +33,19 @@ jobs:
         run: mvn -B test
 
   frontend-test:
-    name: Cypress Tests
-    runs-on: ubuntu-latest
-    environment: test-and-create-image
-    container:
-      image: cypress/browsers:node-22.14.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
-    services:
-      backend:
-        image: qac1978/seguituscompras_backend:latest
-        env:
+      name: Cypress Tests
+      runs-on: ubuntu-latest
+      environment: test-and-create-image
+      container:
+        image: cypress/browsers:node-22.14.0-chrome-… 
+        ports:
+        - 5173:5173            # Exponer puerto Vite
+      services:
+        backend:
+          image: qac1978/seguituscompras_backend:latest
+          ports:
+            - 8080:8080
+      env:
           SPRING_DATASOURCE_URL: ${{ secrets.DB_URL }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -49,41 +53,33 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: http://localhost:5173
+          FRONT_ORIGIN: localhost:5173   # Asegura CORS
           PROFILE: ${{ secrets.PROFILE }}
-        ports:
-          - 8080:8080
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Instalar dependencias Frontend
-        working-directory: ./Front
-        run: npm ci
+      steps:
+        - uses: actions/checkout@v4
 
-      - name: Levantar Frontend (background)
-        working-directory: ./Front
-        run: npm run dev -- --host &
-        env:
-          VITE_API_URL: http://backend:8080
-
-      - name: Ejecutar tests de Cypress
-        uses: cypress-io/github-action@v6
-        with:
+        - name: Instalar dependencias Frontend
           working-directory: ./Front
-          start: ''
-          wait-on: http://localhost:5173
-          wait-on-timeout: 60
-          browser: chrome
-        env:
-          VITE_API_URL: http://backend:8080
+          run: npm ci
 
-      - name: Subir screenshots de Cypress (si fallan)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-screenshots
-          path: ./Front/cypress/screenshots
+        - name: Ejecutar tests de Cypress
+          uses: cypress-io/github-action@v6
+          with:
+            working-directory: ./Front
+            start: npm run dev -- --host    # Arranca Vite en 0.0.0.0:5173
+            wait-on: localhost:5173
+            wait-on-timeout: 120
+            browser: chrome
+          env:
+            VITE_API_URL: backend:8080
 
+        - name: Subir screenshots (si fallan)
+          if: failure()
+          uses: actions/upload-artifact@v4
+          with:
+            name: cypress-screenshots
+            path: ./Front/cypress/screenshots
   tag:
     if: github.event_name == 'push'
     needs: [backend-test, frontend-test]
