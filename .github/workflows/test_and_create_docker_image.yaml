@@ -51,7 +51,7 @@ jobs:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: http://localhost:5173
+          FRONT_ORIGIN: localhost:5173
           PROFILE: ${{ secrets.PROFILE }}
         ports:
           - 8080:8080
@@ -61,6 +61,25 @@ jobs:
       - name: Instalar dependencias Frontend
         working-directory: ./Front
         run: npm ci
+
+      - name: Verificar la conexión al Backend
+        run: |
+                      # Use a loop to wait for the backend to be ready
+                      echo "Esperando que el backend esté disponible en http://backend:8080..."
+                      for i in $(seq 1 60); do
+                        if curl -s -f http://backend:8080/actuator/health; then # Adjust /actuator/health to your actual health endpoint
+                          echo "Backend está online."
+                          break
+                        fi
+                        echo "Reintentando conectar con el backend... ($i/60)"
+                        sleep 2
+                      done
+                      if ! curl -s -f http://backend:8080/actuator/health; then
+                        echo "Error: El backend no está respondiendo en http://backend:8080 después de 120 segundos."
+                        exit 1
+                      fi
+                    # Ensure this step runs within the main container's context
+                    # If this step fails, it means the backend service isn't accessible to the main container.
 
       - name: Ejecutar tests de Cypress
         uses: cypress-io/github-action@v6
