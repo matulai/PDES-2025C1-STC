@@ -79,41 +79,48 @@ def create_env_file(secrets):
         print(f"Error al escribir en el archivo '{ENV_FILE}': {e}", file=sys.stderr)
         sys.exit(1)
 
-
 def run_docker_compose():
     if not os.path.exists(DOCKER_COMPOSE_FILE):
-        print(f"Error: No se encuentra el archivo '{DOCKER_COMPOSE_FILE}'. Asegúrate de que exista en la raíz del proyecto.", file=sys.stderr)
+        print("Error: No se encuentra el archivo 'contenedores.yaml'. Asegúrate de que exista en la raíz del proyecto.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"\nLevantando los contenedores desde '{DOCKER_COMPOSE_FILE}'...")
-    
-    command = ["docker-compose", "-f", DOCKER_COMPOSE_FILE, "up", "-d"]
-    
-    try:
-        subprocess.run(command, check=True)
-        success = True
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print(f"El comando '{" ".join(command)}' falló. Intentando con el siguiente...")
-    
-    if success:
-        print("\n¡Contenedores iniciados con éxito!")
-        print(f"Puedes ver los logs con: docker compose -f {DOCKER_COMPOSE_FILE} logs -f")
-    else:
-        print("\nError: No se pudo ejecutar docker-compose.", file=sys.stderr)
-        print("Asegúrate de que Docker Desktop esté instalado y corriendo.", file=sys.stderr)
-        sys.exit(1)
+    print("\nLevantando los contenedores desde 'contenedores.yaml'...")
+
+    commands = [
+        ["docker", "compose", "-f", DOCKER_COMPOSE_FILE, "up", "-d"],
+        ["docker-compose", "-f", DOCKER_COMPOSE_FILE, "up", "-d"]
+    ]
+
+    for command in commands:
+        try:
+            subprocess.run(command, check=True)
+            print("\n¡Contenedores iniciados con éxito!")
+            print("Puedes ver los logs con: docker compose -f contenedores.yaml logs -f")
+            return
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            print(f"El comando {' '.join(command)} falló. Probando el siguiente...")
+
+    print("\nError: No se pudo ejecutar ningún comando de Docker Compose.", file=sys.stderr)
+    print("Asegúrate de que Docker esté instalado y corriendo.", file=sys.stderr)
+    sys.exit(1)
 
 def run_docker_compose_down():
-    """Detiene y elimina los contenedores de Docker."""
     print("\nDeteniendo contenedores...")
-    
-    command = ["docker-compose", "-f", DOCKER_COMPOSE_FILE, "down"]
 
-    try:
-        subprocess.run(command, check=True, capture_output=True)
-        print("Contenedores detenidos correctamente.")
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("Error al ejecutar 'docker-compose down'. Puede que necesites hacerlo manualmente.", file=sys.stderr)
+    commands = [
+        ["docker", "compose", "-f", DOCKER_COMPOSE_FILE, "down"],
+        ["docker-compose", "-f", DOCKER_COMPOSE_FILE, "down"]
+    ]
+
+    for command in commands:
+        try:
+            subprocess.run(command, check=True)
+            print("Contenedores detenidos correctamente.")
+            return
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            print(f"Error al ejecutar {' '.join(command)}. Probando el siguiente...", file=sys.stderr)
+
+    print("No se pudo detener los contenedores. Puede que necesites hacerlo manualmente.", file=sys.stderr)
 
 def cleanup():
     """Ejecuta la limpieza: detiene contenedores y borra .env."""
