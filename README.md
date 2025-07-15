@@ -40,13 +40,17 @@ Segui tus compras es una aplicación web que permitira a los clientes realizar e
   #### FrontEnd
   - nombre de servicio: frontend
   - nombre de contenedor: frontend_container_grupo2
-  - puerto: 80
+  - puerto: 80  
+  
+  ### Pasos Para levantar los contenederes
 
-  #### Swagger 
-    http://localhost:8080/swagger-ui/index.html
+  - Se tiene que setear el token de doppler como variable de entorno DOPPLER_TOKEN, si no es posible el script cuando no la encuentre va a pedir que ingreses el token manualmente.  
   
   Se levanta en el directorio principal del repositorio con el comando:   
   
   *python .\script-contenedores.py*
 
-  **Por ahora ejecutar docker en la branch grafana, se tiene que setear el DOPPLER_TOKEN en las variables de entorno del sistema**
+**Hacerlo en la rama develop**
+
+  #### Swagger 
+  localhost:8080/swagger-ui/index.html
