@@ -29,7 +29,7 @@ services:
       - "8080:8080" # Es necesario para que funcione que esto se levante en el 8080
 
   frontend:
-    image: qac1978/seguituscompras_frontend:latest
+    image: qac1978/seguituscompras_frontend_local
     container_name: frontend_container_grupo2
     environment:
       VITE_API_URL: ${VITE_API_URL}
