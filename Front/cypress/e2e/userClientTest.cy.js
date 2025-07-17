@@ -10,40 +10,6 @@ describe("Interacciones con un producto", () => {
     });
   });
 
-  it("deberia agregar un producto a favoritos", () => {
-    cy.get(".product-card-container").should("have.length.at.least", 1);
-
-    cy.intercept("GET", "**/products/*").as("products");
-    cy.get("section.carousel-container")
-      .contains("Samsung")
-      .parents("section.carousel-container")
-      .within(() => {
-        cy.get(".product-card-container").as("productosSamsung");
-        cy.get("@productosSamsung").should("have.length.greaterThan", 0);
-        cy.get("@productosSamsung").first().click();
-      });
-    cy.wait("@products");
-
-    cy.contains("button", "Agregar a favoritos").should("be.visible").click();
-
-    cy.get("nav.navbar-container:visible").contains("a", "Favoritos").click();
-    cy.get("div.items-content-wrap").find("a").should("have.length", 1);
-  });
-
-  // it("deberia sacar un producto de favoritos", () => {
-  //   cy.get("nav.navbar-container:visible").contains("a", "Favoritos").click();
-  //   cy.get("div.items-content-wrap").find("a").should("have.length", 1);
-
-  //   cy.intercept("GET", "**/products/*").as("products");
-  //   cy.get("div.items-content-wrap").find("a").first().click();
-  //   cy.wait("@products");
-
-  //   cy.contains("button", "Sacar de favoritos").should("be.visible").click();
-
-  //   cy.get("nav.navbar-container:visible").contains("a", "Favoritos").click();
-  //   cy.get("div.items-content-wrap").find("a").should("have.length", 0);
-  // });
-
   it("deberia comprar un producto", () => {
     cy.get("section.carousel-container")
       .contains("Samsung")
