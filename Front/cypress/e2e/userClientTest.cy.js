@@ -3,10 +3,7 @@
 describe("Interacciones con un producto", () => {
   beforeEach(() => {
     cy.fixture("userClient").then(userClient => {
-      cy.intercept("POST", "**/auth/login").as("login");
-      cy.wait(5000);
       cy.login(userClient.userName, userClient.password);
-      cy.wait("@login");
       cy.url().should("not.include", "/login");
     });
   });

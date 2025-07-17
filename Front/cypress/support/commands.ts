@@ -44,18 +44,30 @@ declare global {
 
 Cypress.Commands.add("login", (userName: string, password: string) => {
   cy.visit("/login");
+
   cy.get("#username").type(userName);
   cy.get("#password").type(password);
+
+  cy.wait(5000);
+
+  cy.intercept("POST", "**/auth/login").as("login");
   cy.get("button[type=submit].auth-card-container-form-button").click();
+  cy.wait("@login");
 });
 
 Cypress.Commands.add(
   "register",
   (userName: string, password: string, rol: string) => {
     cy.visit("/register");
+
     cy.get("#username").type(userName);
     cy.get("#password").type(password);
     cy.get("#rolesOptions").select(rol);
+
+    cy.wait(5000);
+
+    cy.intercept("POST", "**/auth/register").as("register");
     cy.get("button[type=submit].auth-card-container-form-button").click();
+    cy.wait("@register");
   }
 );
