@@ -3,7 +3,7 @@ import {
   getFromLocalStorage,
   removeItemFromLocalStorage,
 } from "@/utils/localStorage";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useMemo } from "react";
 import { getCurrentUser } from "@/service/userService";
 import { toast } from "react-hot-toast";
 import { Spinner } from "@/components";
@@ -11,6 +11,7 @@ import { User } from "@/types";
 
 interface AuthContextType {
   user: User | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   contextLogin: (user: User, token: string) => void;
   contextLogout: () => void;
 }
@@ -53,15 +54,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     removeItemFromLocalStorage("token");
   };
 
+  const value = useMemo(
+    () => ({ user, setIsLoading, contextLogin, contextLogout }),
+    [user]
+  );
+
   if (isLoading) {
     return <Spinner classType="spinner-fullscreen" />;
   }
 
-  return (
-    <AuthContext.Provider value={{ user, contextLogin, contextLogout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export { AuthProvider, AuthContext };

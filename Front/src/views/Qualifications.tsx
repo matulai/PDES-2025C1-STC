@@ -40,17 +40,17 @@ const Qualifications = () => {
       <div className="items">
         <div className="items-content-column">
           {paginationUsersQualifications?.data.map(
-            (userQualifications, index) => (
+            (userQualification, index) => (
               <div key={index} className="items-content-item">
                 <p>
                   <b style={{ fontWeight: "600" }}>
-                    {userQualifications.userName}
+                    {userQualification.userName}
                   </b>{" "}
                   hizo un comentario en el producto:{" "}
-                  {userQualifications.productName}
+                  {userQualification.productName}
                 </p>
-                <p>comentario: "{userQualifications.comment}"</p>
-                <p>puntuación: {userQualifications.score}</p>
+                <p>comentario: "{userQualification.comment}"</p>
+                <p>puntuación: {userQualification.score}</p>
               </div>
             )
           )}

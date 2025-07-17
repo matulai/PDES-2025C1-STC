@@ -1,12 +1,10 @@
 import { RegisterCard } from "@/components";
-import { useNavigate } from "react-router-dom";
 import { register } from "@/service/authService";
 import { useAuth } from "@/hooks";
 import { toast } from "react-hot-toast";
 
 const Register = () => {
-  const navigate = useNavigate();
-  const { contextLogin } = useAuth();
+  const { contextLogin, setIsLoading } = useAuth();
 
   const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,22 +20,21 @@ const Register = () => {
       alert("Por favor completá todos los campos.");
       return;
     }
+    setIsLoading(true);
     register(username, password, role)
       .then(response => {
         contextLogin(response.data, response.headers["authorization"]);
-        navigate("/");
       })
       .catch(error => {
         toast.error("Error al registrarse");
         console.error("Registration failed", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
-  return (
-    <>
-      <RegisterCard onSubmit={handleRegister} />
-    </>
-  );
+  return <RegisterCard onSubmit={handleRegister} />;
 };
 
 export default Register;

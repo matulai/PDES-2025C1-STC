@@ -22,14 +22,14 @@ services:
       CLIENT_SECRET: ${CLIENT_SECRET}
       REFRESH_TOKEN: ${REFRESH_TOKEN}
       FRONT_ORIGIN: ${FRONT_ORIGIN_DOCKER}
-      PROFILE: prod
+      PROFILE: stg
     depends_on:
       - postgres
     ports:
       - "8080:8080" # Es necesario para que funcione que esto se levante en el 8080
 
   frontend:
-    image: qac1978/seguituscompras_frontend:latest
+    image: qac1978/seguituscompras_frontend_local
     container_name: frontend_container_grupo2
     environment:
       VITE_API_URL: ${VITE_API_URL}
@@ -43,10 +43,31 @@ services:
     container_name: k6_grupo2
     volumes:
       - ./k6:/k6 
-    # Establecemos el directorio de trabajo para que los comandos se ejecuten desde allí.
     working_dir: /k6
-    # Mantenemos el contenedor en espera para poder ejecutar comandos en él.
     command: ["sleep", "infinity"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus_grupo2
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - spring
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_grupo2
+    ports:
+      - "2000:3000"
+    depends_on:
+      - prometheus
+    volumes:
+    - grafana_data:/var/lib/grafana
+volumes:
+  grafana_data:
 
 
 

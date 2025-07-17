@@ -1,41 +1,80 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, CartIcon } from "@/icons";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks";
+import { useAuth, useCart } from "@/hooks";
 import "@/styles/Navbar.css";
 
 const navLinksNoRegistered = [
   { label: "Registrarse", pathname: "/register" },
   { label: "Ingresar", pathname: "/login" },
-  { label: "Favoritos", pathname: "/user/favourites?page=1" },
-  { label: "Compras", pathname: "/user/purchases?page=1" },
+  {
+    label: "Favoritos",
+    pathname: "/user/favourites",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Compras",
+    pathname: "/user/purchases",
+    pageQuery: "?page=1",
+  },
 ];
 
 const navLinksRegistered = [
-  { label: "Favoritos", pathname: "/user/favourites?page=1" },
-  { label: "Compras", pathname: "/user/purchases?page=1" },
+  {
+    label: "Favoritos",
+    pathname: "/user/favourites",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Compras",
+    pathname: "/user/purchases",
+    pageQuery: "?page=1",
+  },
 ];
 
 const adminOptions = [
-  { label: "Usuarios", pathname: "/users?page=1" },
-  { label: "Todos los favoritos", pathname: "/users/favourites?page=1" },
-  { label: "Todas las Reseñas", pathname: "/users/qualifications?page=1" },
-  { label: "Todas las Compras", pathname: "/users/purchases?page=1" },
-  { label: "Top vendidos", pathname: "/products/topSellingProducts?page=1" },
-  { label: "Top compradores", pathname: "/users/topBuyers?page=1" },
+  { label: "Usuarios", pathname: "/users", pageQuery: "?page=1" },
+  {
+    label: "Todos los favoritos",
+    pathname: "/users/favourites",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Todas las reseñas",
+    pathname: "/users/qualifications",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Todas las compras",
+    pathname: "/users/purchases",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Top vendidos",
+    pathname: "/products/topSellingProducts",
+    pageQuery: "?page=1",
+  },
+  {
+    label: "Top compradores",
+    pathname: "/users/topBuyers",
+    pageQuery: "?page=1",
+  },
   {
     label: "Top favoritos",
-    pathname: "/products/topFavouritesProducts?page=1",
+    pathname: "/products/topFavouritesProducts",
+    pageQuery: "?page=1",
   },
 ];
 
 interface NavLink {
   label: string;
   pathname: string;
+  pageQuery?: string;
 }
 
 const Navbar = () => {
   const { user, contextLogout } = useAuth();
+  const { cart } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -90,15 +129,15 @@ const Navbar = () => {
             className="navbar-link navbar-link-inactive"
             onClick={() => setShowDropdown(!showDropdown)}
           >
-            Options <ChevronDownIcon />
+            Opciones <ChevronDownIcon />
           </button>
           {showDropdown && (
             <div className="dropdown-menu">
               {roleOptions.map(option => (
                 <Link
                   key={option.label}
-                  to={option.pathname}
-                  className={`navbar-link ${location.pathname + location.search === option.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+                  to={`${option.pathname}${option.pageQuery ?? ""}`}
+                  className={`navbar-link ${location.pathname.includes(option.pathname) ? "navbar-link-active" : "navbar-link-inactive"}`}
                 >
                   {option.label}
                 </Link>
@@ -107,7 +146,7 @@ const Navbar = () => {
                 className="navbar-link navbar-link-inactive"
                 onClick={handleLogout}
               >
-                Logout
+                Salir
               </button>
             </div>
           )}
@@ -117,8 +156,8 @@ const Navbar = () => {
       {navLinks.map(link => (
         <Link
           key={link.label}
-          to={link.pathname}
-          className={`navbar-link ${location.pathname + location.search === link.pathname ? "navbar-link-active" : "navbar-link-inactive"}`}
+          to={`${link.pathname}${link.pageQuery ?? ""}`}
+          className={`navbar-link ${location.pathname.includes(link.pathname) ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           {link.label}
         </Link>
@@ -126,9 +165,10 @@ const Navbar = () => {
       {user?.role === "Client" ? (
         <Link
           to="/user/cart"
-          className={`navbar-link ${location.pathname + location.search === "/cart" ? "navbar-link-active" : "navbar-link-inactive"}`}
+          className={`navbar-link ${location.pathname.includes("/cart") ? "navbar-link-active" : "navbar-link-inactive"}`}
         >
           <CartIcon />
+          <span className="navbar-link-absolute-element">{cart.length}</span>
         </Link>
       ) : null}
     </nav>

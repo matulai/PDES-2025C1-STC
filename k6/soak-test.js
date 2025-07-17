@@ -2,6 +2,7 @@ import { setup, runTestFlow } from './lib/common.js';
 
 
 export let options = {
+  setupTimeout: '10m',
   vus: 50, // 50 usuarios concurrentes
   duration: '30m', // Ejecutar durante 30 minutos
   thresholds: {

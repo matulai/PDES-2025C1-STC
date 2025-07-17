@@ -4,7 +4,7 @@ const addToLocalStorage = (key: string, value: any) => {
 
 const getFromLocalStorage = (key: string) => {
   const value = localStorage.getItem(key);
-  return value ? value : null;
+  return value ?? null;
 };
 
 const removeItemFromLocalStorage = (key: string) => {

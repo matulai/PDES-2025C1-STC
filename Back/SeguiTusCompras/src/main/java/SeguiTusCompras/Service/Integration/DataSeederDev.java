@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("dev")
-public class DataSeeder implements CommandLineRunner {
+public class DataSeederDev implements CommandLineRunner {
 
     private final AuthService authService;
 
-    public DataSeeder(AuthService usuarioRepository) {
+    public DataSeederDev(AuthService usuarioRepository) {
         this.authService = usuarioRepository;
     }
 

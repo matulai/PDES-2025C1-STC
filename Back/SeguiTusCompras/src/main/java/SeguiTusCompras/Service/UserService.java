@@ -1,6 +1,7 @@
 package SeguiTusCompras.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import SeguiTusCompras.Controller.Utils.ObjectMappers.QualificationMapper;
@@ -41,7 +42,7 @@ public class UserService {
 
     public  User getUser(String userName) {
         return Optional.ofNullable(userDao.getByName(userName))
-        .orElseThrow(() -> new RuntimeException(ErrorMessages.USER_NOT_FOUND.getMessage()));
+        .orElseThrow(() -> new NoSuchElementException(ErrorMessages.USER_NOT_FOUND.getMessage()));
     }
 
     private Product findOrCreate(Product product) {
@@ -89,7 +90,7 @@ public class UserService {
 
     private void checkIfScoreIsValid(Integer score) {
         if(score < 1 || score > 5) {
-            throw new RuntimeException(ErrorMessages.INVALID_SCORE.getMessage());
+            throw new IllegalArgumentException(ErrorMessages.INVALID_SCORE.getMessage());
         }
     }
 

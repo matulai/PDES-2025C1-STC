@@ -12,7 +12,7 @@ interface ProductsProps {
 }
 
 const endpointMap = {
-  "Todas las Compras": allUsersPurchases,
+  "Todas las compras": allUsersPurchases,
   "Mis compras": userPurchases,
 };
 

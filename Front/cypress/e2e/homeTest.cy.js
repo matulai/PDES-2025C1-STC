@@ -50,7 +50,13 @@ describe("Nav bar", () => {
 
 describe("Home products", () => {
   it("muestra los productos del home", () => {
+    cy.intercept("GET", "**/products/search*").as("getProducts");
+
     cy.visit("/");
+
+    // Esperar a que se complete la llamada a la API
+    cy.wait("@getProducts");
+
     // Asegura que haya al menos un producto
     cy.get(".product-card-container").should("have.length.at.least", 1);
 

@@ -1,47 +1,116 @@
 name: Test
+
 on:
   push:
-    branches: ["QA"]
+    branches: ["main"]
   pull_request:
-    branches: ["QA"]
+    branches: ["main"]
 
 permissions:
   contents: write
+
 jobs:
-  test:
+  backend-test:
+    name: Backend Tests
     runs-on: ubuntu-latest
     environment: test-and-create-image
-    container: maven:3.9-eclipse-temurin-21
+    container:
+      image: maven:3.9-eclipse-temurin-21
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Run tests with Maven
+      - uses: actions/checkout@v4
+      - name: Run backend tests
         working-directory: ./Back/SeguiTusCompras
         env:
-          DB_URL: ${{ secrets.DB_URL }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           JWT_KEY: ${{ secrets.JWT_KEY }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-          FRONT_ORIGIN: ${{ secrets.VITE_API_URL_LOCAL }}
+          FRONT_ORIGIN: ${{ secrets.FRONT_ORIGIN }}
           PROFILE: ${{ secrets.PROFILE }}
         run: mvn -B test
-  tag:
-      if: github.event_name == 'push'
-      needs: test
-      runs-on: ubuntu-latest
-      permissions:
-        contents: write
 
-      outputs:
-       new_tag: ${{ steps.tag.outputs.new_tag_value }}
-      
-      steps:
+  frontend-test:
+    name: Cypress Tests
+    runs-on: ubuntu-latest
+    environment: test-and-create-image
+    container:
+      image: cypress/browsers:node-22.14.0-chrome-135.0.7049.114-1-ff-137.0.2-edge-135.0.3179.85-1
+      ports:
+        - 5173:5173
+    services:
+      backend:
+        image: qac1978/seguituscompras_backend:latest
+        env:
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          FRONT_ORIGIN: http://localhost:5173
+          PROFILE: ${{ secrets.PROFILE }}
+        ports:
+          - 8080:8080
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar dependencias Frontend
+        working-directory: ./Front
+        run: npm ci
+
+      - name: Instalar curl en el contenedor de Cypress
+        run: |
+              apt-get update && apt-get install -y curl
+              # This step should run before "Verificar la conexión al Backend"
+
+      - name: Verificar la conexión al Backend
+        run: |
+                      # Use a loop to wait for the backend to be ready
+                      echo "Esperando que el backend esté disponible en http://backend:8080..."
+                      for i in $(seq 1 60); do
+                        if curl -s -f http://backend:8080/actuator/health; then # Adjust /actuator/health to your actual health endpoint
+                          echo "Backend está online."
+                          break
+                        fi
+                        echo "Reintentando conectar con el backend... ($i/60)"
+                        sleep 2
+                      done
+                      if ! curl -s -f http://backend:8080/actuator/health; then
+                        echo "Error: El backend no está respondiendo en http://backend:8080 después de 120 segundos."
+                        exit 1
+                      fi
+                    # Ensure this step runs within the main container's context
+                    # If this step fails, it means the backend service isn't accessible to the main container.
+
+      - name: Ejecutar tests de Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./Front
+          start: npm run dev -- --host
+          wait-on: http://localhost:5173
+          wait-on-timeout: 120
+          browser: chrome
+        env:
+          VITE_API_URL: http://backend:8080
+
+      - name: Subir screenshots de Cypress (si fallan)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: ./Front/cypress/screenshots
+
+  tag:
+    if: github.event_name == 'push'
+    needs: [backend-test, frontend-test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      new_tag: ${{ steps.tag.outputs.new_tag_value }}
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -52,7 +121,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
-
           git fetch --tags
           LATEST_TAG=$(git tag --list "checkpoint-*" --sort=v:refname | tail -n 1)
           if [[ -z "$LATEST_TAG" ]]; then
@@ -62,7 +130,6 @@ jobs:
             NEXT_VERSION_NUMBER=$((VERSION_NUMBER + 1))
             NEW_TAG="checkpoint-${NEXT_VERSION_NUMBER}"
           fi
-
           git tag $NEW_TAG
           git push origin $NEW_TAG
           echo "DEBUG - El tag generado es: $NEW_TAG"
@@ -70,21 +137,23 @@ jobs:
           echo "DEBUG - El output generado es: $GITHUB_OUTPUT"
 
   create-images:
-      if: github.event_name == 'push'
-      needs:  [test, tag]
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-      environment: test-and-create-image
-
-      steps:
+    if: github.event_name == 'push'
+    needs: [backend-test, frontend-test, tag]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: test-and-create-image
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Definir variable FRONTEND_IMAGE_NAME
-        run: echo "FRONTEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend" >> $GITHUB_ENV
+      - name: Definir variable para front local FRONTEND_IMAGE_NAME
+        run: echo "FRONTEND_IMAGE_NAME_LOCAL=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend_local" >> $GITHUB_ENV
+
+      - name: Definir variable para front prod FRONTEND_IMAGE_NAME
+        run: echo "FRONTEND_IMAGE_NAME_PROD=${{ secrets.DOCKER_USERNAME }}/seguituscompras_frontend_prod" >> $GITHUB_ENV
 
       - name: Definir variable BACKEND_IMAGE_NAME
         run: echo "BACKEND_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/seguituscompras_backend" >> $GITHUB_ENV
@@ -94,47 +163,63 @@ jobs:
 
       - name: Debug - Verificar tag generado
         run: echo "El tag output es ${{ needs.tag.outputs.new_tag }}}"
-       
+
       - name: Debug - Verificar tag generado 2
-        run: echo "El tag generado es ${{ env.TAG_IMAGE_NAME}}" 
+        run: echo "El tag generado es ${{ env.TAG_IMAGE_NAME}}"
+
+      - name: Debug - Verificar tag generado 3
+        run: echo "El tag generado es ${{ env.FRONTEND_IMAGE_NAME_PROD}}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build  Backend Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./Back/SeguiTusCompras
-          file: ./Back/SeguiTusCompras/Dockerfile 
+          file: ./Back/SeguiTusCompras/Dockerfile
           push: false
           tags: ${{ env.BACKEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.BACKEND_IMAGE_NAME }}:latest
           outputs: type=docker,dest=/tmp/backend-image.tar
-      
 
-      - name: Build Frontend Docker image
+      - name: Build Local Frontend Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./Front 
-          file: ./Front/Dockerfile 
+          context: ./Front
+          file: ./Front/Dockerfile
           push: false
-          tags: ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME }}:latest
-          outputs: type=docker,dest=/tmp/frontend-image.tar
+          tags: ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest
+          outputs: type=docker,dest=/tmp/frontend-local.tar
           build-args: |
-              VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
+            VITE_API_URL=${{ secrets.VITE_API_URL_LOCAL }}
+
+      - name: Build Prod Frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Front
+          file: ./Front/Dockerfile
+          push: false
+          tags: ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }},${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest
+          outputs: type=docker,dest=/tmp/frontend-prod.tar
+          build-args: |
+            VITE_API_URL=${{ secrets.VITE_API_URL_PROD }}
 
       - name: Push both Docker images (if both builds succeeded)
         run: |
           docker load -i /tmp/backend-image.tar
-          docker load -i /tmp/frontend-image.tar
-
+          docker load -i /tmp/frontend-local.tar
+          docker load -i /tmp/frontend-prod.tar
           docker push ${{ env.BACKEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }}
           docker push ${{ env.BACKEND_IMAGE_NAME }}:latest
+          docker push ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:${{ env.TAG_IMAGE_NAME }}
+          docker push ${{ env.FRONTEND_IMAGE_NAME_LOCAL }}:latest  
+          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:${{ env.TAG_IMAGE_NAME }}
+          docker push ${{ env.FRONTEND_IMAGE_NAME_PROD }}:latest
 
-          docker push ${{ env.FRONTEND_IMAGE_NAME }}:${{ env.TAG_IMAGE_NAME }}
-          docker push ${{ env.FRONTEND_IMAGE_NAME }}:latest  
+

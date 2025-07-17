@@ -1,0 +1,2 @@
+# Registrar nuestro Post-Procesador personalizado
+org.springframework.boot.env.EnvironmentPostProcessor=SeguiTusCompras.config.DopplerPropertySource

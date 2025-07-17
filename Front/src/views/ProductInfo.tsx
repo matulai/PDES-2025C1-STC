@@ -114,6 +114,9 @@ const ProductInfo = () => {
           <p className="product-info-details-description">
             {product?.description}
           </p>
+          <p className="product-info-details-title">
+            $ {product?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+          </p>
           <ButtonLoading
             handleFunction={handleOnClickAddToCart}
             text="Agregar al carrito"

@@ -1,6 +1,7 @@
 import { setup, runTestFlow } from './lib/common.js';
 
 export let options = {
+  setupTimeout: '10m',
   stages: [
     { duration: '5m', target: 50 },
     { duration: '5m', target: 100 },
