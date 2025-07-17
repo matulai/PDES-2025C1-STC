@@ -1,26 +1,27 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { scenario } from 'k6/execution';
 
 const BASE_URL = __ENV.BASE_URL || 'http://spring:8080';
-const NUM_CLIENTS = 400;
-const NUM_ADMINS = 400;
+const NUM_CLIENTS = parseInt(__ENV.NUM_CLIENTS) || 400;
+const NUM_ADMINS = parseInt(__ENV.NUM_ADMINS) || 400;
 const USER_PASSWORD = 'Password123!';
 
 export const options = {
   scenarios: {
     // Escenario para registrar clientes en paralelo
     register_clients: {
-      executor: 'per-vu-iterations',
+      executor: 'shared-iterations',
       exec: 'registerClients',
-      vus: 1,
+      vus: 50, // Usar 50 VUs para registrar en paralelo
       iterations: NUM_CLIENTS,
       maxDuration: '10m',
     },
     // Escenario para registrar administradores en paralelo
     register_admins: {
-      executor: 'per-vu-iterations',
+      executor: 'shared-iterations',
       exec: 'registerAdmins',
-      vus: 1,
+      vus: 50, // Usar 50 VUs para registrar en paralelo
       iterations: NUM_ADMINS,
       maxDuration: '10m',
     },
@@ -29,7 +30,8 @@ export const options = {
 
 // Función que se encarga de registrar Clientes
 export function registerClients() {
-  const clientNumber = __ITER + 1;
+  // scenario.iterationInTest es un contador global para el escenario (0 a 399)
+  const clientNumber = scenario.iterationInTest + 1;
   const clientName = `client${clientNumber}`;
 
   const registerPayload = JSON.stringify({
@@ -49,7 +51,7 @@ export function registerClients() {
 
 // Función que se encarga de registrar Administradores
 export function registerAdmins() {
-  const adminNumber = __ITER + 1;
+  const adminNumber = scenario.iterationInTest + 1;
   const adminName = `admin${adminNumber}`;
 
   const registerPayload = JSON.stringify({

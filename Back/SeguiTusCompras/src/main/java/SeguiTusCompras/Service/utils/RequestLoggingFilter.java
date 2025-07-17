@@ -1,5 +1,6 @@
 package SeguiTusCompras.Service.utils;
 
+import SeguiTusCompras.Service.GeoIPService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

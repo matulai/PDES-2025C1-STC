@@ -1,6 +1,7 @@
 import { setup, runTestFlow } from './lib/common.js';
 
 export let options = {
+  setupTimeout: '10m',
   stages: [
     { duration: '10s', target: 200 }, // Súbito aumento a 200 usuarios
     { duration: '30s', target: 200 }, // Mantiene la carga

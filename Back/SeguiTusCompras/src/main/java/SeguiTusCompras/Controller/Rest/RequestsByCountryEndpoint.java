@@ -1,5 +1,6 @@
-package SeguiTusCompras.Service.utils;
+package SeguiTusCompras.Controller.Rest;
 
+import SeguiTusCompras.Service.GeoIPService;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.stereotype.Component;

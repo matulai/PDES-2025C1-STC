@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["main"]
   pull_request:
-    branches: ["QA"]
+    branches: ["main"]
 
 permissions:
   contents: write
