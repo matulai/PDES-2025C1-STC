@@ -57,7 +57,7 @@ const LoginCard = ({ onSubmit }: LoginCardProps) => {
         </button>
       </form>
       <div className="auth-card-container-footer">
-        ¿No tienes una cuenta?
+        ¿Essto es la prueba?
         <Link to="/register" className="auth-card-container-footer-link">
           Registrarse
         </Link>
